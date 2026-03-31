@@ -38,13 +38,13 @@ export default function Home() {
         {/* CTA / contact teaser */}
         <div className="mt-6 flex flex-col items-center gap-4">
           <a
-            href="mailto:info@realamericangrit.net"
+            href="mailto:info@realamericangrit.com"
             className="inline-flex h-12 items-center justify-center rounded-lg bg-[#b71c1c] px-8 font-semibold text-white transition-colors hover:bg-[#d32f2f]"
           >
             Get In Touch
           </a>
           <p className="text-sm text-gray-500">
-            realamericangrit.net
+            realamericangrit.com
           </p>
         </div>
       </main>
