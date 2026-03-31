@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   title: "Real American Grit — Coming Soon",
   description:
     "Coaching and consulting for home service companies ready to scale. Coming soon.",
+  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
 };
 
 export default function RootLayout({
