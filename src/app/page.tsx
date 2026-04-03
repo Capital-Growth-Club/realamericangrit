@@ -30,16 +30,17 @@ import VSLPlayer from "@/components/VSLPlayer";
 const hFont = "font-[family-name:var(--font-outfit)]";
 
 /* ─── CTA button reusable ─── */
-function CtaButton({ variant = "red", className = "", onClick }: { variant?: "red" | "outline-white" | "outline-dark"; className?: string; onClick?: () => void }) {
+function CtaButton({ variant = "red", className = "", onClick, label }: { variant?: "red" | "outline-white" | "outline-dark"; className?: string; onClick?: () => void; label?: string }) {
   const base = `inline-flex h-[60px] items-center justify-center rounded-full px-10 text-lg font-bold cursor-pointer transition-colors duration-200 ${hFont}`;
   const styles = {
     red: `${base} bg-[#b71c1c] text-white hover:bg-[#d32f2f] active:bg-[#9a0007] pulse-red`,
     "outline-white": `${base} border-2 border-white/30 text-white hover:bg-white/10 active:bg-white/5`,
     "outline-dark": `${base} border-2 border-[#0a1628]/20 text-[#0a1628] hover:bg-[#0a1628]/5 active:bg-[#0a1628]/10`,
   };
+  const defaultLabel = variant === "red" ? "Get Instant Access — $997/yr" : "Enroll Now — $997/yr";
   return (
     <button type="button" onClick={onClick} className={`${styles[variant]} ${className}`}>
-      {variant === "red" ? "Get Instant Access — $997/yr" : "Enroll Now — $997/yr"}
+      {label ?? defaultLabel}
     </button>
   );
 }
@@ -115,12 +116,6 @@ const PROBLEMS = [
   { icon: ShieldAlert, title: "Advice That Doesn't Apply", desc: "Generic coaching from people who've never run a truck or managed a crew." },
 ];
 
-const MODULES = [
-  { icon: BarChart3, num: "01", title: "Sales Team Systems", desc: "Repeatable sales processes, proven scripts, and KPI tracking your team can run without you." },
-  { icon: Users, num: "02", title: "Hiring & Retention", desc: "Attract A-players, onboard them fast, and build comp structures that keep them loyal." },
-  { icon: Wrench, num: "03", title: "Fulfillment & Ops", desc: "Systematize fulfillment, reduce callbacks, and optimize scheduling for max efficiency." },
-  { icon: Crown, num: "04", title: "Growth & Leadership", desc: "Remove yourself as the bottleneck. Build a leadership team that runs the day-to-day." },
-];
 
 /* ═══════════════════════════════════════════ */
 export default function Home() {
@@ -147,7 +142,7 @@ export default function Home() {
             <span className="relative inline-flex rounded-full h-3 w-3 bg-[#b71c1c]" />
           </span>
           <p className="text-sm sm:text-base font-semibold">
-            Launch pricing: <span className="line-through opacity-60">$1,997</span> <span className="font-bold">$997/yr</span> — ends May 31
+            Limited Time Launch Promo: <span className="line-through opacity-60">$1,997</span> <span className="font-bold">$997/yr</span> — ends May 31
           </p>
         </div>
       </motion.div>
@@ -354,43 +349,157 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* ═══ SOLUTION ═══ */}
+      {/* ═══ SOLUTION — VALUE STACK ═══ */}
       <Section className="py-16 sm:py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8">
-          <div className="text-center mb-14">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8">
+          <div className="text-center mb-16">
             <p className={`text-xs font-bold uppercase tracking-[0.3em] text-[#1a3a6b] mb-3 ${hFont}`}>Introducing</p>
             <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black text-[#0a1628] tracking-[-0.02em] leading-snug mb-4 ${hFont}`}>
               The Real American Grit <span className="text-[#b71c1c]">Scaling System</span>
             </h2>
             <p className="text-base text-[#475569] max-w-xl mx-auto leading-relaxed">
-              You already know how to do the work. Now get the systems to turn it into a business that scales.
+              Here&rsquo;s exactly what you get inside — and what it would cost you to figure this out on your own.
             </p>
           </div>
 
-          <div className="space-y-4 mb-10">
-            {MODULES.map((mod, i) => {
-              const Icon = mod.icon;
-              return (
-                <Stagger key={mod.num} i={i} className="flex flex-col sm:flex-row items-start gap-5 bg-[#f8f8f6] rounded-2xl p-6 sm:p-7 hover:shadow-md border border-transparent hover:border-gray-200 transition-all duration-200">
-                  <div className="shrink-0 w-12 h-12 rounded-xl bg-[#0a1628] flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-white" aria-hidden="true" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className={`text-xs font-black text-[#b71c1c] tracking-wider ${hFont}`}>MODULE {mod.num}</span>
-                      <h3 className={`font-bold text-lg sm:text-xl text-[#0a1628] ${hFont}`}>{mod.title}</h3>
-                    </div>
-                    <p className="text-base text-[#475569] leading-relaxed">{mod.desc}</p>
-                  </div>
-                </Stagger>
-              );
-            })}
-          </div>
+          {/* Module cards */}
+          {[
+            {
+              num: "01", icon: BarChart3, title: "Sales Team Systems", value: "$5,000",
+              desc: "Without this, you cycle through bad sales hires, pay for consultants who don't understand your business, and lose deals every week to reps who wing it instead of following a system.",
+              points: [
+                "Plug-and-play sales scripts for in-home and phone closes",
+                "Rep scorecard + KPI dashboard so you know who's performing",
+                "Training system that gets new reps productive in weeks, not months",
+                "Commission structures that drive performance without killing margins",
+              ],
+            },
+            {
+              num: "02", icon: Users, title: "Hiring & Retention", value: "$3,500",
+              desc: "Every bad hire costs you months — recruiting, training, lost productivity, then starting over. Most owners churn through the same roles year after year because they don't have a system to find the right people and keep them.",
+              points: [
+                "Hiring pipeline that attracts A-players in a tight labor market",
+                "Onboarding system that gets new hires contributing fast",
+                "Compensation structures that keep your best people loyal",
+                "Interview framework to filter out the wrong fits before they cost you",
+              ],
+            },
+            {
+              num: "03", icon: Wrench, title: "Fulfillment & Operations", value: "$4,000",
+              desc: "Callbacks, rework, scheduling chaos, and bad reviews are silent margin killers. Most owners don't realize how much money walks out the door from sloppy ops until they actually fix it.",
+              points: [
+                "Job fulfillment SOPs so nothing falls through the cracks",
+                "Quality control checkpoints that eliminate costly callbacks",
+                "Scheduling and dispatch optimization for max crew efficiency",
+                "Customer communication templates that prevent 1-star surprises",
+              ],
+            },
+            {
+              num: "04", icon: Crown, title: "Growth & Leadership", value: "$5,000",
+              desc: "This is where you stop being the business and start owning it. The alternative is hiring a fractional COO or business coach — or worse, spending another year stuck as the bottleneck while revenue flatlines.",
+              points: [
+                "Leadership playbook to remove yourself as the daily bottleneck",
+                "Financial clarity framework — know your numbers, protect your margins",
+                "Build a management layer that runs operations without you",
+                "Growth roadmap from $1M to $5M+ with clear milestones",
+              ],
+            },
+          ].map((mod, i) => {
+            const Icon = mod.icon;
+            return (
+              <Stagger key={mod.num} i={i} className="mb-6">
+                <div className="bg-[#f8f8f6] rounded-2xl p-7 sm:p-8 border border-gray-200">
+                  {/* Top: label + title */}
+                  <span className={`text-xs font-black text-[#b71c1c] tracking-wider ${hFont}`}>MODULE {mod.num}</span>
+                  <h3 className={`font-bold text-2xl sm:text-3xl text-[#0a1628] mt-1 ${hFont}`}>{mod.title}</h3>
 
-          {/* CTA */}
-          <div className="text-center">
-            <CtaButton variant="red" onClick={openModal} />
-          </div>
+                  {/* Sleek divider */}
+                  <div className="h-px bg-gray-300 mt-4 mb-5" />
+
+                  {/* Description + bullets */}
+                  <p className="text-base text-[#475569] leading-relaxed mb-5">{mod.desc}</p>
+                  <p className={`text-sm font-bold uppercase tracking-[0.15em] text-[#0a1628] mb-3 ${hFont}`}>What you get:</p>
+                  <ul className="space-y-2 mb-6">
+                    {mod.points.map((pt, j) => (
+                      <li key={j} className="flex items-start gap-2.5 text-base text-[#475569]">
+                        <Check className="shrink-0 mt-1 w-4 h-4 text-[#1a3a6b]" strokeWidth={3} aria-hidden="true" />
+                        {pt}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Value at bottom */}
+                  <div className="h-px bg-gray-300 mb-5" />
+                  <p className={`text-2xl sm:text-3xl font-black text-[#0a1628] ${hFont}`}>{mod.value} <span className="text-base font-semibold text-[#475569]">value</span></p>
+                </div>
+              </Stagger>
+            );
+          })}
+
+          {/* Bonus: Community + Templates */}
+          <Stagger i={4} className="mb-10">
+            <div className="bg-[#0a1628] text-white rounded-2xl p-7 sm:p-8">
+              <span className={`text-xs font-black text-[#b71c1c] tracking-wider ${hFont}`}>BONUS</span>
+              <h3 className={`font-bold text-2xl sm:text-3xl mt-1 ${hFont}`}>Private Community + Templates</h3>
+
+              <div className="h-px bg-white/10 mt-4 mb-5" />
+
+              <p className="text-base text-gray-400 leading-relaxed mb-4">
+                You&rsquo;re not doing this alone. Get a network of operators who&rsquo;ve already solved the problems you&rsquo;re facing, plus every script, SOP, and template ready to download and deploy — no building from scratch.
+              </p>
+              <ul className="space-y-2 mb-6">
+                {[
+                  "Private RAG community of vetted home service owners",
+                  "Every script, SOP, and template — downloadable and editable",
+                  "Future module updates and additions at no extra cost",
+                ].map((pt, j) => (
+                  <li key={j} className="flex items-start gap-2.5 text-base text-gray-400">
+                    <Check className="shrink-0 mt-1 w-4 h-4 text-[#b71c1c]" strokeWidth={3} aria-hidden="true" />
+                    {pt}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="h-px bg-white/10 mb-5" />
+              <p className={`text-2xl sm:text-3xl font-black text-white ${hFont}`}>$2,500 <span className="text-base font-semibold text-gray-400">value</span></p>
+            </div>
+          </Stagger>
+
+          {/* ═══ VALUE STACK SUMMARY ═══ */}
+          <Stagger i={5} className="mb-10">
+            <div className="bg-[#f8f8f6] rounded-2xl p-7 sm:p-8 border-2 border-[#b71c1c]/20">
+              <h3 className={`font-black text-2xl sm:text-3xl text-[#0a1628] text-center mb-8 ${hFont}`}>
+                Everything You Get:
+              </h3>
+              <div className="space-y-3 max-w-md mx-auto mb-8">
+                {[
+                  { label: "Sales Team Systems", value: "$5,000" },
+                  { label: "Hiring & Retention", value: "$3,500" },
+                  { label: "Fulfillment & Operations", value: "$4,000" },
+                  { label: "Growth & Leadership", value: "$5,000" },
+                  { label: "Private Community + Templates", value: "$2,500" },
+                ].map((row, j) => (
+                  <div key={j} className="flex items-center justify-between py-2 border-b border-gray-200 last:border-0">
+                    <p className="text-base text-[#0a1628] font-medium">{row.label}</p>
+                    <p className={`text-base font-bold text-[#475569] ${hFont}`}>{row.value}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-center space-y-2 mb-8">
+                <p className="text-base text-[#475569]">Total Value</p>
+                <p className={`text-3xl sm:text-4xl font-black text-[#475569] line-through opacity-60 ${hFont}`}>$20,000</p>
+                <p className="text-base text-[#475569]">Regular Price</p>
+                <p className={`text-2xl sm:text-3xl font-black text-[#475569] line-through opacity-60 ${hFont}`}>$1,997/yr</p>
+                <p className={`text-base font-bold text-[#b71c1c] uppercase tracking-wider ${hFont}`}>Launch Price — until May 31</p>
+                <p className={`text-5xl sm:text-6xl font-black text-[#0a1628] ${hFont}`}>$997<span className="text-2xl text-[#475569] font-medium">/yr</span></p>
+              </div>
+
+              <div className="text-center">
+                <CtaButton variant="red" onClick={openModal} label="CLAIM LIMITED $997 OFFER NOW" />
+              </div>
+            </div>
+          </Stagger>
         </div>
       </Section>
 
