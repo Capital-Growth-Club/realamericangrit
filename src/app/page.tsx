@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   TrendingDown,
   Flame,
@@ -45,32 +45,40 @@ function CtaButton({ variant = "red", className = "", onClick, label }: { varian
   );
 }
 
-/* ─── animation (respects reduced motion) ─── */
+/* ─── CSS-based scroll reveal (no JS animation overhead on mobile) ─── */
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll(".reveal:not(.visible)");
+    if (!els.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("visible");
+            observer.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  });
+}
+
 function Section({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.12 });
-  const reduced = useReducedMotion();
   return (
-    <section id={id} ref={ref} className={className}>
-      <motion.div
-        initial={reduced ? false : { opacity: 0, y: 32 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.55, ease: "easeOut" }}
-      >{children}</motion.div>
+    <section id={id} className={`reveal ${className}`}>
+      {children}
     </section>
   );
 }
 
 function Stagger({ children, i, className = "" }: { children: React.ReactNode; i: number; className?: string }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, amount: 0.2 });
-  const reduced = useReducedMotion();
   return (
-    <motion.div ref={ref} className={className}
-      initial={reduced ? false : { opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.4, delay: reduced ? 0 : i * 0.07, ease: "easeOut" }}
-    >{children}</motion.div>
+    <div className={`reveal ${className}`} data-d={i < 6 ? i : 5}>
+      {children}
+    </div>
   );
 }
 
@@ -122,6 +130,7 @@ export default function Home() {
   const { visible } = useScrollNav();
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
+  useReveal();
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
@@ -177,32 +186,32 @@ export default function Home() {
         <div className="absolute top-0 left-0 right-0 h-1 flex z-10" aria-hidden="true">
           <div className="flex-1 bg-[#b71c1c]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#1a3a6b]" />
         </div>
-        <div className="absolute top-[12%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[#b71c1c]/[0.05] rounded-full blur-[140px] pointer-events-none" aria-hidden="true" />
+        <div className="absolute top-[12%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[#b71c1c]/[0.05] rounded-full blur-[140px] pointer-events-none glow-bg" aria-hidden="true" />
 
         <div className="relative max-w-[820px] mx-auto px-5 sm:px-8 pt-16 sm:pt-24 md:pt-32 pb-20 sm:pb-28 md:pb-36 text-center">
-          <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}
+          <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.1 }}
             className={`uppercase text-xs sm:text-sm font-bold tracking-[0.2em] text-gray-400 mb-5 ${hFont}`}>
             Led by the President of ServiceTitan &amp; the #1 home services sales rep
           </motion.p>
 
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.2 }}
+          <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}
             className={`text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-[-0.03em] leading-[1.05] mb-5 ${hFont}`}>
             The Proven System to Take Your Home Service Company <span className="text-[#b71c1c]">Past 7&nbsp;Figures</span>
           </motion.h1>
 
-          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.3 }}
+          <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.25 }}
             className="text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
             A step-by-step course &amp; coaching program built for owners of
             plumbing, HVAC, roofing, impact windows, and other blue-collar
             service businesses who are tired of being the bottleneck.
           </motion.p>
 
-          <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.35 }}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.3 }}
             className="mb-8 w-full">
             <VSLPlayer />
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.55 }}
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.4 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <CtaButton variant="red" className="w-full sm:w-auto" onClick={openModal} />
             <a href="#problems" className="inline-flex h-[60px] items-center justify-center gap-2 rounded-full border border-gray-600 px-8 text-base font-medium text-gray-300 cursor-pointer hover:border-white hover:text-white transition-colors duration-200 w-full sm:w-auto">
@@ -545,7 +554,7 @@ export default function Home() {
           </div>
 
           <div className="relative bg-[#0a1628] text-white rounded-3xl p-8 sm:p-10 shadow-2xl shadow-[#0a1628]/25">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180px] h-[80px] bg-[#b71c1c]/20 rounded-full blur-[50px] pointer-events-none" aria-hidden="true" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180px] h-[80px] bg-[#b71c1c]/20 rounded-full blur-[50px] pointer-events-none glow-bg" aria-hidden="true" />
 
             <div className="relative">
               <div className="flex items-baseline justify-center gap-2 mb-1">
@@ -577,7 +586,7 @@ export default function Home() {
 
       {/* ═══ FINAL CTA ═══ */}
       <Section className="relative py-20 sm:py-28 bg-[#0a1628] text-white">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[250px] bg-[#b71c1c]/[0.06] rounded-full blur-[100px] pointer-events-none" aria-hidden="true" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[250px] bg-[#b71c1c]/[0.06] rounded-full blur-[100px] pointer-events-none glow-bg" aria-hidden="true" />
         <div className="relative max-w-2xl mx-auto px-5 sm:px-8 text-center">
           <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-[-0.02em] leading-snug mb-4 ${hFont}`}>
             You built something real.<br />Now build it to <span className="text-[#b71c1c]">last.</span>
