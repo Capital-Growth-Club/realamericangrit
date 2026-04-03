@@ -147,35 +147,36 @@ export default function Home() {
       {/* Checkout modal */}
       <CheckoutModal open={modalOpen} onClose={() => setModalOpen(false)} />
 
-      {/* ═══ LAUNCH BANNER — fixed above nav ═══ */}
-      <div className={`nav-slide fixed top-0 left-0 right-0 z-50 bg-[#1a3a6b] text-white px-4 py-3 ${visible ? "" : "hidden-up"}`}>
-        <div className="flex items-center justify-center gap-3 h-full">
-          <span className="relative flex h-3 w-3 shrink-0">
-            <span className="absolute -inset-1.5 rounded-full bg-[#b71c1c] animate-ping opacity-60" />
-            <span className="absolute -inset-0.5 rounded-full bg-[#b71c1c]/40 animate-pulse" />
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-[#b71c1c]" />
-          </span>
-          <p className="text-[11px] sm:text-base font-semibold">
-            Limited Time Launch Promo: <span className="line-through opacity-60">$1,997</span> <span className="font-bold">$997/yr</span> — ends May 31
-          </p>
+      {/* ═══ BANNER + NAV — single fixed block, no gap ═══ */}
+      <div className={`nav-slide fixed top-0 left-0 right-0 z-50 ${visible ? "" : "hidden-up"}`}>
+        {/* Banner */}
+        <div className="bg-[#1a3a6b] text-white px-4 py-3">
+          <div className="flex items-center justify-center gap-3">
+            <span className="relative flex h-3 w-3 shrink-0">
+              <span className="absolute -inset-1.5 rounded-full bg-[#b71c1c] animate-ping opacity-60" />
+              <span className="absolute -inset-0.5 rounded-full bg-[#b71c1c]/40 animate-pulse" />
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#b71c1c]" />
+            </span>
+            <p className="text-[11px] sm:text-base font-semibold">
+              Limited Time Launch Promo: <span className="line-through opacity-60">$1,997</span> <span className="font-bold">$997/yr</span> — ends May 31
+            </p>
+          </div>
         </div>
+        {/* Nav */}
+        <nav className="bg-white border-b border-gray-100" role="navigation" aria-label="Main">
+          <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-[72px]">
+            <a href="/" className="flex items-center gap-2.5 cursor-pointer" aria-label="Home">
+              <div className="w-10 h-10 rounded-full bg-[#b71c1c] flex items-center justify-center">
+                <span className={`text-sm font-black text-white tracking-tighter ${hFont}`}>RAG</span>
+              </div>
+              <span className={`font-extrabold text-base tracking-tight text-[#0a1628] ${hFont}`}>REAL AMERICAN GRIT</span>
+            </a>
+            <button type="button" onClick={openModal} className={`hidden sm:inline-flex h-11 items-center rounded-full bg-[#b71c1c] px-6 text-sm font-bold text-white cursor-pointer hover:bg-[#d32f2f] active:bg-[#9a0007] transition-colors duration-200 ${hFont}`}>
+              Enroll Now — $997/yr
+            </button>
+          </div>
+        </nav>
       </div>
-
-      {/* ═══ NAV ═══ */}
-      <nav className={`nav-slide fixed top-[43px] left-0 right-0 z-50 bg-white border-b border-gray-100 ${visible ? "" : "hidden-up"}`}
-        role="navigation" aria-label="Main">
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-[72px]">
-          <a href="/" className="flex items-center gap-2.5 cursor-pointer" aria-label="Home">
-            <div className="w-10 h-10 rounded-full bg-[#b71c1c] flex items-center justify-center">
-              <span className={`text-sm font-black text-white tracking-tighter ${hFont}`}>RAG</span>
-            </div>
-            <span className={`font-extrabold text-base tracking-tight text-[#0a1628] ${hFont}`}>REAL AMERICAN GRIT</span>
-          </a>
-          <button type="button" onClick={openModal} className={`hidden sm:inline-flex h-11 items-center rounded-full bg-[#b71c1c] px-6 text-sm font-bold text-white cursor-pointer hover:bg-[#d32f2f] active:bg-[#9a0007] transition-colors duration-200 ${hFont}`}>
-            Enroll Now — $997/yr
-          </button>
-        </div>
-      </nav>
 
       {/* Spacer for banner + nav */}
       <div className="h-[116px]" />
