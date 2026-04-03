@@ -153,7 +153,7 @@ export default function Home() {
         role="navigation"
         aria-label="Main"
         initial={{ y: 0 }}
-        animate={{ y: visible ? 0 : -80 }}
+        animate={{ y: visible ? 0 : -120 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-[72px]">
