@@ -162,7 +162,7 @@ export default function Home() {
       </div>
 
       {/* ═══ NAV ═══ */}
-      <nav className={`nav-slide fixed top-[44px] left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100 ${visible ? "" : "hidden-up"}`}
+      <nav className={`nav-slide fixed top-[43px] left-0 right-0 z-50 bg-white border-b border-gray-100 ${visible ? "" : "hidden-up"}`}
         role="navigation" aria-label="Main">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-[72px]">
           <a href="/" className="flex items-center gap-2.5 cursor-pointer" aria-label="Home">
