@@ -247,9 +247,7 @@ export default function Home() {
                   <p className="text-base text-[#b71c1c] font-semibold">#1 Home Services Sales Rep</p>
                 </div>
               </div>
-              <p className="text-base text-[#475569] leading-relaxed">
-                Has personally closed <strong className="text-[#0a1628] font-semibold">more home service deals than anyone</strong> in the country. He&rsquo;ll show you how to build a sales team that performs whether you&rsquo;re in the room or not.
-              </p>
+              <p className="text-base text-[#475569] leading-relaxed">Has personally closed <strong className="text-[#0a1628] font-semibold">more home service deals than anyone</strong> in the country. He&rsquo;ll show you how to build a sales team that performs whether you&rsquo;re in the room or not.</p>
             </Stagger>
           </div>
 
