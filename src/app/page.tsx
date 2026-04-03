@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import {
   TrendingDown,
   Flame,
@@ -45,30 +44,40 @@ function CtaButton({ variant = "red", className = "", onClick, label }: { varian
   );
 }
 
-/* ─── CSS-based scroll reveal (no JS animation overhead on mobile) ─── */
+/* ─── Scroll reveal — pure CSS transitions + IntersectionObserver (same as CGC) ─── */
 function useReveal() {
   useEffect(() => {
-    const els = document.querySelectorAll(".reveal:not(.visible)");
+    const els = document.querySelectorAll(".section-fade:not(.visible)");
     if (!els.length) return;
-    const observer = new IntersectionObserver(
+    const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
             e.target.classList.add("visible");
-            observer.unobserve(e.target);
+            obs.unobserve(e.target);
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.05, rootMargin: "0px 0px -40px 0px" }
     );
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
   });
+}
+
+/* Hero fade — triggers on mount with staggered delays */
+function useHeroFade() {
+  useEffect(() => {
+    const els = document.querySelectorAll(".hero-fade");
+    els.forEach((el, i) => {
+      setTimeout(() => el.classList.add("visible"), 100 + i * 100);
+    });
+  }, []);
 }
 
 function Section({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
   return (
-    <section id={id} className={`reveal ${className}`}>
+    <section id={id} className={`section-fade ${className}`}>
       {children}
     </section>
   );
@@ -76,7 +85,7 @@ function Section({ children, className = "", id }: { children: React.ReactNode; 
 
 function Stagger({ children, i, className = "" }: { children: React.ReactNode; i: number; className?: string }) {
   return (
-    <div className={`reveal ${className}`} data-d={i < 6 ? i : 5}>
+    <div className={`section-fade ${className}`} data-d={i < 5 ? i : 4}>
       {children}
     </div>
   );
@@ -131,6 +140,7 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   useReveal();
+  useHeroFade();
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
@@ -138,12 +148,7 @@ export default function Home() {
       <CheckoutModal open={modalOpen} onClose={() => setModalOpen(false)} />
 
       {/* ═══ LAUNCH BANNER — fixed above nav ═══ */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 z-50 bg-[#1a3a6b] text-white px-4 py-3"
-        initial={{ y: 0 }}
-        animate={{ y: visible ? 0 : -120 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      >
+      <div className={`nav-slide fixed top-0 left-0 right-0 z-50 bg-[#1a3a6b] text-white px-4 py-3 ${visible ? "" : "hidden-up"}`}>
         <div className="flex items-center justify-center gap-3 h-full">
           <span className="relative flex h-3 w-3 shrink-0">
             <span className="absolute -inset-1.5 rounded-full bg-[#b71c1c] animate-ping opacity-60" />
@@ -154,17 +159,11 @@ export default function Home() {
             Limited Time Launch Promo: <span className="line-through opacity-60">$1,997</span> <span className="font-bold">$997/yr</span> — ends May 31
           </p>
         </div>
-      </motion.div>
+      </div>
 
-      {/* ═══ NAV — slides down when scrolling up past hero ═══ */}
-      <motion.nav
-        className="fixed top-[44px] left-0 right-0 z-50 bg-white/90 backdrop-blur-lg border-b border-gray-100"
-        role="navigation"
-        aria-label="Main"
-        initial={{ y: 0 }}
-        animate={{ y: visible ? 0 : -120 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      >
+      {/* ═══ NAV ═══ */}
+      <nav className={`nav-slide fixed top-[44px] left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100 ${visible ? "" : "hidden-up"}`}
+        role="navigation" aria-label="Main">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-[72px]">
           <a href="/" className="flex items-center gap-2.5 cursor-pointer" aria-label="Home">
             <div className="w-10 h-10 rounded-full bg-[#b71c1c] flex items-center justify-center">
@@ -176,7 +175,7 @@ export default function Home() {
             Enroll Now — $997/yr
           </button>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Spacer for banner + nav */}
       <div className="h-[116px]" />
@@ -189,35 +188,30 @@ export default function Home() {
         <div className="absolute top-[12%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[#b71c1c]/[0.05] rounded-full blur-[140px] pointer-events-none glow-bg" aria-hidden="true" />
 
         <div className="relative max-w-[820px] mx-auto px-5 sm:px-8 pt-16 sm:pt-24 md:pt-32 pb-20 sm:pb-28 md:pb-36 text-center">
-          <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.1 }}
-            className={`uppercase text-xs sm:text-sm font-bold tracking-[0.2em] text-gray-400 mb-5 ${hFont}`}>
+          <p className={`hero-fade uppercase text-xs sm:text-sm font-bold tracking-[0.2em] text-gray-400 mb-5 ${hFont}`}>
             Led by the President of ServiceTitan &amp; the #1 home services sales rep
-          </motion.p>
+          </p>
 
-          <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }}
-            className={`text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-[-0.03em] leading-[1.05] mb-5 ${hFont}`}>
+          <h1 className={`hero-fade text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-[-0.03em] leading-[1.05] mb-5 ${hFont}`}>
             The Proven System to Take Your Home Service Company <span className="text-[#b71c1c]">Past 7&nbsp;Figures</span>
-          </motion.h1>
+          </h1>
 
-          <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.25 }}
-            className="text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
+          <p className="hero-fade text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
             A step-by-step course &amp; coaching program built for owners of
             plumbing, HVAC, roofing, impact windows, and other blue-collar
             service businesses who are tired of being the bottleneck.
-          </motion.p>
+          </p>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.3 }}
-            className="mb-8 w-full">
+          <div className="hero-fade mb-8 w-full">
             <VSLPlayer />
-          </motion.div>
+          </div>
 
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.4 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="hero-fade flex flex-col sm:flex-row items-center justify-center gap-4">
             <CtaButton variant="red" className="w-full sm:w-auto" onClick={openModal} />
             <a href="#problems" className="inline-flex h-[60px] items-center justify-center gap-2 rounded-full border border-gray-600 px-8 text-base font-medium text-gray-300 cursor-pointer hover:border-white hover:text-white transition-colors duration-200 w-full sm:w-auto">
               See What&rsquo;s Inside <ArrowDown className="w-4 h-4" />
             </a>
-          </motion.div>
+          </div>
         </div>
       </section>
 
