@@ -1,22 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit, Rubik } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const rubik = Rubik({
+  variable: "--font-rubik",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Real American Grit — Coming Soon",
+  title:
+    "Real American Grit — Scale Your Home Service Company",
   description:
-    "Coaching and consulting for home service companies ready to scale. Coming soon.",
-  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
+    "The proven system to scale your home service company past 7 figures. Led by Tom Howard, President of ServiceTitan, and Trent Lowenstein, the #1 home services sales rep in the country.",
 };
 
 export default function RootLayout({
@@ -27,9 +29,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${outfit.variable} ${rubik.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+      </head>
+      <body className="min-h-full flex flex-col bg-white text-[#1a1a1a]">
+        {children}
+      </body>
     </html>
   );
 }
