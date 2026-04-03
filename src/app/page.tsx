@@ -155,7 +155,7 @@ export default function Home() {
             <span className="absolute -inset-0.5 rounded-full bg-[#b71c1c]/40 animate-pulse" />
             <span className="relative inline-flex rounded-full h-3 w-3 bg-[#b71c1c]" />
           </span>
-          <p className="text-sm sm:text-base font-semibold">
+          <p className="text-[11px] sm:text-base font-semibold">
             Limited Time Launch Promo: <span className="line-through opacity-60">$1,997</span> <span className="font-bold">$997/yr</span> — ends May 31
           </p>
         </div>
