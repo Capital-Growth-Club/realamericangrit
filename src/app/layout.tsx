@@ -15,13 +15,13 @@ const rubik = Rubik({
 });
 
 export const metadata: Metadata = {
-  title: "Real American Grit — Scale Your Home Service Company Past 7 Figures",
+  title: "Real American Grit — Coming Soon",
   description:
-    "The proven course & coaching program for home service business owners. Led by Tom Howard, President of ServiceTitan ($3B company), and Trent Lowenstein, the #1 home services sales rep in the country. $997/yr — limited launch pricing.",
+    "The proven course & coaching program for home service business owners is almost here. Pre-register to get notified the moment we go live.",
   openGraph: {
-    title: "Scale Your Home Service Company Past 7 Figures",
+    title: "Real American Grit — Coming Soon",
     description:
-      "The proven system from the President of ServiceTitan & the #1 home services sales rep. Course + coaching for plumbing, HVAC, roofing & more. Limited launch price: $997/yr.",
+      "The proven system from the President of ServiceTitan & the #1 home services sales rep. Pre-register to get notified when we launch.",
     url: "https://www.realamericangrit.com",
     siteName: "Real American Grit",
     type: "website",
@@ -29,9 +29,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Scale Your Home Service Company Past 7 Figures",
+    title: "Real American Grit — Coming Soon",
     description:
-      "The proven system from the President of ServiceTitan & the #1 home services sales rep. Limited launch price: $997/yr.",
+      "The proven system from the President of ServiceTitan & the #1 home services sales rep. Pre-register to get notified when we launch.",
   },
   metadataBase: new URL("https://www.realamericangrit.com"),
 };

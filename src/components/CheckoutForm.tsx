@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Elements,
   PaymentElement,
@@ -13,13 +13,38 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "",
 );
 
+type FormData = {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+};
+
+type Tracking = {
+  cid: string;
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  utm_content: string;
+  utm_term: string;
+};
+
+const EMPTY_TRACKING: Tracking = {
+  cid: "",
+  utm_source: "",
+  utm_medium: "",
+  utm_campaign: "",
+  utm_content: "",
+  utm_term: "",
+};
+
 /* ─── Inner form (has access to Stripe context) ─── */
 function PaymentForm({
   formData,
-  onSuccess,
+  tracking,
 }: {
-  formData: { name: string; email: string; phone: string; company: string };
-  onSuccess: () => void;
+  formData: FormData;
+  tracking: Tracking;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -37,7 +62,7 @@ function PaymentForm({
     fetch("/api/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ ...formData, ...tracking }),
     }).catch(() => {});
 
     const { error: stripeError } = await stripe.confirmPayment({
@@ -54,7 +79,6 @@ function PaymentForm({
       },
     });
 
-    // Only reaches here if there's an error (otherwise redirects)
     if (stripeError) {
       setError(stripeError.message ?? "Payment failed. Please try again.");
     }
@@ -67,6 +91,14 @@ function PaymentForm({
         <PaymentElement
           options={{
             layout: "tabs",
+            fields: {
+              billingDetails: {
+                name: "never",
+                email: "never",
+                phone: "never",
+                address: { country: "never" },
+              },
+            },
           }}
         />
       </div>
@@ -80,7 +112,7 @@ function PaymentForm({
         disabled={paying || !stripe || !elements}
         className="w-full h-14 rounded-lg bg-[#b71c1c] text-white text-lg font-bold hover:bg-[#d32f2f] transition-colors pulse-red disabled:opacity-60"
       >
-        {paying ? "Processing Payment…" : "Pay $997 — Get Instant Access"}
+        {paying ? "Processing Payment…" : "Complete Purchase — $997"}
       </button>
 
       <p className="text-center text-xs text-gray-500">
@@ -90,40 +122,75 @@ function PaymentForm({
   );
 }
 
-/* ─── Outer wrapper (handles lead info + payment intent creation) ─── */
+/* ─── Outer wrapper ─── */
 export default function CheckoutForm() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     phone: "",
     company: "",
   });
+  const [tracking, setTracking] = useState<Tracking>(EMPTY_TRACKING);
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [editingContact, setEditingContact] = useState(false);
+  const [prefilled, setPrefilled] = useState(false);
+  const autoIntentTriggered = useRef(false);
 
-  async function handleContinueToPayment(e: React.FormEvent) {
-    e.preventDefault();
+  // Read URL params on mount — prefill contact info + tracking
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const next: FormData = {
+      name: params.get("name") ?? "",
+      email: params.get("email") ?? "",
+      phone: params.get("phone") ?? "",
+      company: params.get("company") ?? "",
+    };
+    const trackNext: Tracking = {
+      cid: params.get("cid") ?? "",
+      utm_source: params.get("utm_source") ?? "",
+      utm_medium: params.get("utm_medium") ?? "",
+      utm_campaign: params.get("utm_campaign") ?? "",
+      utm_content: params.get("utm_content") ?? "",
+      utm_term: params.get("utm_term") ?? "",
+    };
+
+    setTracking(trackNext);
+
+    if (next.name && next.email && next.phone) {
+      setFormData(next);
+      setPrefilled(true);
+    } else if (next.name || next.email || next.phone || next.company) {
+      setFormData(next);
+    }
+  }, []);
+
+  // Auto-create payment intent when contact info is fully prefilled
+  useEffect(() => {
+    if (!prefilled || autoIntentTriggered.current) return;
+    if (!formData.name || !formData.email || !formData.phone) return;
+
+    autoIntentTriggered.current = true;
+    void createPaymentIntent(formData, tracking);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefilled, formData.name, formData.email, formData.phone]);
+
+  async function createPaymentIntent(data: FormData, track: Tracking) {
     setLoading(true);
     setFormError("");
-
     try {
       const res = await fetch("/api/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...data, ...track }),
       });
-
-      const data = await res.json();
-
+      const json = await res.json();
       if (!res.ok) {
-        setFormError(data.error || "Something went wrong.");
-        setLoading(false);
+        setFormError(json.error || "Something went wrong.");
         return;
       }
-
-      setClientSecret(data.clientSecret);
+      setClientSecret(json.clientSecret);
     } catch {
       setFormError("Connection error. Please try again.");
     } finally {
@@ -131,24 +198,81 @@ export default function CheckoutForm() {
     }
   }
 
-  if (success) {
+  async function handleManualSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    await createPaymentIntent(formData, tracking);
+  }
+
+  /* ─── Prefilled flow: read-only contact card + immediate Stripe ─── */
+  if (prefilled && !editingContact) {
     return (
-      <div className="text-center py-8">
-        <div className="text-4xl mb-3">✅</div>
-        <p className="text-lg font-bold text-white mb-2">
-          Payment Successful!
-        </p>
-        <p className="text-sm text-gray-400">
-          Check your email for access details.
-        </p>
+      <div>
+        {/* Contact summary card */}
+        <div className="bg-white/[0.04] border border-white/10 rounded-lg p-4 mb-5">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
+                Enrolling as
+              </p>
+              <p className="text-white font-semibold text-sm truncate">
+                {formData.name}
+              </p>
+              <p className="text-gray-400 text-xs truncate">{formData.email}</p>
+              <p className="text-gray-400 text-xs truncate">{formData.phone}</p>
+              {formData.company && (
+                <p className="text-gray-400 text-xs truncate">
+                  {formData.company}
+                </p>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => setEditingContact(true)}
+              className="text-[#b71c1c] text-xs font-semibold hover:underline shrink-0"
+            >
+              Edit
+            </button>
+          </div>
+        </div>
+
+        {/* Stripe payment element (loads automatically) */}
+        {loading && !clientSecret && (
+          <div className="text-center py-8 text-gray-400 text-sm">
+            Loading secure payment…
+          </div>
+        )}
+        {formError && (
+          <p className="text-red-400 text-sm text-center mb-4">{formError}</p>
+        )}
+        {clientSecret && (
+          <Elements
+            stripe={stripePromise}
+            options={{
+              clientSecret,
+              appearance: {
+                theme: "night",
+                variables: {
+                  colorPrimary: "#b71c1c",
+                  colorBackground: "#0f1d32",
+                  colorText: "#ffffff",
+                  colorDanger: "#ef4444",
+                  borderRadius: "8px",
+                  fontFamily: "system-ui, sans-serif",
+                },
+              },
+            }}
+          >
+            <PaymentForm formData={formData} tracking={tracking} />
+          </Elements>
+        )}
       </div>
     );
   }
 
-  /* Step 1: Collect contact info */
+  /* ─── Cold flow (or user clicked Edit): collect contact info first ─── */
   if (!clientSecret) {
     return (
-      <form onSubmit={handleContinueToPayment} className="space-y-3">
+      <form onSubmit={handleManualSubmit} className="space-y-3">
         <input
           type="text"
           placeholder="Full Name"
@@ -198,7 +322,7 @@ export default function CheckoutForm() {
           disabled={loading}
           className="w-full h-14 rounded-lg bg-[#b71c1c] text-white text-lg font-bold hover:bg-[#d32f2f] transition-colors pulse-red disabled:opacity-60 mt-2"
         >
-          {loading ? "Loading…" : "Continue to Payment →"}
+          {loading ? "Loading…" : "Continue Checkout →"}
         </button>
 
         <p className="text-center text-xs text-gray-500 mt-2">
@@ -208,7 +332,7 @@ export default function CheckoutForm() {
     );
   }
 
-  /* Step 2: Stripe payment element */
+  /* ─── Cold flow step 2: Stripe element after manual submit ─── */
   return (
     <div>
       <div className="flex items-center gap-3 mb-5 pb-4 border-b border-white/10">
@@ -246,7 +370,7 @@ export default function CheckoutForm() {
           },
         }}
       >
-        <PaymentForm formData={formData} onSuccess={() => setSuccess(true)} />
+        <PaymentForm formData={formData} tracking={tracking} />
       </Elements>
     </div>
   );

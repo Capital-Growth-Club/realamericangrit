@@ -13,11 +13,28 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { name, email, phone, company } = body as {
+  const {
+    name,
+    email,
+    phone,
+    company,
+    cid,
+    utm_source,
+    utm_medium,
+    utm_campaign,
+    utm_content,
+    utm_term,
+  } = body as {
     name: string;
     email: string;
     phone: string;
     company?: string;
+    cid?: string;
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    utm_content?: string;
+    utm_term?: string;
   };
 
   if (!name || !email || !phone) {
@@ -40,9 +57,15 @@ export async function POST(request: Request) {
         customer_phone: phone,
         company: company || "",
         source: "Real American Grit - Landing Page",
+        ghl_contact_id: cid || "",
+        utm_source: utm_source || "",
+        utm_medium: utm_medium || "",
+        utm_campaign: utm_campaign || "",
+        utm_content: utm_content || "",
+        utm_term: utm_term || "",
       },
       receipt_email: email,
-      description: "Real American Grit — Scaling System Course",
+      description: "Real American Grit — Scaling System Course (Monthly)",
     });
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });

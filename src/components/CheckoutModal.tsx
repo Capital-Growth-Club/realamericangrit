@@ -75,17 +75,17 @@ export default function CheckoutModal({
                 $997
               </span>
               <span className="text-gray-500 text-base font-medium">
-                /year
+                /month
               </span>
             </div>
             <p className="text-center text-gray-500 text-sm mb-6">
-              Full course access + coaching — billed annually
+              Full course access + coaching — billed monthly
             </p>
 
             {/* Benefits */}
             <ul className="space-y-2 mb-6">
               {[
-                "Full year of access to all 4 training modules",
+                "Access to all 4 training modules",
                 "Frameworks from Tom Howard & Trent Lowenstein",
                 "Downloadable scripts, SOPs, and templates",
                 "Access to the private RAG community",

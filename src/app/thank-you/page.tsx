@@ -13,7 +13,7 @@ export default function ThankYou() {
           and next steps to access the Real American Grit Scaling System.
         </p>
         <a
-          href="/"
+          href="/coaching"
           className="inline-flex h-12 items-center rounded-lg border border-gray-600 px-6 text-sm font-semibold text-gray-300 hover:border-gray-400 hover:text-white transition-colors"
         >
           ← Back to Home
