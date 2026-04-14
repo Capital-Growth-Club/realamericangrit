@@ -66,7 +66,7 @@ function PaymentForm({
       body: JSON.stringify({ ...formData, ...tracking }),
     }).catch(() => {});
 
-    const { error: stripeError } = await stripe.confirmPayment({
+    const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url: `${window.location.origin}/thank-you`,
@@ -78,12 +78,30 @@ function PaymentForm({
           },
         },
       },
+      redirect: "if_required",
     });
 
     if (stripeError) {
       setError(stripeError.message ?? "Payment failed. Please try again.");
       setPaying(false);
+      return;
     }
+
+    if (paymentIntent?.status === "succeeded") {
+      window.location.assign(`${window.location.origin}/thank-you`);
+      return;
+    }
+
+    if (paymentIntent?.status === "processing") {
+      // Some cards (rare) return processing — redirect anyway, Stripe emails the receipt
+      window.location.assign(`${window.location.origin}/thank-you`);
+      return;
+    }
+
+    setError(
+      `Unexpected payment status: ${paymentIntent?.status ?? "unknown"}. Please try again.`,
+    );
+    setPaying(false);
   }
 
   return (
