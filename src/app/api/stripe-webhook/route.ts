@@ -9,8 +9,11 @@ function getStripe() {
   return new Stripe(key);
 }
 
-// Customers (paid / payment events) go to the customer webhook.
-// Falls back to the legacy GHL_WEBHOOK_URL if the dedicated one isn't set.
+// Successful payment webhook (new enrollment + renewals) — triggers onboarding / contract in GHL
+const GHL_PAYMENT_SUCCESS_WEBHOOK_URL =
+  "https://services.leadconnectorhq.com/hooks/U33crx49dqSM4lE4OIY2/webhook-trigger/e4dba996-f93f-4c06-8163-365d925629f9";
+
+// Fallback webhook for lifecycle events (failed payments, disputes, cancellations, etc.)
 const GHL_CUSTOMER_WEBHOOK_URL =
   process.env.GHL_CUSTOMER_WEBHOOK_URL ?? process.env.GHL_WEBHOOK_URL ?? "";
 
@@ -30,10 +33,10 @@ type GhlPayload = {
   reason?: string;
 };
 
-async function forwardToGhl(payload: GhlPayload) {
-  if (!GHL_CUSTOMER_WEBHOOK_URL) return;
+async function forwardToGhl(url: string, payload: GhlPayload) {
+  if (!url) return;
   try {
-    await fetch(GHL_CUSTOMER_WEBHOOK_URL, {
+    await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -112,7 +115,7 @@ export async function POST(request: Request) {
 
         if (customer) {
           const { first_name, last_name } = splitName(customer.name);
-          await forwardToGhl({
+          await forwardToGhl(GHL_PAYMENT_SUCCESS_WEBHOOK_URL, {
             first_name,
             last_name,
             email: customer.email ?? "",
@@ -152,7 +155,7 @@ export async function POST(request: Request) {
 
         if (customer) {
           const { first_name, last_name } = splitName(customer.name);
-          await forwardToGhl({
+          await forwardToGhl(GHL_CUSTOMER_WEBHOOK_URL, {
             first_name,
             last_name,
             email: customer.email ?? "",
@@ -186,7 +189,7 @@ export async function POST(request: Request) {
         if (customer) {
           const { first_name, last_name } = splitName(customer.name);
           const fullyRefunded = charge.amount_refunded === charge.amount;
-          await forwardToGhl({
+          await forwardToGhl(GHL_CUSTOMER_WEBHOOK_URL, {
             first_name,
             last_name,
             email: customer.email ?? "",
@@ -223,7 +226,7 @@ export async function POST(request: Request) {
 
         if (customer) {
           const { first_name, last_name } = splitName(customer.name);
-          await forwardToGhl({
+          await forwardToGhl(GHL_CUSTOMER_WEBHOOK_URL, {
             first_name,
             last_name,
             email: customer.email ?? "",
@@ -259,7 +262,7 @@ export async function POST(request: Request) {
 
         if (customer) {
           const { first_name, last_name } = splitName(customer.name);
-          await forwardToGhl({
+          await forwardToGhl(GHL_CUSTOMER_WEBHOOK_URL, {
             first_name,
             last_name,
             email: customer.email ?? "",
@@ -294,7 +297,7 @@ export async function POST(request: Request) {
 
         if (customer) {
           const { first_name, last_name } = splitName(customer.name);
-          await forwardToGhl({
+          await forwardToGhl(GHL_CUSTOMER_WEBHOOK_URL, {
             first_name,
             last_name,
             email: customer.email ?? "",
@@ -337,7 +340,7 @@ export async function POST(request: Request) {
 
           if (customer) {
             const { first_name, last_name } = splitName(customer.name);
-            await forwardToGhl({
+            await forwardToGhl(GHL_CUSTOMER_WEBHOOK_URL, {
               first_name,
               last_name,
               email: customer.email ?? "",

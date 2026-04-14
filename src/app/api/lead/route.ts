@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-// Leads (contact info submitted, no payment yet) go to the lead webhook
-const GHL_LEAD_WEBHOOK_URL =
-  process.env.GHL_LEAD_WEBHOOK_URL ?? process.env.GHL_WEBHOOK_URL ?? "";
+// Sign-up webhook: fires when someone submits the checkout contact form (pre-payment lead)
+const GHL_SIGNUP_WEBHOOK_URL =
+  "https://services.leadconnectorhq.com/hooks/U33crx49dqSM4lE4OIY2/webhook-trigger/cab88f76-e7b3-4512-bfbb-de4d627ebcd0";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -38,33 +38,31 @@ export async function POST(request: Request) {
     );
   }
 
-  // Forward lead to Go High Level via webhook
-  if (GHL_LEAD_WEBHOOK_URL) {
-    try {
-      await fetch(GHL_LEAD_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contact_id: cid || "",
-          first_name: name.split(" ")[0],
-          last_name: name.split(" ").slice(1).join(" ") || "",
-          email,
-          phone,
-          company_name: company || "",
-          source: "Real American Grit - Landing Page",
-          event_type: "lead_captured",
-          tags: ["rag-scaling-system", "landing-page-lead", "checkout-started"],
-          utm_source: utm_source || "",
-          utm_medium: utm_medium || "",
-          utm_campaign: utm_campaign || "",
-          utm_content: utm_content || "",
-          utm_term: utm_term || "",
-        }),
-      });
-    } catch (err) {
-      console.error("GHL lead webhook failed:", err);
-      // Don't block the user — still redirect to Stripe
-    }
+  // Forward sign-up to Go High Level via webhook
+  try {
+    await fetch(GHL_SIGNUP_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contact_id: cid || "",
+        first_name: name.split(" ")[0],
+        last_name: name.split(" ").slice(1).join(" ") || "",
+        email,
+        phone,
+        company_name: company || "",
+        source: "Real American Grit - Landing Page",
+        event_type: "lead_captured",
+        tags: ["rag-scaling-system", "landing-page-lead", "checkout-started"],
+        utm_source: utm_source || "",
+        utm_medium: utm_medium || "",
+        utm_campaign: utm_campaign || "",
+        utm_content: utm_content || "",
+        utm_term: utm_term || "",
+      }),
+    });
+  } catch (err) {
+    console.error("GHL signup webhook failed:", err);
+    // Don't block the user — still redirect to Stripe
   }
 
   return NextResponse.json({ success: true });
