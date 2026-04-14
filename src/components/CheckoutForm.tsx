@@ -54,7 +54,12 @@ function PaymentForm({
 
   async function handlePay(e: React.FormEvent) {
     e.preventDefault();
-    if (!stripe || !elements) return;
+    console.log("[checkout] handlePay called", { hasStripe: !!stripe, hasElements: !!elements });
+
+    if (!stripe || !elements) {
+      setError("Payment system not loaded. Please refresh and try again.");
+      return;
+    }
 
     setPaying(true);
     setError("");
@@ -66,42 +71,65 @@ function PaymentForm({
       body: JSON.stringify({ ...formData, ...tracking }),
     }).catch(() => {});
 
-    const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/thank-you`,
-        payment_method_data: {
-          billing_details: {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-          },
-        },
-      },
-      redirect: "if_required",
-    });
-
-    if (stripeError) {
-      setError(stripeError.message ?? "Payment failed. Please try again.");
+    // Step 1: validate elements (surfaces card field errors immediately)
+    console.log("[checkout] submitting Elements…");
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      console.error("[checkout] Elements.submit error:", submitError);
+      setError(submitError.message ?? "Please check your card details.");
       setPaying(false);
       return;
     }
+    console.log("[checkout] Elements.submit OK");
 
-    if (paymentIntent?.status === "succeeded") {
-      window.location.assign(`${window.location.origin}/thank-you`);
-      return;
+    // Step 2: confirm the PaymentIntent
+    try {
+      console.log("[checkout] calling confirmPayment…");
+      const result = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/thank-you`,
+          payment_method_data: {
+            billing_details: {
+              name: formData.name,
+              email: formData.email,
+              phone: formData.phone,
+            },
+          },
+        },
+        redirect: "if_required",
+      });
+
+      console.log("[checkout] confirmPayment returned:", result);
+
+      if (result.error) {
+        console.error("[checkout] Stripe error:", result.error);
+        setError(result.error.message ?? "Payment failed. Please try again.");
+        setPaying(false);
+        return;
+      }
+
+      const status = result.paymentIntent?.status;
+      console.log("[checkout] PaymentIntent status:", status);
+
+      if (status === "succeeded" || status === "processing") {
+        window.location.assign(`${window.location.origin}/thank-you`);
+        return;
+      }
+
+      setError(
+        `Payment status: ${status ?? "unknown"}. Please try again or contact support.`,
+      );
+      setPaying(false);
+    } catch (err) {
+      console.error("[checkout] Unexpected error:", err);
+      setError(
+        err instanceof Error
+          ? `Unexpected error: ${err.message}`
+          : "An unexpected error occurred. Please try again.",
+      );
+      setPaying(false);
     }
-
-    if (paymentIntent?.status === "processing") {
-      // Some cards (rare) return processing — redirect anyway, Stripe emails the receipt
-      window.location.assign(`${window.location.origin}/thank-you`);
-      return;
-    }
-
-    setError(
-      `Unexpected payment status: ${paymentIntent?.status ?? "unknown"}. Please try again.`,
-    );
-    setPaying(false);
   }
 
   return (
