@@ -80,7 +80,7 @@ export async function POST(request: Request) {
       payment_settings: {
         save_default_payment_method: "on_subscription",
       },
-      expand: ["latest_invoice.payment_intent"],
+      expand: ["latest_invoice.confirmation_secret"],
       metadata: {
         customer_name: name,
         customer_email: email,
@@ -97,12 +97,13 @@ export async function POST(request: Request) {
     });
 
     const latestInvoice = subscription.latest_invoice as Stripe.Invoice | null;
-    const paymentIntent =
-      latestInvoice &&
-      (latestInvoice as Stripe.Invoice & { payment_intent?: Stripe.PaymentIntent })
-        .payment_intent;
+    const clientSecret = latestInvoice?.confirmation_secret?.client_secret;
 
-    if (!paymentIntent || typeof paymentIntent === "string") {
+    if (!clientSecret) {
+      console.error(
+        "No confirmation_secret on latest invoice:",
+        JSON.stringify(latestInvoice, null, 2),
+      );
       return NextResponse.json(
         { error: "Could not initialize payment. Please try again." },
         { status: 500 },
@@ -110,7 +111,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({
-      clientSecret: paymentIntent.client_secret,
+      clientSecret,
       subscriptionId: subscription.id,
       customerId: customer.id,
     });

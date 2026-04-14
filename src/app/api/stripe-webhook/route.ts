@@ -85,9 +85,9 @@ export async function POST(request: Request) {
           ? ((await stripe.customers.retrieve(customerId)) as Stripe.Customer)
           : null;
         const isFirstPayment = invoice.billing_reason === "subscription_create";
+        const rawSub = invoice.parent?.subscription_details?.subscription;
         const subscriptionId =
-          (invoice as Stripe.Invoice & { subscription?: string | Stripe.Subscription })
-            .subscription;
+          typeof rawSub === "string" ? rawSub : rawSub?.id;
 
         console.log(
           `[stripe] invoice.payment_succeeded: ${invoice.id} customer=${customerId} first=${isFirstPayment}`,
@@ -109,10 +109,7 @@ export async function POST(request: Request) {
               ? "subscription_started"
               : "subscription_renewed",
             stripe_customer_id: customerId,
-            stripe_subscription_id:
-              typeof subscriptionId === "string"
-                ? subscriptionId
-                : subscriptionId?.id,
+            stripe_subscription_id: subscriptionId,
             amount_cents: invoice.amount_paid,
             currency: invoice.currency,
           });
@@ -130,9 +127,9 @@ export async function POST(request: Request) {
         const customer = customerId
           ? ((await stripe.customers.retrieve(customerId)) as Stripe.Customer)
           : null;
+        const rawSub = invoice.parent?.subscription_details?.subscription;
         const subscriptionId =
-          (invoice as Stripe.Invoice & { subscription?: string | Stripe.Subscription })
-            .subscription;
+          typeof rawSub === "string" ? rawSub : rawSub?.id;
 
         console.log(
           `[stripe] invoice.payment_failed: ${invoice.id} customer=${customerId}`,
@@ -150,10 +147,7 @@ export async function POST(request: Request) {
             tags: ["rag-scaling-system", "payment-failed"],
             event_type: "payment_failed",
             stripe_customer_id: customerId,
-            stripe_subscription_id:
-              typeof subscriptionId === "string"
-                ? subscriptionId
-                : subscriptionId?.id,
+            stripe_subscription_id: subscriptionId,
             amount_cents: invoice.amount_due,
             currency: invoice.currency,
           });
