@@ -3,11 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Elements,
-  PaymentElement,
+  CardNumberElement,
+  CardExpiryElement,
+  CardCvcElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { Lock } from "lucide-react";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "",
@@ -38,11 +41,31 @@ const EMPTY_TRACKING: Tracking = {
   utm_term: "",
 };
 
+/* ─── Shared style for split card fields ─── */
+const cardElementStyle = {
+  style: {
+    base: {
+      fontSize: "16px",
+      color: "#ffffff",
+      fontFamily: "system-ui, -apple-system, sans-serif",
+      fontSmoothing: "antialiased",
+      "::placeholder": { color: "#64748b" },
+      iconColor: "#94a3b8",
+    },
+    invalid: {
+      color: "#ef4444",
+      iconColor: "#ef4444",
+    },
+  },
+};
+
 /* ─── Inner form (has access to Stripe context) ─── */
 function PaymentForm({
+  clientSecret,
   formData,
   tracking,
 }: {
+  clientSecret: string;
   formData: FormData;
   tracking: Tracking;
 }) {
@@ -55,6 +78,9 @@ function PaymentForm({
     e.preventDefault();
     if (!stripe || !elements) return;
 
+    const cardNumber = elements.getElement(CardNumberElement);
+    if (!cardNumber) return;
+
     setPaying(true);
     setError("");
 
@@ -65,11 +91,11 @@ function PaymentForm({
       body: JSON.stringify({ ...formData, ...tracking }),
     }).catch(() => {});
 
-    const { error: stripeError } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/thank-you`,
-        payment_method_data: {
+    const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
+      clientSecret,
+      {
+        payment_method: {
+          card: cardNumber,
           billing_details: {
             name: formData.name,
             email: formData.email,
@@ -77,47 +103,83 @@ function PaymentForm({
           },
         },
       },
-    });
+    );
 
     if (stripeError) {
       setError(stripeError.message ?? "Payment failed. Please try again.");
+      setPaying(false);
+      return;
     }
+
+    if (paymentIntent?.status === "succeeded") {
+      window.location.href = `${window.location.origin}/thank-you`;
+      return;
+    }
+
     setPaying(false);
   }
 
+  const fieldClass =
+    "bg-white/[0.04] border border-white/10 rounded-lg px-4 py-3.5 transition-colors focus-within:border-[#b71c1c]/60 focus-within:bg-white/[0.06]";
+
   return (
-    <form onSubmit={handlePay} className="space-y-4">
-      <div className="bg-white rounded-lg p-4">
-        <PaymentElement
-          options={{
-            layout: "tabs",
-            fields: {
-              billingDetails: {
-                name: "never",
-                email: "never",
-                phone: "never",
-                address: { country: "never" },
-              },
-            },
-          }}
-        />
+    <form onSubmit={handlePay} className="space-y-3">
+      {/* Card number */}
+      <div>
+        <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
+          Card Number
+        </label>
+        <div className={fieldClass}>
+          <CardNumberElement
+            options={{
+              ...cardElementStyle,
+              placeholder: "1234 1234 1234 1234",
+              showIcon: true,
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Expiry + CVC row */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
+            Expiry
+          </label>
+          <div className={fieldClass}>
+            <CardExpiryElement
+              options={{ ...cardElementStyle, placeholder: "MM / YY" }}
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
+            CVC
+          </label>
+          <div className={fieldClass}>
+            <CardCvcElement
+              options={{ ...cardElementStyle, placeholder: "123" }}
+            />
+          </div>
+        </div>
       </div>
 
       {error && (
-        <p className="text-red-400 text-sm text-center">{error}</p>
+        <p className="text-red-400 text-sm text-center pt-1">{error}</p>
       )}
 
       <button
         type="submit"
         disabled={paying || !stripe || !elements}
-        className="w-full h-14 rounded-lg bg-[#b71c1c] text-white text-lg font-bold hover:bg-[#d32f2f] transition-colors pulse-red disabled:opacity-60"
+        className="w-full h-14 rounded-lg bg-[#b71c1c] text-white text-lg font-bold hover:bg-[#d32f2f] transition-colors pulse-red disabled:opacity-60 mt-2"
       >
-        {paying ? "Processing Payment…" : "Start Subscription — $997/mo"}
+        {paying ? "Processing…" : "Start Subscription — $997/mo"}
       </button>
 
-      <p className="text-center text-xs text-gray-500">
-        Secure payment powered by Stripe. 256-bit SSL encryption.
-      </p>
+      <div className="flex items-center justify-center gap-1.5 text-xs text-gray-500 pt-1">
+        <Lock className="w-3 h-3" />
+        <span>Secure payment · Powered by Stripe</span>
+      </div>
     </form>
   );
 }
@@ -245,24 +307,12 @@ export default function CheckoutForm() {
           <p className="text-red-400 text-sm text-center mb-4">{formError}</p>
         )}
         {clientSecret && (
-          <Elements
-            stripe={stripePromise}
-            options={{
-              clientSecret,
-              appearance: {
-                theme: "night",
-                variables: {
-                  colorPrimary: "#b71c1c",
-                  colorBackground: "#0f1d32",
-                  colorText: "#ffffff",
-                  colorDanger: "#ef4444",
-                  borderRadius: "8px",
-                  fontFamily: "system-ui, sans-serif",
-                },
-              },
-            }}
-          >
-            <PaymentForm formData={formData} tracking={tracking} />
+          <Elements stripe={stripePromise}>
+            <PaymentForm
+              clientSecret={clientSecret}
+              formData={formData}
+              tracking={tracking}
+            />
           </Elements>
         )}
       </div>
@@ -353,24 +403,12 @@ export default function CheckoutForm() {
         </div>
       </div>
 
-      <Elements
-        stripe={stripePromise}
-        options={{
-          clientSecret,
-          appearance: {
-            theme: "night",
-            variables: {
-              colorPrimary: "#b71c1c",
-              colorBackground: "#0f1d32",
-              colorText: "#ffffff",
-              colorDanger: "#ef4444",
-              borderRadius: "8px",
-              fontFamily: "system-ui, sans-serif",
-            },
-          },
-        }}
-      >
-        <PaymentForm formData={formData} tracking={tracking} />
+      <Elements stripe={stripePromise}>
+        <PaymentForm
+          clientSecret={clientSecret}
+          formData={formData}
+          tracking={tracking}
+        />
       </Elements>
     </div>
   );
