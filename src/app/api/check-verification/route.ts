@@ -14,12 +14,30 @@ function getClient() {
 }
 
 export async function POST(request: Request) {
-  const { email, code, name, phone, company } = (await request.json()) as {
+  const {
+    email,
+    code,
+    name,
+    phone,
+    company,
+    cid,
+    utm_source,
+    utm_medium,
+    utm_campaign,
+    utm_content,
+    utm_term,
+  } = (await request.json()) as {
     email?: string;
     code?: string;
     name?: string;
     phone?: string;
     company?: string;
+    cid?: string;
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    utm_content?: string;
+    utm_term?: string;
   };
 
   if (!email || !code) {
@@ -63,6 +81,12 @@ export async function POST(request: Request) {
             company_name: company || "",
             source: "Real American Grit - Pre-Register",
             tags: ["rag-pre-register", "email-verified"],
+            contact_id: cid || "",
+            utm_source: utm_source || "",
+            utm_medium: utm_medium || "",
+            utm_campaign: utm_campaign || "",
+            utm_content: utm_content || "",
+            utm_term: utm_term || "",
           }),
         });
     } catch (err) {

@@ -1,11 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, ArrowRight, Loader2, ShieldCheck } from "lucide-react";
 
 const hFont = "font-[family-name:var(--font-outfit)]";
 
 type Step = "info" | "verify" | "done";
+
+type Tracking = {
+  cid: string;
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  utm_content: string;
+  utm_term: string;
+};
+
+const EMPTY_TRACKING: Tracking = {
+  cid: "",
+  utm_source: "",
+  utm_medium: "",
+  utm_campaign: "",
+  utm_content: "",
+  utm_term: "",
+};
 
 export default function PreRegisterPage() {
   const [step, setStep] = useState<Step>("info");
@@ -16,6 +34,20 @@ export default function PreRegisterPage() {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [tracking, setTracking] = useState<Tracking>(EMPTY_TRACKING);
+
+  // Capture UTM + contact ID params from URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setTracking({
+      cid: params.get("cid") ?? "",
+      utm_source: params.get("utm_source") ?? "",
+      utm_medium: params.get("utm_medium") ?? "",
+      utm_campaign: params.get("utm_campaign") ?? "",
+      utm_content: params.get("utm_content") ?? "",
+      utm_term: params.get("utm_term") ?? "",
+    });
+  }, []);
 
   async function handleSendCode(e: React.FormEvent) {
     e.preventDefault();
@@ -47,7 +79,7 @@ export default function PreRegisterPage() {
       const res = await fetch("/api/check-verification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code, name, phone, company }),
+        body: JSON.stringify({ email, code, name, phone, company, ...tracking }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Verification failed");
