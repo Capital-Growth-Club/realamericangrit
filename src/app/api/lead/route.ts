@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 
-const GHL_WEBHOOK_URL = process.env.GHL_WEBHOOK_URL ?? "";
+// Leads (contact info submitted, no payment yet) go to the lead webhook
+const GHL_LEAD_WEBHOOK_URL =
+  process.env.GHL_LEAD_WEBHOOK_URL ?? process.env.GHL_WEBHOOK_URL ?? "";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -37,9 +39,9 @@ export async function POST(request: Request) {
   }
 
   // Forward lead to Go High Level via webhook
-  if (GHL_WEBHOOK_URL) {
+  if (GHL_LEAD_WEBHOOK_URL) {
     try {
-      await fetch(GHL_WEBHOOK_URL, {
+      await fetch(GHL_LEAD_WEBHOOK_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -50,7 +52,8 @@ export async function POST(request: Request) {
           phone,
           company_name: company || "",
           source: "Real American Grit - Landing Page",
-          tags: ["rag-scaling-system", "landing-page-lead"],
+          event_type: "lead_captured",
+          tags: ["rag-scaling-system", "landing-page-lead", "checkout-started"],
           utm_source: utm_source || "",
           utm_medium: utm_medium || "",
           utm_campaign: utm_campaign || "",
@@ -59,7 +62,7 @@ export async function POST(request: Request) {
         }),
       });
     } catch (err) {
-      console.error("GHL webhook failed:", err);
+      console.error("GHL lead webhook failed:", err);
       // Don't block the user — still redirect to Stripe
     }
   }
