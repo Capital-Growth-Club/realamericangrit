@@ -22,7 +22,11 @@ const GHL_RENEWAL_FAILED_WEBHOOK_URL =
 const GHL_DISPUTE_WEBHOOK_URL =
   "https://services.leadconnectorhq.com/hooks/U33crx49dqSM4lE4OIY2/webhook-trigger/vSJhziS3J7EPm90zksAK";
 
-// Fallback webhook for other lifecycle events (cancellations, refunds, status changes)
+// Member cancelled subscription webhook — fires when a subscription is fully canceled
+const GHL_CANCELED_WEBHOOK_URL =
+  "https://services.leadconnectorhq.com/hooks/U33crx49dqSM4lE4OIY2/webhook-trigger/F1xUscobQBbzBPeWPRiO";
+
+// Fallback webhook for other lifecycle events (refunds, status changes like past_due)
 const GHL_CUSTOMER_WEBHOOK_URL =
   process.env.GHL_CUSTOMER_WEBHOOK_URL ?? process.env.GHL_WEBHOOK_URL ?? "";
 
@@ -314,7 +318,7 @@ export async function POST(request: Request) {
 
         if (customer) {
           const { first_name, last_name } = splitName(customer.name);
-          await forwardToGhl(GHL_CUSTOMER_WEBHOOK_URL, {
+          await forwardToGhl(GHL_CANCELED_WEBHOOK_URL, {
             first_name,
             last_name,
             email: customer.email ?? "",
