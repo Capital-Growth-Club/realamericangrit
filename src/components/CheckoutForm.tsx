@@ -6,10 +6,11 @@ import {
   CardNumberElement,
   CardExpiryElement,
   CardCvcElement,
+  PaymentRequestButtonElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, type PaymentRequest } from "@stripe/stripe-js";
 import { Lock } from "lucide-react";
 
 const stripePromise = loadStripe(
@@ -73,6 +74,65 @@ function PaymentForm({
   const elements = useElements();
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState("");
+  const [paymentRequest, setPaymentRequest] = useState<PaymentRequest | null>(
+    null,
+  );
+
+  // Set up Apple Pay / Google Pay button (only appears when supported)
+  useEffect(() => {
+    if (!stripe || !clientSecret) return;
+
+    const pr = stripe.paymentRequest({
+      country: "US",
+      currency: "usd",
+      total: { label: "RAG Scaling System", amount: 99700 },
+      requestPayerName: true,
+      requestPayerEmail: true,
+      requestPayerPhone: true,
+      disableWallets: ["link", "googlePay", "browserCard"],
+    });
+
+    pr.canMakePayment().then((result) => {
+      if (result) setPaymentRequest(pr);
+    });
+
+    pr.on("paymentmethod", async (ev) => {
+      // Send lead to GHL in parallel
+      fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, ...tracking }),
+      }).catch(() => {});
+
+      const { error: confirmError, paymentIntent } =
+        await stripe.confirmCardPayment(
+          clientSecret,
+          { payment_method: ev.paymentMethod.id },
+          { handleActions: false },
+        );
+
+      if (confirmError) {
+        ev.complete("fail");
+        setError(confirmError.message ?? "Payment failed.");
+        return;
+      }
+
+      ev.complete("success");
+
+      // Handle 3DS if needed
+      if (paymentIntent?.status === "requires_action") {
+        const { error: actionError } = await stripe.confirmCardPayment(
+          clientSecret,
+        );
+        if (actionError) {
+          setError(actionError.message ?? "Payment failed.");
+          return;
+        }
+      }
+
+      window.location.href = `${window.location.origin}/thank-you`;
+    });
+  }, [stripe, clientSecret, formData, tracking]);
 
   async function handlePay(e: React.FormEvent) {
     e.preventDefault();
@@ -124,6 +184,31 @@ function PaymentForm({
 
   return (
     <form onSubmit={handlePay} className="space-y-3">
+      {/* Apple Pay button (only appears on supported devices) */}
+      {paymentRequest && (
+        <div className="space-y-3 pb-1">
+          <PaymentRequestButtonElement
+            options={{
+              paymentRequest,
+              style: {
+                paymentRequestButton: {
+                  type: "default",
+                  theme: "dark",
+                  height: "52px",
+                },
+              },
+            }}
+          />
+          <div className="flex items-center gap-3 py-1">
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-xs text-gray-500 uppercase tracking-wider">
+              or pay with card
+            </span>
+            <div className="flex-1 h-px bg-white/10" />
+          </div>
+        </div>
+      )}
+
       {/* Card number */}
       <div>
         <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
