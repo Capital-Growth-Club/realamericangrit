@@ -112,7 +112,7 @@ function PaymentForm({
         disabled={paying || !stripe || !elements}
         className="w-full h-14 rounded-lg bg-[#b71c1c] text-white text-lg font-bold hover:bg-[#d32f2f] transition-colors pulse-red disabled:opacity-60"
       >
-        {paying ? "Processing Payment…" : "Complete Purchase — $997"}
+        {paying ? "Processing Payment…" : "Start Subscription — $997/mo"}
       </button>
 
       <p className="text-center text-xs text-gray-500">
@@ -180,7 +180,7 @@ export default function CheckoutForm() {
     setLoading(true);
     setFormError("");
     try {
-      const res = await fetch("/api/create-payment-intent", {
+      const res = await fetch("/api/create-subscription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...data, ...track }),
