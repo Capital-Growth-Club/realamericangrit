@@ -3,14 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Elements,
-  CardNumberElement,
-  CardExpiryElement,
-  CardCvcElement,
-  PaymentRequestButtonElement,
+  PaymentElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { loadStripe, type PaymentRequest } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { Lock } from "lucide-react";
 
 const stripePromise = loadStripe(
@@ -42,31 +39,11 @@ const EMPTY_TRACKING: Tracking = {
   utm_term: "",
 };
 
-/* ─── Shared style for split card fields ─── */
-const cardElementStyle = {
-  style: {
-    base: {
-      fontSize: "16px",
-      color: "#ffffff",
-      fontFamily: "system-ui, -apple-system, sans-serif",
-      fontSmoothing: "antialiased",
-      "::placeholder": { color: "#64748b" },
-      iconColor: "#94a3b8",
-    },
-    invalid: {
-      color: "#ef4444",
-      iconColor: "#ef4444",
-    },
-  },
-};
-
 /* ─── Inner form (has access to Stripe context) ─── */
 function PaymentForm({
-  clientSecret,
   formData,
   tracking,
 }: {
-  clientSecret: string;
   formData: FormData;
   tracking: Tracking;
 }) {
@@ -74,72 +51,10 @@ function PaymentForm({
   const elements = useElements();
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState("");
-  const [paymentRequest, setPaymentRequest] = useState<PaymentRequest | null>(
-    null,
-  );
-
-  // Set up Apple Pay / Google Pay button (only appears when supported)
-  useEffect(() => {
-    if (!stripe || !clientSecret) return;
-
-    const pr = stripe.paymentRequest({
-      country: "US",
-      currency: "usd",
-      total: { label: "RAG Scaling System", amount: 99700 },
-      requestPayerName: true,
-      requestPayerEmail: true,
-      requestPayerPhone: true,
-      disableWallets: ["link", "googlePay", "browserCard"],
-    });
-
-    pr.canMakePayment().then((result) => {
-      if (result) setPaymentRequest(pr);
-    });
-
-    pr.on("paymentmethod", async (ev) => {
-      // Send lead to GHL in parallel
-      fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, ...tracking }),
-      }).catch(() => {});
-
-      const { error: confirmError, paymentIntent } =
-        await stripe.confirmCardPayment(
-          clientSecret,
-          { payment_method: ev.paymentMethod.id },
-          { handleActions: false },
-        );
-
-      if (confirmError) {
-        ev.complete("fail");
-        setError(confirmError.message ?? "Payment failed.");
-        return;
-      }
-
-      ev.complete("success");
-
-      // Handle 3DS if needed
-      if (paymentIntent?.status === "requires_action") {
-        const { error: actionError } = await stripe.confirmCardPayment(
-          clientSecret,
-        );
-        if (actionError) {
-          setError(actionError.message ?? "Payment failed.");
-          return;
-        }
-      }
-
-      window.location.href = `${window.location.origin}/thank-you`;
-    });
-  }, [stripe, clientSecret, formData, tracking]);
 
   async function handlePay(e: React.FormEvent) {
     e.preventDefault();
     if (!stripe || !elements) return;
-
-    const cardNumber = elements.getElement(CardNumberElement);
-    if (!cardNumber) return;
 
     setPaying(true);
     setError("");
@@ -151,11 +66,11 @@ function PaymentForm({
       body: JSON.stringify({ ...formData, ...tracking }),
     }).catch(() => {});
 
-    const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
-      clientSecret,
-      {
-        payment_method: {
-          card: cardNumber,
+    const { error: stripeError } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: `${window.location.origin}/thank-you`,
+        payment_method_data: {
           billing_details: {
             name: formData.name,
             email: formData.email,
@@ -163,105 +78,47 @@ function PaymentForm({
           },
         },
       },
-    );
+    });
 
     if (stripeError) {
       setError(stripeError.message ?? "Payment failed. Please try again.");
       setPaying(false);
-      return;
     }
-
-    if (paymentIntent?.status === "succeeded") {
-      window.location.href = `${window.location.origin}/thank-you`;
-      return;
-    }
-
-    setPaying(false);
   }
 
-  const fieldClass =
-    "bg-white/[0.04] border border-white/10 rounded-lg px-4 py-3.5 transition-colors focus-within:border-[#b71c1c]/60 focus-within:bg-white/[0.06]";
-
   return (
-    <form onSubmit={handlePay} className="space-y-3">
-      {/* Apple Pay button (only appears on supported devices) */}
-      {paymentRequest && (
-        <div className="space-y-3 pb-1">
-          <PaymentRequestButtonElement
-            options={{
-              paymentRequest,
-              style: {
-                paymentRequestButton: {
-                  type: "default",
-                  theme: "dark",
-                  height: "52px",
-                },
+    <form onSubmit={handlePay} className="space-y-4">
+      {/* Stripe Payment Element — white card for clean contrast against navy */}
+      <div className="bg-white rounded-xl p-4">
+        <PaymentElement
+          options={{
+            layout: "tabs",
+            fields: {
+              billingDetails: {
+                name: "never",
+                email: "never",
+                phone: "never",
+                address: { country: "never" },
               },
-            }}
-          />
-          <div className="flex items-center gap-3 py-1">
-            <div className="flex-1 h-px bg-white/10" />
-            <span className="text-xs text-gray-500 uppercase tracking-wider">
-              or pay with card
-            </span>
-            <div className="flex-1 h-px bg-white/10" />
-          </div>
-        </div>
-      )}
-
-      {/* Card number */}
-      <div>
-        <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
-          Card Number
-        </label>
-        <div className={fieldClass}>
-          <CardNumberElement
-            options={{
-              ...cardElementStyle,
-              placeholder: "1234 1234 1234 1234",
-              showIcon: true,
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Expiry + CVC row */}
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
-            Expiry
-          </label>
-          <div className={fieldClass}>
-            <CardExpiryElement
-              options={{ ...cardElementStyle, placeholder: "MM / YY" }}
-            />
-          </div>
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wider">
-            CVC
-          </label>
-          <div className={fieldClass}>
-            <CardCvcElement
-              options={{ ...cardElementStyle, placeholder: "123" }}
-            />
-          </div>
-        </div>
+            },
+            wallets: { applePay: "auto", googlePay: "never" },
+          }}
+        />
       </div>
 
       {error && (
-        <p className="text-red-400 text-sm text-center pt-1">{error}</p>
+        <p className="text-red-400 text-sm text-center">{error}</p>
       )}
 
       <button
         type="submit"
         disabled={paying || !stripe || !elements}
-        className="w-full h-14 rounded-lg bg-[#b71c1c] text-white text-lg font-bold hover:bg-[#d32f2f] transition-colors pulse-red disabled:opacity-60 mt-2"
+        className="w-full h-14 rounded-lg bg-[#b71c1c] text-white text-lg font-bold hover:bg-[#d32f2f] transition-colors pulse-red disabled:opacity-60"
       >
         {paying ? "Processing…" : "Start Subscription — $997/mo"}
       </button>
 
-      <div className="flex items-center justify-center gap-1.5 text-xs text-gray-500 pt-1">
+      <div className="flex items-center justify-center gap-1.5 text-xs text-gray-500">
         <Lock className="w-3 h-3" />
         <span>Secure payment · Powered by Stripe</span>
       </div>
@@ -392,12 +249,25 @@ export default function CheckoutForm() {
           <p className="text-red-400 text-sm text-center mb-4">{formError}</p>
         )}
         {clientSecret && (
-          <Elements stripe={stripePromise}>
-            <PaymentForm
-              clientSecret={clientSecret}
-              formData={formData}
-              tracking={tracking}
-            />
+          <Elements
+            stripe={stripePromise}
+            options={{
+              clientSecret,
+              appearance: {
+                theme: "stripe",
+                variables: {
+                  colorPrimary: "#b71c1c",
+                  colorBackground: "#ffffff",
+                  colorText: "#0a1628",
+                  colorDanger: "#ef4444",
+                  borderRadius: "8px",
+                  fontFamily: "system-ui, sans-serif",
+                  spacingUnit: "4px",
+                },
+              },
+            }}
+          >
+            <PaymentForm formData={formData} tracking={tracking} />
           </Elements>
         )}
       </div>
@@ -488,12 +358,25 @@ export default function CheckoutForm() {
         </div>
       </div>
 
-      <Elements stripe={stripePromise}>
-        <PaymentForm
-          clientSecret={clientSecret}
-          formData={formData}
-          tracking={tracking}
-        />
+      <Elements
+        stripe={stripePromise}
+        options={{
+          clientSecret,
+          appearance: {
+            theme: "stripe",
+            variables: {
+              colorPrimary: "#b71c1c",
+              colorBackground: "#ffffff",
+              colorText: "#0a1628",
+              colorDanger: "#ef4444",
+              borderRadius: "8px",
+              fontFamily: "system-ui, sans-serif",
+              spacingUnit: "4px",
+            },
+          },
+        }}
+      >
+        <PaymentForm formData={formData} tracking={tracking} />
       </Elements>
     </div>
   );
