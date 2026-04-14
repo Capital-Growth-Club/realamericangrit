@@ -13,7 +13,12 @@ function getStripe() {
 const GHL_PAYMENT_SUCCESS_WEBHOOK_URL =
   "https://services.leadconnectorhq.com/hooks/U33crx49dqSM4lE4OIY2/webhook-trigger/e4dba996-f93f-4c06-8163-365d925629f9";
 
-// Fallback webhook for lifecycle events (failed payments, disputes, cancellations, etc.)
+// Failed auto-renewal webhook — ONLY fires when an existing subscription's recurring
+// charge fails (not when a new signup's first payment fails).
+const GHL_RENEWAL_FAILED_WEBHOOK_URL =
+  "https://services.leadconnectorhq.com/hooks/U33crx49dqSM4lE4OIY2/webhook-trigger/e76ac156-b934-40cb-a04c-1e3787ae8023";
+
+// Fallback webhook for other lifecycle events (disputes, cancellations, etc.)
 const GHL_CUSTOMER_WEBHOOK_URL =
   process.env.GHL_CUSTOMER_WEBHOOK_URL ?? process.env.GHL_WEBHOOK_URL ?? "";
 
@@ -137,33 +142,41 @@ export async function POST(request: Request) {
         break;
       }
 
-      // Failed recurring payment (dunning)
+      // Failed payment — only fire GHL webhook for renewal failures (dunning),
+      // NOT for new-signup first-payment failures (user sees those in the checkout UI).
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
+        const isRenewalFailure =
+          invoice.billing_reason === "subscription_cycle";
         const customerId =
           typeof invoice.customer === "string"
             ? invoice.customer
             : invoice.customer?.id ?? null;
-        const customer = await getCustomer(stripe, customerId);
         const rawSub = invoice.parent?.subscription_details?.subscription;
         const subscriptionId =
           typeof rawSub === "string" ? rawSub : rawSub?.id;
 
         console.log(
-          `[stripe] invoice.payment_failed: ${invoice.id} customer=${customerId}`,
+          `[stripe] invoice.payment_failed: ${invoice.id} customer=${customerId} billing_reason=${invoice.billing_reason} renewalFailure=${isRenewalFailure}`,
         );
 
+        if (!isRenewalFailure) {
+          // New-signup failure — skip GHL forward. No dunning needed; checkout UI already surfaces the error.
+          break;
+        }
+
+        const customer = await getCustomer(stripe, customerId);
         if (customer) {
           const { first_name, last_name } = splitName(customer.name);
-          await forwardToGhl(GHL_CUSTOMER_WEBHOOK_URL, {
+          await forwardToGhl(GHL_RENEWAL_FAILED_WEBHOOK_URL, {
             first_name,
             last_name,
             email: customer.email ?? "",
             phone: customer.phone ?? "",
             company_name: customer.metadata?.company ?? "",
             source: "Real American Grit - Stripe",
-            tags: ["rag-scaling-system", "payment-failed"],
-            event_type: "payment_failed",
+            tags: ["rag-scaling-system", "renewal-failed"],
+            event_type: "renewal_payment_failed",
             stripe_customer_id: customerId ?? "",
             stripe_subscription_id: subscriptionId,
             amount_cents: invoice.amount_due,
