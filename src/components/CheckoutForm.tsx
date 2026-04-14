@@ -94,6 +94,7 @@ function PaymentForm({
               name: formData.name,
               email: formData.email,
               phone: formData.phone,
+              address: { country: "US" },
             },
           },
         },
