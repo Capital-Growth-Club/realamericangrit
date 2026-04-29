@@ -160,9 +160,9 @@ function PaymentForm({
       <button
         type="submit"
         disabled={paying || !stripe || !elements}
-        className="w-full h-14 rounded-lg bg-[#b71c1c] text-white text-lg font-bold hover:bg-[#d32f2f] transition-colors pulse-red disabled:opacity-60"
+        className="w-full h-14 rounded-lg bg-[#BF0A30] text-white text-lg font-bold hover:bg-[#D91C40] transition-colors pulse-red disabled:opacity-60"
       >
-        {paying ? "Processing…" : "Start Subscription — $997/mo"}
+        {paying ? "Processing…" : "Start Subscription — $997/m"}
       </button>
 
       <div className="flex items-center justify-center gap-1.5 text-xs text-gray-500">
@@ -279,7 +279,7 @@ export default function CheckoutForm() {
             <button
               type="button"
               onClick={() => setEditingContact(true)}
-              className="text-[#b71c1c] text-xs font-semibold hover:underline shrink-0"
+              className="text-[#BF0A30] text-xs font-semibold hover:underline shrink-0"
             >
               Edit
             </button>
@@ -303,9 +303,9 @@ export default function CheckoutForm() {
               appearance: {
                 theme: "stripe",
                 variables: {
-                  colorPrimary: "#b71c1c",
+                  colorPrimary: "#BF0A30",
                   colorBackground: "#ffffff",
-                  colorText: "#0a1628",
+                  colorText: "#0B2341",
                   colorDanger: "#ef4444",
                   borderRadius: "8px",
                   fontFamily: "system-ui, sans-serif",
@@ -333,7 +333,7 @@ export default function CheckoutForm() {
           onChange={(e) =>
             setFormData({ ...formData, name: e.target.value })
           }
-          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#b71c1c]"
+          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#BF0A30]"
         />
         <input
           type="email"
@@ -343,7 +343,7 @@ export default function CheckoutForm() {
           onChange={(e) =>
             setFormData({ ...formData, email: e.target.value })
           }
-          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#b71c1c]"
+          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#BF0A30]"
         />
         <input
           type="tel"
@@ -353,7 +353,7 @@ export default function CheckoutForm() {
           onChange={(e) =>
             setFormData({ ...formData, phone: e.target.value })
           }
-          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#b71c1c]"
+          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#BF0A30]"
         />
         <input
           type="text"
@@ -362,7 +362,7 @@ export default function CheckoutForm() {
           onChange={(e) =>
             setFormData({ ...formData, company: e.target.value })
           }
-          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#b71c1c]"
+          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#BF0A30]"
         />
 
         {formError && (
@@ -372,7 +372,7 @@ export default function CheckoutForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-14 rounded-lg bg-[#b71c1c] text-white text-lg font-bold hover:bg-[#d32f2f] transition-colors pulse-red disabled:opacity-60 mt-2"
+          className="w-full h-14 rounded-lg bg-[#BF0A30] text-white text-lg font-bold hover:bg-[#D91C40] transition-colors pulse-red disabled:opacity-60 mt-2"
         >
           {loading ? "Loading…" : "Continue Checkout →"}
         </button>
@@ -398,7 +398,7 @@ export default function CheckoutForm() {
           <button
             type="button"
             onClick={() => setClientSecret("")}
-            className="text-[#b71c1c] text-xs hover:underline"
+            className="text-[#BF0A30] text-xs hover:underline"
           >
             Edit info
           </button>
@@ -412,9 +412,9 @@ export default function CheckoutForm() {
           appearance: {
             theme: "stripe",
             variables: {
-              colorPrimary: "#b71c1c",
+              colorPrimary: "#BF0A30",
               colorBackground: "#ffffff",
-              colorText: "#0a1628",
+              colorText: "#0B2341",
               colorDanger: "#ef4444",
               borderRadius: "8px",
               fontFamily: "system-ui, sans-serif",

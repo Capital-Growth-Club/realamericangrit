@@ -1,7 +1,7 @@
 import { Check, ShieldCheck, Lock } from "lucide-react";
 import CheckoutForm from "@/components/CheckoutForm";
 
-const hFont = "font-[family-name:var(--font-outfit)]";
+const hFont = "font-[family-name:var(--font-bebas)]";
 
 const INCLUDES = [
   "Full Scaling System course (pricing, hiring, sales, systems)",
@@ -13,22 +13,22 @@ const INCLUDES = [
 
 export default function CheckoutPage() {
   return (
-    <div className="min-h-[100dvh] bg-[#0a1628] text-white">
+    <div className="min-h-[100dvh] bg-[#0B2341] text-white">
       {/* Top tricolor stripe */}
       <div className="h-1 flex" aria-hidden="true">
-        <div className="flex-1 bg-[#b71c1c]" />
+        <div className="flex-1 bg-[#BF0A30]" />
         <div className="flex-1 bg-white" />
-        <div className="flex-1 bg-[#1a3a6b]" />
+        <div className="flex-1 bg-[#0B2341]" />
       </div>
 
       {/* Minimal header */}
       <header className="border-b border-white/10">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-[72px]">
           <a href="/coaching" className="flex items-center gap-2.5" aria-label="Home">
-            <div className="w-10 h-10 rounded-full bg-[#b71c1c] flex items-center justify-center">
-              <span className={`text-sm font-black text-white tracking-tighter ${hFont}`}>RAG</span>
+            <div className="w-10 h-10 rounded-full bg-[#BF0A30] flex items-center justify-center">
+              <span className={`text-sm font-black text-white tracking-[0.05em] ${hFont}`}>RAG</span>
             </div>
-            <span className={`font-extrabold text-base tracking-tight text-white ${hFont}`}>
+            <span className={`font-extrabold text-base tracking-[0.05em] text-white ${hFont}`}>
               REAL AMERICAN GRIT
             </span>
           </a>
@@ -42,7 +42,7 @@ export default function CheckoutPage() {
       {/* Background glow */}
       <div className="relative overflow-hidden">
         <div
-          className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[#b71c1c]/[0.05] rounded-full blur-[140px] pointer-events-none"
+          className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[#BF0A30]/[0.05] rounded-full blur-[140px] pointer-events-none"
           aria-hidden="true"
         />
 
@@ -55,10 +55,10 @@ export default function CheckoutPage() {
               </p>
 
               <h1
-                className={`text-[2rem] sm:text-4xl md:text-5xl font-black tracking-[-0.03em] leading-[1.05] mb-5 ${hFont}`}
+                className={`text-[2rem] sm:text-4xl md:text-5xl font-black tracking-[0.05em] leading-[1.05] mb-5 ${hFont}`}
               >
                 Take Your Home Service Company{" "}
-                <span className="text-[#b71c1c]">Past 7 Figures.</span>
+                <span className="text-[#BF0A30]">Past 7 Figures.</span>
               </h1>
 
               <p className="text-base sm:text-lg text-gray-400 leading-relaxed mb-8">
@@ -76,7 +76,7 @@ export default function CheckoutPage() {
                 <ul className="space-y-3">
                   {INCLUDES.map((item) => (
                     <li key={item} className="flex items-start gap-3 text-sm sm:text-base text-gray-200">
-                      <Check className="w-5 h-5 text-[#b71c1c] shrink-0 mt-0.5" />
+                      <Check className="w-5 h-5 text-[#BF0A30] shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -91,7 +91,7 @@ export default function CheckoutPage() {
                 </span>
                 <span className="text-gray-400 text-base">/ month</span>
               </div>
-              <p className="text-sm text-[#b71c1c] font-semibold mb-6">
+              <p className="text-sm text-[#BF0A30] font-semibold mb-6">
                 Limited launch pricing — ends May 31
               </p>
 
@@ -120,9 +120,9 @@ export default function CheckoutPage() {
 
       {/* Bottom tricolor */}
       <div className="h-1 flex" aria-hidden="true">
-        <div className="flex-1 bg-[#b71c1c]" />
+        <div className="flex-1 bg-[#BF0A30]" />
         <div className="flex-1 bg-white" />
-        <div className="flex-1 bg-[#1a3a6b]" />
+        <div className="flex-1 bg-[#0B2341]" />
       </div>
     </div>
   );
