@@ -363,7 +363,7 @@ export default function Home() {
             For home service owners doing $2M – $10M
           </p>
 
-          <h1 className={`hero-fade text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-black tracking-[0.05em] leading-[1.05] mb-5 ${hFont}`}>
+          <h1 className={`hero-fade text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-black tracking-[0.05em] leading-[1.0] mb-5 ${hFont}`}>
             Stop Being The Reason Your Company <span className="text-[#BF0A30]">Can&rsquo;t Grow.</span>
           </h1>
 
@@ -392,7 +392,7 @@ export default function Home() {
       <Section className="bg-[#EDEDED] py-16 sm:py-24">
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <div className="max-w-2xl mb-10">
-            <h2 className={`text-4xl sm:text-5xl font-black text-[#0B2341] tracking-[0.05em] leading-snug ${hFont}`}>
+            <h2 className={`text-4xl sm:text-5xl font-black text-[#0B2341] tracking-[0.05em] leading-[1.1] ${hFont}`}>
               The Operators Behind It Who&rsquo;ve Actually Done It Themselves.
             </h2>
           </div>
@@ -432,7 +432,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10 lg:gap-16">
             <div className="lg:sticky lg:top-28 lg:self-start">
               <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-3 ${hFont}`}>Sound familiar?</p>
-              <h2 className={`text-4xl sm:text-5xl font-black text-[#0B2341] tracking-[0.05em] leading-snug mb-4 ${hFont}`}>
+              <h2 className={`text-4xl sm:text-5xl font-black text-[#0B2341] tracking-[0.05em] leading-[1.1] mb-4 ${hFont}`}>
                 You already know what&rsquo;s wrong.
               </h2>
               <p className="text-base text-[#475569] leading-relaxed">
@@ -533,7 +533,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <div className="text-center mb-12">
             <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-3 ${hFont}`}>How it works</p>
-            <h2 className={`text-4xl sm:text-5xl font-black text-[#0B2341] tracking-[0.05em] leading-snug ${hFont}`}>
+            <h2 className={`text-4xl sm:text-5xl font-black text-[#0B2341] tracking-[0.05em] leading-[1.1] ${hFont}`}>
               Three steps. No rollout. No theory.
             </h2>
           </div>
@@ -562,7 +562,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
           <div className="text-center mb-12">
             <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-3 ${hFont}`}>What&rsquo;s inside</p>
-            <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black text-[#0B2341] tracking-[0.05em] leading-snug mb-4 ${hFont}`}>
+            <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black text-[#0B2341] tracking-[0.05em] leading-[1.1] mb-4 ${hFont}`}>
               9 Departments. 50+ Courses. <span className="text-[#BF0A30]">Zero Theory.</span>
             </h2>
             <p className="text-base text-[#475569] max-w-2xl mx-auto leading-relaxed">
@@ -590,7 +590,7 @@ export default function Home() {
           <div className="bg-[#0B2341] text-white rounded-2xl p-8 sm:p-10">
             <div className="text-center mb-8">
               <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-4 ${hFont}`}>Plus the platform</p>
-              <h3 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-[0.05em] ${hFont}`}>
+              <h3 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-[0.05em] leading-[1.1] ${hFont}`}>
                 The accountability layer that makes it actually work.
               </h3>
             </div>
@@ -619,7 +619,7 @@ export default function Home() {
           <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-5 ${hFont}`}>
             What you get — department by department
           </p>
-          <h2 className={`text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-black tracking-[0.05em] leading-[1.02] mb-6 ${hFont}`}>
+          <h2 className={`text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-black tracking-[0.05em] leading-[1.0] mb-6 ${hFont}`}>
             The 9-Figure Operator&rsquo;s <span className="text-[#BF0A30]">Playbook.</span>
           </h2>
           <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
@@ -682,15 +682,15 @@ export default function Home() {
                   <h3 className={`font-black text-5xl sm:text-6xl lg:text-7xl text-[#0B2341] mb-6 tracking-[0.05em] leading-[1.02] ${hFont}`}>
                     {dept.name}
                   </h3>
-                  <p className={`border-l-4 border-[#BF0A30] pl-5 text-3xl sm:text-4xl md:text-5xl text-[#0B2341] font-bold mb-10 leading-[1.15] tracking-[0.05em] ${hFont}`}>
+                  <p className={`border-l-4 border-[#BF0A30] pl-5 text-3xl sm:text-4xl md:text-5xl text-[#0B2341] font-bold mb-10 leading-[1.05] tracking-[0.05em] ${hFont}`}>
                     {dept.headline}
                   </p>
-                  <ul className="space-y-7 max-w-2xl">
+                  <ul className="space-y-5 max-w-2xl">
                     {dept.bullets.map((b, j) => (
                       <li key={j} className="flex gap-4">
                         <Check className="shrink-0 mt-2 w-6 h-6 text-[#BF0A30]" strokeWidth={3} aria-hidden="true" />
                         <div>
-                          <p className={`text-xl sm:text-2xl text-[#0B2341] font-bold leading-snug tracking-[0.05em] ${hFont}`}>
+                          <p className={`text-xl sm:text-2xl text-[#0B2341] font-bold leading-[1.1] tracking-[0.05em] ${hFont}`}>
                             {b.title}
                           </p>
                           <p className="text-base sm:text-lg text-[#475569] mt-1.5 leading-snug">
@@ -841,7 +841,7 @@ export default function Home() {
       <Section className="relative py-20 sm:py-28 bg-[#0B2341] text-white">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[250px] bg-[#BF0A30]/[0.06] rounded-full blur-[100px] pointer-events-none glow-bg" aria-hidden="true" />
         <div className="relative max-w-2xl mx-auto px-5 sm:px-8 text-center">
-          <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black tracking-[0.05em] leading-snug mb-4 ${hFont}`}>
+          <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black tracking-[0.05em] leading-[1.1] mb-4 ${hFont}`}>
             Your business is worth what your <span className="text-[#BF0A30]">systems</span> are worth.
           </h2>
           <p className="text-gray-400 text-lg max-w-md mx-auto mb-8 font-light leading-relaxed">
