@@ -15,23 +15,37 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Real American Grit — Coming Soon",
+  title: {
+    default: "Real American Grit University — The 9-Figure Operator's Playbooks",
+    template: "%s | Real American Grit University",
+  },
   description:
-    "The proven course & coaching program for home service business owners is almost here. Pre-register to get notified the moment we go live.",
+    "The 9 playbooks behind a $1 billion home services company — now video trainings that install a 9-figure standard into every operator on your team.",
+  keywords: [
+    "home services training",
+    "HVAC training",
+    "plumbing training",
+    "trades coaching",
+    "home services SOPs",
+    "9-figure operator",
+    "operator playbooks",
+    "home services operations",
+  ],
+  authors: [{ name: "Real American Grit University" }],
   openGraph: {
-    title: "Real American Grit — Coming Soon",
+    title: "Real American Grit University — The 9-Figure Operator's Playbooks",
     description:
-      "The proven system from the President of ServiceTitan & the #1 home services sales rep. Pre-register to get notified when we launch.",
+      "Train every operator on your team with the playbooks behind a $1 billion home services operation.",
     url: "https://www.realamericangrit.com",
-    siteName: "Real American Grit",
+    siteName: "Real American Grit University",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Real American Grit — Coming Soon",
+    title: "Real American Grit University — The 9-Figure Operator's Playbooks",
     description:
-      "The proven system from the President of ServiceTitan & the #1 home services sales rep. Pre-register to get notified when we launch.",
+      "Train every operator on your team with the playbooks behind a $1 billion home services operation.",
   },
   metadataBase: new URL("https://www.realamericangrit.com"),
 };

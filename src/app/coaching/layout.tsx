@@ -1,23 +1,26 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Real American Grit — Scale Your Home Service Company Past 7 Figures",
+  title: "The 9-Figure Operator's Playbooks",
   description:
-    "The proven course & coaching program for home service business owners. Led by Tom Howard, President of ServiceTitan ($3B company), and Trent Lowenstein, the #1 home services sales rep in the country. $997/mo — limited launch pricing.",
+    "Get the 9 playbooks behind a $1 billion home services company — now video trainings that install a 9-figure standard into every operator on your team. Built for HVAC, plumbing, electrical, roofing, and home services owners doing $2M – $10M.",
   openGraph: {
-    title: "Scale Your Home Service Company Past 7 Figures",
+    title: "The 9-Figure Operator's Playbooks | Real American Grit University",
     description:
-      "The proven system from the President of ServiceTitan & the #1 home services sales rep. Course + coaching for plumbing, HVAC, roofing & more. Limited launch price: $997/mo.",
+      "Train every operator on your team — GM, Service Manager, Sales Lead, CSR, Tech — with the exact playbooks behind a $1 billion home services operation.",
     url: "https://www.realamericangrit.com/coaching",
-    siteName: "Real American Grit",
+    siteName: "Real American Grit University",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Scale Your Home Service Company Past 7 Figures",
+    title: "The 9-Figure Operator's Playbooks | Real American Grit University",
     description:
-      "The proven system from the President of ServiceTitan & the #1 home services sales rep. Limited launch price: $997/mo.",
+      "Train every operator on your team with the exact playbooks behind a $1 billion home services operation.",
+  },
+  alternates: {
+    canonical: "https://www.realamericangrit.com/coaching",
   },
 };
 
