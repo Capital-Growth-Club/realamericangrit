@@ -268,7 +268,7 @@ const DEPARTMENT_DEEP = [
     num: "08",
     name: "Human Resources",
     price: 3997,
-    headline: "How to hire people who don't quit and walk off with what you taught them.",
+    headline: "How to hire and retain good talent forever.",
     bullets: [
       { title: "The Workforce Planning Framework", desc: "Plug in the hiring pipeline that works in any labor market." },
       { title: "The Structured Onboarding System", desc: "Get new hires productive in days, not months." },
@@ -282,7 +282,7 @@ const DEPARTMENT_DEEP = [
     num: "09",
     name: "Leadership",
     price: 9997,
-    headline: "How to build the culture and leadership that runs without you.",
+    headline: "How to build culture and leadership that runs without you.",
     bullets: [
       { title: "The Leadership Transition Sequence", desc: "Step out of doing the work and into leading it." },
       { title: "The Authority Foundations Framework", desc: "Get the credibility, respect, and authority your team actually follows." },
@@ -359,12 +359,12 @@ export default function Home() {
         <div className="absolute top-[12%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[#BF0A30]/[0.05] rounded-full blur-[140px] pointer-events-none glow-bg" aria-hidden="true" />
 
         <div className="relative max-w-[820px] mx-auto px-5 sm:px-8 pt-16 sm:pt-24 md:pt-32 pb-20 sm:pb-28 md:pb-36 text-center">
-          <p className={`hero-fade uppercase text-base sm:text-lg md:text-xl font-bold tracking-[0.25em] text-gray-300 mb-6 ${hFont}`}>
+          <p className={`hero-fade uppercase text-sm sm:text-base font-bold tracking-[0.25em] text-gray-300 mb-6 ${hFont}`}>
             For home service owners doing $2M – $10M
           </p>
 
-          <h1 className={`hero-fade text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-black tracking-[0.05em] leading-[1.0] mb-5 ${hFont}`}>
-            Stop Being The Reason Your Company <span className="text-[#BF0A30]">Can&rsquo;t Grow.</span>
+          <h1 className={`hero-fade text-6xl sm:text-7xl md:text-7xl lg:text-8xl font-black tracking-[0.05em] leading-[0.95] mb-5 ${hFont}`}>
+            Stop Being<br className="md:hidden" /> The Reason<br className="md:hidden" /> Your Company<br /> <span className="text-[#BF0A30]">Can&rsquo;t Grow.</span>
           </h1>
 
           <p className="hero-fade text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
@@ -590,7 +590,7 @@ export default function Home() {
           <div className="bg-[#0B2341] text-white rounded-2xl p-8 sm:p-10">
             <div className="text-center mb-8">
               <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-4 ${hFont}`}>Plus the platform</p>
-              <h3 className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-[0.05em] leading-[1.1] ${hFont}`}>
+              <h3 className={`text-4xl sm:text-5xl md:text-6xl font-black tracking-[0.05em] leading-[1.1] ${hFont}`}>
                 The accountability layer that makes it actually work.
               </h3>
             </div>
@@ -619,8 +619,8 @@ export default function Home() {
           <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-5 ${hFont}`}>
             What you get — department by department
           </p>
-          <h2 className={`text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-black tracking-[0.05em] leading-[1.0] mb-6 ${hFont}`}>
-            The 9-Figure Operator&rsquo;s <span className="text-[#BF0A30]">Playbook.</span>
+          <h2 className={`text-6xl sm:text-7xl md:text-8xl font-black tracking-[0.05em] leading-[0.95] mb-6 ${hFont}`}>
+            The 9-Figure<br className="md:hidden" /> Operator&rsquo;s<br /> <span className="text-[#BF0A30]">Playbooks.</span>
           </h2>
           <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
             The training system that turns your whole team into <span className="text-white font-semibold">9-figure operators</span>.
@@ -827,7 +827,7 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              <CtaButton variant="outline-white" className="w-full" onClick={openModal} label="Upgrade to White-Label — $1,497/m" />
+              <CtaButton variant="outline-white" className="w-full whitespace-nowrap" onClick={openModal} label="Make It Yours — $1,497/m" />
             </Stagger>
           </div>
 
