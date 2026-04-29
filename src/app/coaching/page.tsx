@@ -353,9 +353,6 @@ export default function Home() {
 
       {/* ═══ HERO ═══ */}
       <section className="relative bg-[#0B2341] text-white overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-1 flex z-10" aria-hidden="true">
-          <div className="flex-1 bg-[#BF0A30]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#0B2341]" />
-        </div>
         <div className="absolute top-[12%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[#BF0A30]/[0.05] rounded-full blur-[140px] pointer-events-none glow-bg" aria-hidden="true" />
 
         <div className="relative max-w-[820px] mx-auto px-5 sm:px-8 pt-16 sm:pt-24 md:pt-32 pb-20 sm:pb-28 md:pb-36 text-center">
