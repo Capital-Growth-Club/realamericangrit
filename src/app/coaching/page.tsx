@@ -647,8 +647,8 @@ export default function Home() {
                     <img
                       src={dept.image}
                       alt={`The 9-Figure Operator's ${dept.name} Playbook`}
-                      className="w-full max-w-[320px] sm:max-w-[360px] h-auto"
-                      style={{ filter: "drop-shadow(0 18px 30px rgba(0,0,0,0.18))" }}
+                      className="w-full max-w-[380px] sm:max-w-[440px] h-auto"
+                      style={{ filter: "drop-shadow(0 6px 8px rgba(0,0,0,0.08)) drop-shadow(0 24px 36px rgba(0,0,0,0.22))" }}
                     />
                   ) : (
                     <div
@@ -743,29 +743,29 @@ export default function Home() {
               The hidden cost
             </p>
             <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black text-[#0B2341] tracking-[0.05em] leading-[1.05] mb-6 ${hFont}`}>
-              Here&rsquo;s what <span className="text-[#BF0A30]">nobody tells you</span> you&rsquo;re losing right now.
+              Here&rsquo;s what <span className="text-[#BF0A30]">nobody tells you</span>{" "}you&rsquo;re losing right now.
             </h2>
           </div>
 
           <div className="space-y-5 text-lg sm:text-xl text-[#475569] leading-relaxed mb-12 max-w-2xl mx-auto">
             <p>
-              When you go to sell your home services company, a buyer doesn&rsquo;t pay you for what you <em>say</em> it&rsquo;s worth. They pay for what&rsquo;s documented, trained, and transferable.
+              When you go to sell your home services company, a buyer doesn&rsquo;t pay you what you think it&rsquo;s worth. They pay for what&rsquo;s documented, trained, and transferable.
             </p>
             <p>
               Right now, your operation lives in your head. Every script. Every system. Every SOP. That&rsquo;s not a business — that&rsquo;s a job with extra steps. And a buyer pays you accordingly: <strong className="text-[#0B2341]">2x EBITDA. Sometimes less.</strong>
             </p>
             <p>
-              The same shop with documented playbooks, trained operators, and a system a buyer can read on diligence day? <strong className="text-[#0B2341]">4x EBITDA. Sometimes higher.</strong> That gap doesn&rsquo;t open the day you sell. It&rsquo;s open right now — and every month you don&rsquo;t close it, the bill grows.
+              The same shop with documented playbooks, trained operators, and a system a buyer can read on diligence day? <strong className="text-[#0B2341]">4x EBITDA. Sometimes higher.</strong>{" "}That gap doesn&rsquo;t open the day you sell. It&rsquo;s open right now — and every month you don&rsquo;t close it, the bill grows.
             </p>
           </div>
 
           {/* Stat callout */}
           <div className="bg-[#0B2341] text-white rounded-2xl p-8 sm:p-12 text-center max-w-2xl mx-auto shadow-2xl shadow-[#0B2341]/25">
             <p className={`text-base sm:text-lg uppercase tracking-[0.25em] text-gray-400 mb-3 ${hFont}`}>
-              On a $1M EBITDA shop
+              On a $5M EBITDA shop
             </p>
             <p className={`text-5xl sm:text-6xl md:text-7xl font-black text-[#BF0A30] tracking-[0.05em] mb-3 ${hFont}`}>
-              &minus;$2 million
+              &minus;$10 million
             </p>
             <p className="text-base sm:text-lg text-gray-300">
               evaporates the day you sell.
