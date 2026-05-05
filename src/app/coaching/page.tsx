@@ -169,6 +169,7 @@ const DEPARTMENT_DEEP = [
     icon: TrendingUp,
     num: "01",
     name: "Sales",
+    image: "/Sales Playbook.png",
     price: 9997,
     headline: "How to turn every rep into a top closer.",
     bullets: [
@@ -183,6 +184,7 @@ const DEPARTMENT_DEEP = [
     icon: Briefcase,
     num: "02",
     name: "Acquisitions",
+    image: "/Acquisitions Playbook.png",
     price: 4997,
     headline: "How to scale through acquisitions without overpaying.",
     bullets: [
@@ -196,6 +198,7 @@ const DEPARTMENT_DEEP = [
     icon: DollarSign,
     num: "03",
     name: "Pricing",
+    image: "/Pricing Playbook.png",
     price: 4997,
     headline: "How to make more money on every job you sell.",
     bullets: [
@@ -210,6 +213,7 @@ const DEPARTMENT_DEEP = [
     icon: Building2,
     num: "04",
     name: "Corporate Structure",
+    image: null,
     price: 2997,
     headline: "How to keep more of the money you make.",
     bullets: [
@@ -223,6 +227,7 @@ const DEPARTMENT_DEEP = [
     icon: BarChart3,
     num: "05",
     name: "Financials",
+    image: "/Financials Playbook.png",
     price: 7997,
     headline: "How to stop feeling broke and spend money confidently.",
     bullets: [
@@ -237,6 +242,7 @@ const DEPARTMENT_DEEP = [
     icon: Megaphone,
     num: "06",
     name: "Marketing",
+    image: "/Marketing Playbook.png",
     price: 9997,
     headline: "How to turn $1 of marketing into $10.",
     bullets: [
@@ -252,6 +258,7 @@ const DEPARTMENT_DEEP = [
     icon: Wrench,
     num: "07",
     name: "Operations",
+    image: "/Operations Playbook.png",
     price: 9997,
     headline: "How to take a month off without anything falling apart.",
     bullets: [
@@ -267,6 +274,7 @@ const DEPARTMENT_DEEP = [
     icon: Users,
     num: "08",
     name: "Human Resources",
+    image: "/Human Resources Playbook.png",
     price: 3997,
     headline: "How to hire and retain good talent forever.",
     bullets: [
@@ -281,6 +289,7 @@ const DEPARTMENT_DEEP = [
     icon: Crown,
     num: "09",
     name: "Leadership",
+    image: "/Leadership Playbook.png",
     price: 9997,
     headline: "How to build culture and leadership that runs without you.",
     bullets: [
@@ -633,42 +642,55 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
                 {/* Playbook cover column */}
                 <div className={`flex justify-center ${isReverse ? "lg:order-2 lg:justify-start" : "lg:justify-end"}`}>
-                  {/* TODO: replace with <img src={`/playbooks/${dept.num}.webp`} ... /> when renders are ready */}
-                  <div
-                    className="relative w-full max-w-[320px] sm:max-w-[360px] aspect-[3/4] rounded-lg overflow-hidden shadow-2xl shadow-black/30 border border-white/10"
-                    style={{ transform: "perspective(1200px) rotateY(-4deg)" }}
-                    aria-hidden="true"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#0B2341] via-[#0B2341] to-black" />
-                    <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-[#BF0A30]" />
+                  {dept.image ? (
                     <div
-                      className="absolute inset-0 opacity-[0.05]"
-                      style={{
-                        backgroundImage:
-                          "linear-gradient(45deg, #fff 1px, transparent 1px), linear-gradient(-45deg, #fff 1px, transparent 1px)",
-                        backgroundSize: "12px 12px",
-                      }}
-                    />
-                    <div className="relative h-full flex flex-col justify-between p-7 sm:p-8 text-white">
-                      <div>
-                        <p className={`text-[10px] font-black uppercase tracking-[0.3em] text-[#BF0A30] mb-2 ${hFont}`}>
-                          The 9-Figure Operator&rsquo;s
-                        </p>
-                        <p className={`text-2xl sm:text-3xl font-black tracking-[0.05em] ${hFont}`}>
-                          Playbook
-                        </p>
-                      </div>
-                      <div>
-                        <div className="h-[2px] bg-[#BF0A30] w-12 mb-3" />
-                        <p className={`text-4xl sm:text-5xl font-black tracking-[0.05em] leading-[1.1] ${hFont}`}>
-                          {dept.name}
-                        </p>
-                      </div>
-                      <p className={`text-[10px] uppercase tracking-[0.3em] text-gray-500 self-end ${hFont}`}>
-                        Vol. {dept.num}
-                      </p>
+                      className="relative w-full max-w-[320px] sm:max-w-[360px] aspect-[3/4] rounded-lg overflow-hidden shadow-2xl shadow-black/30"
+                      style={{ transform: "perspective(1200px) rotateY(-4deg)" }}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={dept.image}
+                        alt={`The 9-Figure Operator's ${dept.name} Playbook`}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                  </div>
+                  ) : (
+                    <div
+                      className="relative w-full max-w-[320px] sm:max-w-[360px] aspect-[3/4] rounded-lg overflow-hidden shadow-2xl shadow-black/30 border border-white/10"
+                      style={{ transform: "perspective(1200px) rotateY(-4deg)" }}
+                      aria-hidden="true"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#0B2341] via-[#0B2341] to-black" />
+                      <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-[#BF0A30]" />
+                      <div
+                        className="absolute inset-0 opacity-[0.05]"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(45deg, #fff 1px, transparent 1px), linear-gradient(-45deg, #fff 1px, transparent 1px)",
+                          backgroundSize: "12px 12px",
+                        }}
+                      />
+                      <div className="relative h-full flex flex-col justify-between p-7 sm:p-8 text-white">
+                        <div>
+                          <p className={`text-[10px] font-black uppercase tracking-[0.3em] text-[#BF0A30] mb-2 ${hFont}`}>
+                            The 9-Figure Operator&rsquo;s
+                          </p>
+                          <p className={`text-2xl sm:text-3xl font-black tracking-[0.05em] ${hFont}`}>
+                            Playbook
+                          </p>
+                        </div>
+                        <div>
+                          <div className="h-[2px] bg-[#BF0A30] w-12 mb-3" />
+                          <p className={`text-4xl sm:text-5xl font-black tracking-[0.05em] leading-[1.1] ${hFont}`}>
+                            {dept.name}
+                          </p>
+                        </div>
+                        <p className={`text-[10px] uppercase tracking-[0.3em] text-gray-500 self-end ${hFont}`}>
+                          Vol. {dept.num}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Content column */}
@@ -756,6 +778,15 @@ export default function Home() {
       {/* ═══ PRICING ANCHOR + WHITE-LABEL ═══ */}
       <Section className="py-16 sm:py-24 bg-white">
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
+          {/* Bundle visual — anchors "everything you get" before the price reveal */}
+          <div className="flex justify-center mb-10 sm:mb-12">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/9 Figure Operators Bundle.png"
+              alt="The 9-Figure Operator's Playbooks — complete bundle"
+              className="w-full max-w-4xl h-auto"
+            />
+          </div>
           <div className="text-center mb-12">
             <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-3 ${hFont}`}>What it actually costs you</p>
             <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black text-[#0B2341] tracking-[0.05em] leading-[1.05] mb-4 ${hFont}`}>
