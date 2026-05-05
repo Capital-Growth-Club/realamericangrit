@@ -643,17 +643,13 @@ export default function Home() {
                 {/* Playbook cover column */}
                 <div className={`flex justify-center ${isReverse ? "lg:order-2 lg:justify-start" : "lg:justify-end"}`}>
                   {dept.image ? (
-                    <div
-                      className="relative w-full max-w-[320px] sm:max-w-[360px] aspect-[3/4] rounded-lg overflow-hidden shadow-2xl shadow-black/30"
-                      style={{ transform: "perspective(1200px) rotateY(-4deg)" }}
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={dept.image}
-                        alt={`The 9-Figure Operator's ${dept.name} Playbook`}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={dept.image}
+                      alt={`The 9-Figure Operator's ${dept.name} Playbook`}
+                      className="w-full max-w-[320px] sm:max-w-[360px] h-auto"
+                      style={{ filter: "drop-shadow(0 18px 30px rgba(0,0,0,0.18))" }}
+                    />
                   ) : (
                     <div
                       className="relative w-full max-w-[320px] sm:max-w-[360px] aspect-[3/4] rounded-lg overflow-hidden shadow-2xl shadow-black/30 border border-white/10"
@@ -744,10 +740,10 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-5 sm:px-8">
           <div className="text-center mb-10">
             <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-4 ${hFont}`}>
-              The Bigger Win
+              The hidden cost
             </p>
             <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black text-[#0B2341] tracking-[0.05em] leading-[1.05] mb-6 ${hFont}`}>
-              But here&rsquo;s what <span className="text-[#BF0A30]">nobody tells you</span> about all this.
+              Here&rsquo;s what <span className="text-[#BF0A30]">nobody tells you</span> you&rsquo;re losing right now.
             </h2>
           </div>
 
@@ -756,7 +752,10 @@ export default function Home() {
               When you go to sell your home services company, a buyer doesn&rsquo;t pay you for what you <em>say</em> it&rsquo;s worth. They pay for what&rsquo;s documented, trained, and transferable.
             </p>
             <p>
-              These 9 playbooks aren&rsquo;t just training. They&rsquo;re the system documentation a buyer wants to see — the difference between a <strong className="text-[#0B2341]">2x EBITDA exit</strong> and a <strong className="text-[#0B2341]">4x+ EBITDA exit</strong>.
+              Right now, your operation lives in your head. Every script. Every system. Every SOP. That&rsquo;s not a business — that&rsquo;s a job with extra steps. And a buyer pays you accordingly: <strong className="text-[#0B2341]">2x EBITDA. Sometimes less.</strong>
+            </p>
+            <p>
+              The same shop with documented playbooks, trained operators, and a system a buyer can read on diligence day? <strong className="text-[#0B2341]">4x EBITDA. Sometimes higher.</strong> That gap doesn&rsquo;t open the day you sell. It&rsquo;s open right now — and every month you don&rsquo;t close it, the bill grows.
             </p>
           </div>
 
@@ -766,10 +765,10 @@ export default function Home() {
               On a $1M EBITDA shop
             </p>
             <p className={`text-5xl sm:text-6xl md:text-7xl font-black text-[#BF0A30] tracking-[0.05em] mb-3 ${hFont}`}>
-              +$2 million
+              &minus;$2 million
             </p>
             <p className="text-base sm:text-lg text-gray-300">
-              in your pocket the day you sell.
+              evaporates the day you sell.
             </p>
           </div>
         </div>
