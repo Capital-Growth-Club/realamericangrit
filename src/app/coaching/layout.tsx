@@ -14,10 +14,10 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "/og-bundle.jpg",
-        width: 1500,
-        height: 788,
-        alt: "The 9-Figure Operator's Playbooks — complete bundle",
+        url: "/Social Sharing Images.png",
+        width: 1920,
+        height: 1080,
+        alt: "The 9-Figure Operator's Playbooks — Real American Grit University",
       },
     ],
   },
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: "The 9-Figure Operator's Playbooks | Real American Grit University",
     description:
       "Train every operator on your team with the exact playbooks behind a $1 billion home services operation.",
-    images: ["/og-bundle.jpg"],
+    images: ["/Social Sharing Images.png"],
   },
   alternates: {
     canonical: "https://www.realamericangrit.com/coaching",
