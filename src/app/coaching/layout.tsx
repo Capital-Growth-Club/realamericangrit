@@ -16,7 +16,7 @@ export const metadata: Metadata = {
       {
         url: "/og-bundle.jpg",
         width: 1500,
-        height: 612,
+        height: 788,
         alt: "The 9-Figure Operator's Playbooks — complete bundle",
       },
     ],
