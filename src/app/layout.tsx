@@ -40,12 +40,21 @@ export const metadata: Metadata = {
     siteName: "Real American Grit University",
     type: "website",
     locale: "en_US",
+    images: [
+      {
+        url: "/og-bundle.jpg",
+        width: 1500,
+        height: 612,
+        alt: "The 9-Figure Operator's Playbooks — complete bundle",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Real American Grit University — The 9-Figure Operator's Playbooks",
     description:
       "Train every operator on your team with the playbooks behind a $1 billion home services operation.",
+    images: ["/og-bundle.jpg"],
   },
   metadataBase: new URL("https://www.realamericangrit.com"),
 };
