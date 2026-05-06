@@ -213,7 +213,7 @@ const DEPARTMENT_DEEP = [
     icon: Building2,
     num: "04",
     name: "Corporate Structure",
-    image: null,
+    image: "/Corporate Structures Playbook.png",
     price: 2997,
     headline: "How to keep more of the money you make.",
     bullets: [
