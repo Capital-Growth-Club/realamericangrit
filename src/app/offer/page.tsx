@@ -359,7 +359,7 @@ export default function Offer() {
           </div>
 
           <div className="hero-fade flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-            <CtaButton variant="red" className="w-full sm:w-auto" onClick={openModal} />
+            <CtaButton variant="red" className="w-full sm:w-auto" href="#pricing" label="Train My Team" />
           </div>
 
           <p className="hero-fade text-sm text-gray-500">
@@ -541,7 +541,7 @@ export default function Offer() {
       })}
 
       {/* ═══ PRICING ANCHOR + WHITE-LABEL ═══ */}
-      <Section className="py-16 sm:py-24 bg-white">
+      <Section id="pricing" className="scroll-mt-[140px] py-16 sm:py-24 bg-white">
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           {/* Bundle visual — anchors "everything you get" before the price reveal */}
           <div className="flex justify-center mb-10 sm:mb-12">
