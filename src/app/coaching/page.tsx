@@ -325,6 +325,17 @@ export default function Home() {
   useReveal();
   useHeroFade();
 
+  // Auto-open the checkout modal when arriving via ?checkout=standard|white-label
+  // (used by the abandoned-checkout recovery email).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const checkout = params.get("checkout");
+    if (checkout === "standard" || checkout === "white-label") {
+      setModalTier(checkout);
+      setModalOpen(true);
+    }
+  }, []);
+
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
       {/* Checkout modal */}
