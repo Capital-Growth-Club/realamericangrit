@@ -30,41 +30,171 @@ const GHL_CANCELED_WEBHOOK_URL =
 const GHL_CUSTOMER_WEBHOOK_URL =
   process.env.GHL_CUSTOMER_WEBHOOK_URL ?? process.env.GHL_WEBHOOK_URL ?? "";
 
-// Make.com — receives every successful payment with customer + product info.
-// Make's scenario provisions the LightspeedVT location + user from this payload.
-const MAKE_PAYMENT_SUCCESS_WEBHOOK_URL =
-  "https://hook.us2.make.com/wr8lnoxujvlnfh36554hbytr5d6bflec";
-
-type MakePayload = {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  company_name: string;
-  product_name: string;
-  product_tier: "standard" | "white-label" | "unknown";
-  price_id: string;
-  amount_cents: number;
-  amount_dollars: number;
-  currency: string;
-  billing_reason: string;
-  is_new_enrollment: boolean;
-  stripe_customer_id: string;
-  stripe_subscription_id?: string;
-  stripe_invoice_id: string;
-  source: string;
+// LightspeedVT REST API — direct integration, replaces the prior Zapier/Make hops.
+// Creates a Location for the customer's company, then a User as the location owner
+// with content roles based on tier (Standard vs White-Label).
+const LSVT_API_BASE_URL = "https://webservices.lightspeedvt.net/REST/V1";
+const LSVT_SOURCE_LOCATION_ID = Number(
+  process.env.LSVT_SOURCE_LOCATION_ID ?? "233608", // B2B Template Location
+);
+const LSVT_ACCESS_LEVEL_MANAGER = 4; // Manager/Location Owner per LSVT docs
+const LSVT_CONTENT_ROLES: Record<"standard" | "white-label", number[]> = {
+  standard: [40245, 40246],
+  "white-label": [40245, 40246, 41313],
 };
 
-async function forwardToMake(payload: MakePayload) {
-  try {
-    await fetch(MAKE_PAYMENT_SUCCESS_WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-  } catch (err) {
-    console.error("Make.com webhook forward failed:", err);
+function lsvtAuthHeader(): string | null {
+  const username = process.env.LSVT_API_USERNAME;
+  const password = process.env.LSVT_API_PASSWORD;
+  if (!username || !password) return null;
+  return `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
+}
+
+async function lsvtCreateLocation(params: {
+  name: string;
+  phone: string;
+}): Promise<number | null> {
+  const auth = lsvtAuthHeader();
+  if (!auth) {
+    console.error("[LSVT] credentials not set — skipping createLocation");
+    return null;
   }
+  try {
+    const res = await fetch(`${LSVT_API_BASE_URL}/locations`, {
+      method: "POST",
+      headers: {
+        Authorization: auth,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        sourceLocationId: LSVT_SOURCE_LOCATION_ID,
+        name: params.name.slice(0, 100),
+        // Placeholder address — required by LSVT API but unknown at checkout.
+        // Customer can update inside LSVT once they're in.
+        address: "Not provided",
+        city: "Not provided",
+        state: "Not provided",
+        zip: "00000",
+        country: "USA",
+        phone: params.phone || "0000000000",
+        isActive: true,
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      console.error(`[LSVT] createLocation ${res.status}: ${body}`);
+      return null;
+    }
+    const data = await res.json();
+    const locationId = data.locationId ?? data.id ?? null;
+    return typeof locationId === "number" ? locationId : null;
+  } catch (err) {
+    console.error("[LSVT] createLocation error:", err);
+    return null;
+  }
+}
+
+async function lsvtCreateUser(params: {
+  locationId: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  contentRoles: number[];
+}): Promise<number | null> {
+  const auth = lsvtAuthHeader();
+  if (!auth) {
+    console.error("[LSVT] credentials not set — skipping createUser");
+    return null;
+  }
+  try {
+    const res = await fetch(`${LSVT_API_BASE_URL}/users`, {
+      method: "POST",
+      headers: {
+        Authorization: auth,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        locationId: params.locationId,
+        username: params.email,
+        email: params.email,
+        firstName: params.firstName,
+        lastName: params.lastName,
+        password: params.password,
+        accessLevel: LSVT_ACCESS_LEVEL_MANAGER,
+        forcePasswordUpdate: true,
+        contentRole: params.contentRoles,
+        isActive: true,
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      console.error(`[LSVT] createUser ${res.status}: ${body}`);
+      return null;
+    }
+    const data = await res.json();
+    const userId = data.userId ?? data.id ?? null;
+    return typeof userId === "number" ? userId : null;
+  } catch (err) {
+    console.error("[LSVT] createUser error:", err);
+    return null;
+  }
+}
+
+async function provisionLightspeedVT(payload: {
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  company_name: string;
+  product_tier: "standard" | "white-label" | "unknown";
+}) {
+  if (payload.product_tier === "unknown") {
+    console.error("[LSVT] cannot provision — product tier unknown");
+    return;
+  }
+  if (!payload.email || !payload.first_name) {
+    console.error("[LSVT] cannot provision — missing email or first name");
+    return;
+  }
+
+  const locationName =
+    payload.company_name?.trim() ||
+    `${payload.first_name} ${payload.last_name}`.trim();
+
+  const locationId = await lsvtCreateLocation({
+    name: locationName,
+    phone: payload.phone,
+  });
+  if (!locationId) {
+    console.error("[LSVT] location creation failed — aborting user creation");
+    return;
+  }
+  console.log(`[LSVT] created location ${locationId} (${locationName})`);
+
+  // Temp password = FirstNameLastName123! (spaces stripped) — matches the
+  // credentials email sent by GHL. forcePasswordUpdate makes LSVT require
+  // the user to set their own on first login.
+  const stripSpaces = (s: string) => (s || "").replace(/\s+/g, "");
+  const password = `${stripSpaces(payload.first_name)}${stripSpaces(payload.last_name)}123!`;
+
+  const userId = await lsvtCreateUser({
+    locationId,
+    email: payload.email,
+    firstName: payload.first_name,
+    lastName: payload.last_name,
+    password,
+    contentRoles: LSVT_CONTENT_ROLES[payload.product_tier],
+  });
+  if (!userId) {
+    console.error(`[LSVT] user creation failed for location ${locationId}`);
+    return;
+  }
+  console.log(
+    `[LSVT] created user ${userId} (${payload.email}) in location ${locationId}`,
+  );
 }
 
 function resolveTier(
@@ -225,25 +355,19 @@ export async function POST(request: Request) {
             product_name: productName,
           });
 
-          await forwardToMake({
-            first_name,
-            last_name,
-            email: customer.email ?? "",
-            phone: customer.phone ?? "",
-            company_name: customer.metadata?.company ?? "",
-            product_name: productName,
-            product_tier: tier,
-            price_id: priceId,
-            amount_cents: invoice.amount_paid,
-            amount_dollars: invoice.amount_paid / 100,
-            currency: invoice.currency,
-            billing_reason: invoice.billing_reason ?? "",
-            is_new_enrollment: isFirstPayment,
-            stripe_customer_id: customerId ?? "",
-            stripe_subscription_id: subscriptionId,
-            stripe_invoice_id: invoice.id ?? "",
-            source: "Real American Grit - Stripe",
-          });
+          // Only provision LightspeedVT for first payments (subscription_create),
+          // not for monthly renewals — otherwise we'd create duplicate
+          // locations + users every billing cycle.
+          if (isFirstPayment) {
+            await provisionLightspeedVT({
+              email: customer.email ?? "",
+              first_name,
+              last_name,
+              phone: customer.phone ?? "",
+              company_name: customer.metadata?.company ?? "",
+              product_tier: tier,
+            });
+          }
         }
         break;
       }
