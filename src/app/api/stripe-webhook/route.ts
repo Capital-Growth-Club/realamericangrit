@@ -30,6 +30,62 @@ const GHL_CANCELED_WEBHOOK_URL =
 const GHL_CUSTOMER_WEBHOOK_URL =
   process.env.GHL_CUSTOMER_WEBHOOK_URL ?? process.env.GHL_WEBHOOK_URL ?? "";
 
+// Zapier — receives every successful payment with customer + product info
+const ZAPIER_PAYMENT_SUCCESS_WEBHOOK_URL =
+  "https://hooks.zapier.com/hooks/catch/18481939/4o5z9d0/";
+
+type ZapierPayload = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  company_name: string;
+  product_name: string;
+  product_tier: "standard" | "white-label" | "unknown";
+  price_id: string;
+  amount_cents: number;
+  amount_dollars: number;
+  currency: string;
+  billing_reason: string;
+  is_new_enrollment: boolean;
+  stripe_customer_id: string;
+  stripe_subscription_id?: string;
+  stripe_invoice_id: string;
+  source: string;
+};
+
+async function forwardToZapier(payload: ZapierPayload) {
+  try {
+    await fetch(ZAPIER_PAYMENT_SUCCESS_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch (err) {
+    console.error("Zapier webhook forward failed:", err);
+  }
+}
+
+function resolveTier(
+  metadataTier: string | undefined,
+  priceId: string,
+): { tier: "standard" | "white-label" | "unknown"; productName: string } {
+  if (metadataTier === "white-label") {
+    return { tier: "white-label", productName: "White-Label - Make It Yours" };
+  }
+  if (metadataTier === "standard") {
+    return { tier: "standard", productName: "Standard - The Full Library" };
+  }
+  // Fallback: match against configured price IDs
+  if (priceId && priceId === process.env.STRIPE_PRICE_ID_WHITE_LABEL) {
+    return { tier: "white-label", productName: "White-Label - Make It Yours" };
+  }
+  if (priceId && priceId === process.env.STRIPE_PRICE_ID) {
+    return { tier: "standard", productName: "Standard - The Full Library" };
+  }
+  return { tier: "unknown", productName: "Unknown" };
+}
+
 type GhlPayload = {
   first_name: string;
   last_name: string;
@@ -128,6 +184,21 @@ export async function POST(request: Request) {
 
         if (customer) {
           const { first_name, last_name } = splitName(customer.name);
+
+          // Look up the subscription to read tier + price ID
+          let metadataTier: string | undefined;
+          let priceId = "";
+          if (subscriptionId) {
+            try {
+              const sub = await stripe.subscriptions.retrieve(subscriptionId);
+              metadataTier = sub.metadata?.tier;
+              priceId = sub.items.data[0]?.price?.id ?? "";
+            } catch (err) {
+              console.error("Failed to retrieve subscription for tier lookup:", err);
+            }
+          }
+          const { tier, productName } = resolveTier(metadataTier, priceId);
+
           await forwardToGhl(GHL_PAYMENT_SUCCESS_WEBHOOK_URL, {
             first_name,
             last_name,
@@ -145,6 +216,26 @@ export async function POST(request: Request) {
             stripe_subscription_id: subscriptionId,
             amount_cents: invoice.amount_paid,
             currency: invoice.currency,
+          });
+
+          await forwardToZapier({
+            first_name,
+            last_name,
+            email: customer.email ?? "",
+            phone: customer.phone ?? "",
+            company_name: customer.metadata?.company ?? "",
+            product_name: productName,
+            product_tier: tier,
+            price_id: priceId,
+            amount_cents: invoice.amount_paid,
+            amount_dollars: invoice.amount_paid / 100,
+            currency: invoice.currency,
+            billing_reason: invoice.billing_reason ?? "",
+            is_new_enrollment: isFirstPayment,
+            stripe_customer_id: customerId ?? "",
+            stripe_subscription_id: subscriptionId,
+            stripe_invoice_id: invoice.id ?? "",
+            source: "Real American Grit - Stripe",
           });
         }
         break;
