@@ -6,12 +6,42 @@ import CheckoutForm from "./CheckoutForm";
 
 const hFont = "font-[family-name:var(--font-bebas)]";
 
+type Tier = "standard" | "white-label";
+
+const TIER_COPY: Record<
+  Tier,
+  { price: string; subtitle: string; bullets: string[] }
+> = {
+  standard: {
+    price: "$997",
+    subtitle: "Full library access for your entire team — billed monthly",
+    bullets: [
+      "All 9 department curricula — 50+ courses",
+      "Frameworks from Tom Howard (ServiceTitan president, Leesair owner) & Phil Filaski ($19.6M HVAC)",
+      "Quizzes, certificates, and the owner dashboard",
+      "Lock in $997/m before it goes to $1,497/m",
+    ],
+  },
+  "white-label": {
+    price: "$1,497",
+    subtitle: "Everything in Standard — fully rebranded as your operation",
+    bullets: [
+      "Everything in Standard — all 9 department curricula",
+      "Certificates issued under your company name",
+      "Training portal branded as your operation",
+      "Lock in $1,497/m before it goes to $1,997/m",
+    ],
+  },
+};
+
 export default function CheckoutModal({
   open,
   onClose,
+  tier = "standard",
 }: {
   open: boolean;
   onClose: () => void;
+  tier?: Tier;
 }) {
   // Lock body scroll when open
   useEffect(() => {
@@ -35,6 +65,8 @@ export default function CheckoutModal({
   }, [open, onClose]);
 
   if (!open) return null;
+
+  const copy = TIER_COPY[tier];
 
   return (
     <div
@@ -72,24 +104,19 @@ export default function CheckoutModal({
             {/* Price */}
             <div className="flex items-baseline justify-center gap-2 mb-1">
               <span className={`text-4xl sm:text-5xl font-black ${hFont}`}>
-                $997
+                {copy.price}
               </span>
               <span className="text-gray-500 text-base font-medium">
                 /m
               </span>
             </div>
             <p className="text-center text-gray-500 text-sm mb-6">
-              Full library access for your entire team — billed monthly
+              {copy.subtitle}
             </p>
 
             {/* Benefits */}
             <ul className="space-y-2 mb-6">
-              {[
-                "All 9 department curricula — 50+ courses",
-                "Frameworks from Tom Howard (ServiceTitan president, Leesair owner) & Phil Filaski ($19.6M HVAC)",
-                "Quizzes, certificates, and the owner dashboard",
-                "Lock in $997/m before it goes to $1,497/m",
-              ].map((item, i) => (
+              {copy.bullets.map((item, i) => (
                 <li key={i} className="flex items-center gap-2.5">
                   <span className="shrink-0 w-4 h-4 rounded-full bg-[#BF0A30] flex items-center justify-center">
                     <svg
@@ -111,7 +138,7 @@ export default function CheckoutModal({
             <div className="h-px bg-white/10 mb-6" />
 
             {/* Checkout form */}
-            <CheckoutForm />
+            <CheckoutForm tier={tier} />
           </div>
         </div>
       </div>

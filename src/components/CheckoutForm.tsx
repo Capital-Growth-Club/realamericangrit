@@ -39,13 +39,28 @@ const EMPTY_TRACKING: Tracking = {
   utm_term: "",
 };
 
+type Tier = "standard" | "white-label";
+
+const TIER_COPY: Record<Tier, { priceLabel: string; buttonLabel: string }> = {
+  standard: {
+    priceLabel: "$997/m",
+    buttonLabel: "Start Subscription — $997/m",
+  },
+  "white-label": {
+    priceLabel: "$1,497/m",
+    buttonLabel: "Start Subscription — $1,497/m",
+  },
+};
+
 /* ─── Inner form (has access to Stripe context) ─── */
 function PaymentForm({
   formData,
   tracking,
+  tier,
 }: {
   formData: FormData;
   tracking: Tracking;
+  tier: Tier;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -162,7 +177,7 @@ function PaymentForm({
         disabled={paying || !stripe || !elements}
         className="w-full h-14 rounded-lg bg-[#BF0A30] text-white text-lg font-bold hover:bg-[#D91C40] transition-colors pulse-red disabled:opacity-60"
       >
-        {paying ? "Processing…" : "Start Subscription — $997/m"}
+        {paying ? "Processing…" : TIER_COPY[tier].buttonLabel}
       </button>
 
       <div className="flex items-center justify-center gap-1.5 text-xs text-gray-500">
@@ -174,7 +189,11 @@ function PaymentForm({
 }
 
 /* ─── Outer wrapper ─── */
-export default function CheckoutForm() {
+export default function CheckoutForm({
+  tier = "standard",
+}: {
+  tier?: Tier;
+} = {}) {
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -234,7 +253,7 @@ export default function CheckoutForm() {
       const res = await fetch("/api/create-subscription", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, ...track }),
+        body: JSON.stringify({ ...data, ...track, tier }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -314,7 +333,7 @@ export default function CheckoutForm() {
               },
             }}
           >
-            <PaymentForm formData={formData} tracking={tracking} />
+            <PaymentForm formData={formData} tracking={tracking} tier={tier} />
           </Elements>
         )}
       </div>
@@ -423,7 +442,7 @@ export default function CheckoutForm() {
           },
         }}
       >
-        <PaymentForm formData={formData} tracking={tracking} />
+        <PaymentForm formData={formData} tracking={tracking} tier={tier} />
       </Elements>
     </div>
   );

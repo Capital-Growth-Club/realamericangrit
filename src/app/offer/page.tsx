@@ -287,13 +287,23 @@ const PLATFORM = [
 export default function Offer() {
   const { visible } = useScrollNav();
   const [modalOpen, setModalOpen] = useState(false);
-  const openModal = () => setModalOpen(true);
+  const [modalTier, setModalTier] = useState<"standard" | "white-label">(
+    "standard",
+  );
+  const openModal = (tier: "standard" | "white-label" = "standard") => {
+    setModalTier(tier);
+    setModalOpen(true);
+  };
   useReveal();
   useHeroFade();
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
-      <CheckoutModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <CheckoutModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        tier={modalTier}
+      />
 
       {/* ═══ BANNER + NAV ═══ */}
       <div className={`nav-slide fixed top-0 left-0 right-0 z-50 ${visible ? "" : "hidden-up"}`}>
@@ -590,7 +600,7 @@ export default function Offer() {
                   </li>
                 ))}
               </ul>
-              <CtaButton variant="red" className="w-full" onClick={openModal} />
+              <CtaButton variant="red" className="w-full" onClick={() => openModal("standard")} />
             </Stagger>
 
             {/* White-Label */}
@@ -620,7 +630,7 @@ export default function Offer() {
                   </li>
                 ))}
               </ul>
-              <CtaButton variant="outline-white" className="w-full whitespace-nowrap" onClick={openModal} label="Make It Yours — $1,497/m" />
+              <CtaButton variant="outline-white" className="w-full whitespace-nowrap" onClick={() => openModal("white-label")} label="Make It Yours — $1,497/m" />
             </Stagger>
           </div>
 
@@ -640,7 +650,7 @@ export default function Offer() {
           <p className="text-gray-400 text-lg max-w-md mx-auto mb-8 font-light leading-relaxed">
             Right now, the operation runs on what&rsquo;s in your head. That&rsquo;s not a business — that&rsquo;s a job. Hand it over.
           </p>
-          <CtaButton variant="red" onClick={openModal} />
+          <CtaButton variant="red" onClick={() => openModal("standard")} />
         </div>
       </Section>
 

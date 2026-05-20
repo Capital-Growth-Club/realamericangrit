@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     email,
     phone,
     company,
+    tier,
     cid,
     utm_source,
     utm_medium,
@@ -27,6 +28,7 @@ export async function POST(request: Request) {
     email: string;
     phone: string;
     company?: string;
+    tier?: "standard" | "white-label";
     cid?: string;
     utm_source?: string;
     utm_medium?: string;
@@ -42,7 +44,13 @@ export async function POST(request: Request) {
     );
   }
 
-  const priceId = process.env.STRIPE_PRICE_ID;
+  const selectedTier: "standard" | "white-label" =
+    tier === "white-label" ? "white-label" : "standard";
+  const priceId =
+    selectedTier === "white-label"
+      ? process.env.STRIPE_PRICE_ID_WHITE_LABEL
+      : process.env.STRIPE_PRICE_ID;
+
   if (!priceId) {
     return NextResponse.json(
       { error: "Subscription price not configured." },
@@ -87,6 +95,7 @@ export async function POST(request: Request) {
         customer_email: email,
         customer_phone: phone,
         company: company || "",
+        tier: selectedTier,
         source: "Real American Grit - Landing Page",
         ghl_contact_id: cid || "",
         utm_source: utm_source || "",
