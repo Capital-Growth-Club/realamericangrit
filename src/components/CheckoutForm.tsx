@@ -79,13 +79,6 @@ function PaymentForm({
     setPaying(true);
     setError("");
 
-    // Send lead to GHL in parallel (fire-and-forget)
-    fetch("/api/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...formData, ...tracking }),
-    }).catch(() => {});
-
     // Step 1: validate elements (surfaces card field errors immediately)
     console.log("[checkout] submitting Elements…");
     const { error: submitError } = await elements.submit();
@@ -242,9 +235,20 @@ export default function CheckoutForm({
     if (!formData.name || !formData.email || !formData.phone) return;
 
     autoIntentTriggered.current = true;
+    captureLead(formData, tracking);
     void createPaymentIntent(formData, tracking);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefilled, formData.name, formData.email, formData.phone]);
+
+  // Fire-and-forget: capture the lead in GHL the moment we have full contact info,
+  // before any Stripe interaction, so we still get the contact if they bail on payment.
+  function captureLead(data: FormData, track: Tracking) {
+    fetch("/api/lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...data, ...track }),
+    }).catch(() => {});
+  }
 
   async function createPaymentIntent(data: FormData, track: Tracking) {
     setLoading(true);
@@ -270,6 +274,7 @@ export default function CheckoutForm({
 
   async function handleManualSubmit(e: React.FormEvent) {
     e.preventDefault();
+    captureLead(formData, tracking);
     await createPaymentIntent(formData, tracking);
   }
 
