@@ -98,7 +98,10 @@ type GhlPayload = {
   stripe_customer_id: string;
   stripe_subscription_id?: string;
   amount_cents?: number;
+  amount_dollars?: number;
   currency?: string;
+  product_tier?: "standard" | "white-label" | "unknown";
+  product_name?: string;
   reason?: string;
 };
 
@@ -215,7 +218,10 @@ export async function POST(request: Request) {
             stripe_customer_id: customerId ?? "",
             stripe_subscription_id: subscriptionId,
             amount_cents: invoice.amount_paid,
+            amount_dollars: invoice.amount_paid / 100,
             currency: invoice.currency,
+            product_tier: tier,
+            product_name: productName,
           });
 
           await forwardToZapier({

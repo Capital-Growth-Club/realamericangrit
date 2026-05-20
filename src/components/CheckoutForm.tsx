@@ -246,7 +246,7 @@ export default function CheckoutForm({
     fetch("/api/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...data, ...track }),
+      body: JSON.stringify({ ...data, ...track, tier }),
     }).catch(() => {});
   }
 

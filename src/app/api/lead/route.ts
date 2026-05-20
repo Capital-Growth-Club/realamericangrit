@@ -4,6 +4,19 @@ import { NextResponse } from "next/server";
 const GHL_SIGNUP_WEBHOOK_URL =
   "https://services.leadconnectorhq.com/hooks/U33crx49dqSM4lE4OIY2/webhook-trigger/cab88f76-e7b3-4512-bfbb-de4d627ebcd0";
 
+const TIER_INFO = {
+  standard: {
+    productName: "Standard - The Full Library",
+    amountDollars: 997,
+    amountCents: 99700,
+  },
+  "white-label": {
+    productName: "White-Label - Make It Yours",
+    amountDollars: 1497,
+    amountCents: 149700,
+  },
+} as const;
+
 export async function POST(request: Request) {
   const body = await request.json();
 
@@ -12,6 +25,7 @@ export async function POST(request: Request) {
     email,
     phone,
     company,
+    tier,
     cid,
     utm_source,
     utm_medium,
@@ -23,6 +37,7 @@ export async function POST(request: Request) {
     email: string;
     phone: string;
     company?: string;
+    tier?: "standard" | "white-label";
     cid?: string;
     utm_source?: string;
     utm_medium?: string;
@@ -37,6 +52,10 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
+
+  const selectedTier: "standard" | "white-label" =
+    tier === "white-label" ? "white-label" : "standard";
+  const tierInfo = TIER_INFO[selectedTier];
 
   // Forward sign-up to Go High Level via webhook
   try {
@@ -53,6 +72,11 @@ export async function POST(request: Request) {
         source: "Real American Grit - Landing Page",
         event_type: "lead_captured",
         tags: ["rag-scaling-system", "landing-page-lead", "checkout-started"],
+        product_tier: selectedTier,
+        product_name: tierInfo.productName,
+        amount_dollars: tierInfo.amountDollars,
+        amount_cents: tierInfo.amountCents,
+        currency: "usd",
         utm_source: utm_source || "",
         utm_medium: utm_medium || "",
         utm_campaign: utm_campaign || "",
