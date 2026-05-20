@@ -1,4 +1,4 @@
-import { Mail, FileSignature, GraduationCap } from "lucide-react";
+import { Mail, KeyRound, GraduationCap } from "lucide-react";
 
 const hFont = "font-[family-name:var(--font-bebas)]";
 
@@ -6,17 +6,17 @@ const STEPS = [
   {
     icon: Mail,
     title: "Check Your Email",
-    desc: "We just sent your enrollment contract to the email you used at checkout. Open it and review the terms.",
+    desc: "A welcome email is on its way to the address you used at checkout. Open it for the next steps and a quick overview of what to expect.",
   },
   {
-    icon: FileSignature,
-    title: "Sign the Contract",
-    desc: "Once you sign, we'll immediately unlock access to the full Scaling System and all training materials.",
+    icon: KeyRound,
+    title: "Get Your Login Details",
+    desc: "A second email follows shortly with your username and temporary password. Should land in your inbox within the next few minutes.",
   },
   {
     icon: GraduationCap,
-    title: "Get Onboarded",
-    desc: "You'll receive your login credentials, a welcome call invite, and everything you need to start installing systems this week.",
+    title: "Log In & Access Your Material",
+    desc: "Use those credentials to log in, add your team, and start assigning playbooks. The full 9-figure library is unlocked the moment you sign in.",
   },
 ];
 
@@ -91,7 +91,7 @@ export default function ThankYou() {
 
           {/* Support note */}
           <p className="text-sm text-gray-500 mb-6">
-            Didn&rsquo;t get the email? Check your spam folder or email us at{" "}
+            Didn&rsquo;t get the emails? Check your spam folder or reach us at{" "}
             <a
               href="mailto:info@realamericangrit.com"
               className="text-[#BF0A30] hover:underline font-medium"
