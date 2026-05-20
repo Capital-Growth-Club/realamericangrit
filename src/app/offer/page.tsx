@@ -297,6 +297,27 @@ export default function Offer() {
   useReveal();
   useHeroFade();
 
+  // Mobile fix: re-scroll to the URL hash after images load. The browser's
+  // initial scroll-to-anchor happens before playbook cover images have laid
+  // out, so visitors arriving via #pricing land on the wrong section.
+  useEffect(() => {
+    if (!window.location.hash) return;
+    const id = window.location.hash.slice(1);
+    const scrollToHash = () => {
+      document.getElementById(id)?.scrollIntoView({ block: "start" });
+    };
+    if (document.readyState === "complete") {
+      scrollToHash();
+    } else {
+      window.addEventListener("load", scrollToHash, { once: true });
+    }
+    const t = window.setTimeout(scrollToHash, 800);
+    return () => {
+      window.removeEventListener("load", scrollToHash);
+      window.clearTimeout(t);
+    };
+  }, []);
+
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
       <CheckoutModal
