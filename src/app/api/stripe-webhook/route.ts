@@ -30,11 +30,12 @@ const GHL_CANCELED_WEBHOOK_URL =
 const GHL_CUSTOMER_WEBHOOK_URL =
   process.env.GHL_CUSTOMER_WEBHOOK_URL ?? process.env.GHL_WEBHOOK_URL ?? "";
 
-// Zapier — receives every successful payment with customer + product info
-const ZAPIER_PAYMENT_SUCCESS_WEBHOOK_URL =
-  "https://hooks.zapier.com/hooks/catch/18481939/4o5z9d0/";
+// Make.com — receives every successful payment with customer + product info.
+// Make's scenario provisions the LightspeedVT location + user from this payload.
+const MAKE_PAYMENT_SUCCESS_WEBHOOK_URL =
+  "https://hook.us2.make.com/wr8lnoxujvlnfh36554hbytr5d6bflec";
 
-type ZapierPayload = {
+type MakePayload = {
   first_name: string;
   last_name: string;
   email: string;
@@ -54,15 +55,15 @@ type ZapierPayload = {
   source: string;
 };
 
-async function forwardToZapier(payload: ZapierPayload) {
+async function forwardToMake(payload: MakePayload) {
   try {
-    await fetch(ZAPIER_PAYMENT_SUCCESS_WEBHOOK_URL, {
+    await fetch(MAKE_PAYMENT_SUCCESS_WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
   } catch (err) {
-    console.error("Zapier webhook forward failed:", err);
+    console.error("Make.com webhook forward failed:", err);
   }
 }
 
@@ -224,7 +225,7 @@ export async function POST(request: Request) {
             product_name: productName,
           });
 
-          await forwardToZapier({
+          await forwardToMake({
             first_name,
             last_name,
             email: customer.email ?? "",
