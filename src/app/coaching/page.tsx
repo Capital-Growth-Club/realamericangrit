@@ -325,17 +325,6 @@ export default function Home() {
   useReveal();
   useHeroFade();
 
-  // Auto-open the checkout modal when arriving via ?checkout=standard|white-label
-  // (used by the abandoned-checkout recovery email).
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const checkout = params.get("checkout");
-    if (checkout === "standard" || checkout === "white-label") {
-      setModalTier(checkout);
-      setModalOpen(true);
-    }
-  }, []);
-
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
       {/* Checkout modal */}
@@ -796,7 +785,7 @@ export default function Home() {
       </Section>
 
       {/* ═══ PRICING ANCHOR + WHITE-LABEL ═══ */}
-      <Section className="py-16 sm:py-24 bg-white">
+      <Section id="pricing" className="scroll-mt-[140px] py-16 sm:py-24 bg-white">
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           {/* Bundle visual — anchors "everything you get" before the price reveal */}
           <div className="flex justify-center mb-10 sm:mb-12">
