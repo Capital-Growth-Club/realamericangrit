@@ -127,6 +127,10 @@ async function lsvtCreateUser(params: {
         password: params.password,
         accessLevel: LSVT_ACCESS_LEVEL_MANAGER,
         forcePasswordUpdate: true,
+        // updateMyProfile must be true so the user actually has permission to
+        // change their own password; without it forcePasswordUpdate appears
+        // to be silently skipped on first login.
+        updateMyProfile: true,
         manageUsers: true,
         contentRole: params.contentRoles,
         isActive: true,
