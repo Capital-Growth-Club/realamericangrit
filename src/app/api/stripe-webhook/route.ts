@@ -70,11 +70,13 @@ async function lsvtCreateLocation(params: {
       body: JSON.stringify({
         sourceLocationId: LSVT_SOURCE_LOCATION_ID,
         name: params.name.slice(0, 100),
-        // Placeholder address — required by LSVT API but unknown at checkout.
-        // Customer can update inside LSVT once they're in.
-        address: "Not provided",
-        city: "Not provided",
-        state: "Not provided",
+        // Placeholder address values — LSVT validates `state` against a real
+        // US state list (rejects free-form like "Not provided") so we pass a
+        // valid state code. The owner can update everything from inside LSVT
+        // after they log in; we don't collect address at checkout.
+        address: "Update in settings",
+        city: "Update in settings",
+        state: "TX",
         zip: "00000",
         country: "USA",
         phone: params.phone || "0000000000",
