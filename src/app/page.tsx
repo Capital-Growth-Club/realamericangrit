@@ -407,7 +407,7 @@ export default function Home() {
           <p className="hero-fade text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
             Train every operator on your team — GM, Service Manager, Install
             Manager, Sales Lead, CSR, Technician — with the exact SOPs that
-            built a $1 billion home services operation. Without you
+            built a $140M+ home services operation. Without you
             having to be the trainer.
           </p>
 
@@ -444,7 +444,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-base text-[#475569] leading-relaxed">
-                Every system in this library came from <strong className="text-[#0B2341] font-semibold">Leesair</strong> — the home services operation Tom actually built, now valued past <strong className="text-[#0B2341] font-semibold">$1 billion</strong>. He&rsquo;s not a consultant. He lived it.
+                Every system in this library came from <strong className="text-[#0B2341] font-semibold">Lee&rsquo;s Air</strong> — the home services operation Tom actually built, now doing over <strong className="text-[#0B2341] font-semibold">$140M in annual revenue</strong>. He&rsquo;s not a consultant. He lived it.
               </p>
             </Stagger>
             <Stagger i={1} className="bg-white rounded-2xl p-7 border border-gray-200 hover:shadow-lg transition-shadow duration-200">
@@ -554,7 +554,7 @@ export default function Home() {
           {/* Hidden h2 for SEO/a11y */}
           <h2 className="sr-only">What is Real American Grit University?</h2>
           <p className="text-lg text-[#475569] leading-relaxed mb-4">
-            Get the <strong className="text-[#0B2341]">9 playbooks</strong> Tom used to run a <strong className="text-[#0B2341]">$1 billion home services company</strong> — now broken into video trainings that install a <strong className="text-[#0B2341]">9-figure standard</strong> into every operator on your team.
+            Get the <strong className="text-[#0B2341]">9 playbooks</strong> Tom used to run a <strong className="text-[#0B2341]">$140M+ home services company</strong> — now broken into video trainings that install a <strong className="text-[#0B2341]">9-figure standard</strong> into every operator on your team.
           </p>
           <p className="text-lg text-[#475569] leading-relaxed mb-4">
             Every department. Every role. Every operator. You assign the playbooks by role. Your team watches the videos. They take the quizzes. They earn the certificates. You watch their progress on one dashboard.
@@ -603,7 +603,7 @@ export default function Home() {
               9 Departments. 50+ Courses. <span className="text-[#BF0A30]">Zero Theory.</span>
             </h2>
             <p className="text-base text-[#475569] max-w-2xl mx-auto leading-relaxed">
-              Every system in this library came from a real $1 billion+
+              Every system in this library came from a real $140M+
               home services operation. Not a single module is theoretical.
             </p>
           </div>

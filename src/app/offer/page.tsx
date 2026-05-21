@@ -376,7 +376,7 @@ export default function Offer() {
           <p className="hero-fade text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
             Train every operator on your team — GM, Service Manager, Install
             Manager, Sales Lead, CSR, Technician — with the exact SOPs that
-            built a $1 billion home services operation. Without you
+            built a $140M+ home services operation. Without you
             having to be the trainer.
           </p>
 
@@ -408,7 +408,7 @@ export default function Offer() {
               9 Departments. 50+ Courses. <span className="text-[#BF0A30]">Zero Theory.</span>
             </h2>
             <p className="text-base text-[#475569] max-w-2xl mx-auto leading-relaxed">
-              Every system in this library came from a real $1 billion+
+              Every system in this library came from a real $140M+
               home services operation. Not a single module is theoretical.
             </p>
           </div>

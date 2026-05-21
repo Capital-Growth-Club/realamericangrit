@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "The 9-Figure Operator's Playbooks",
   description:
-    "Get the 9 playbooks behind a $1 billion home services company — now video trainings that install a 9-figure standard into every operator on your team. Built for HVAC, plumbing, electrical, roofing, and home services owners doing $2M – $10M.",
+    "Get the 9 playbooks behind a $140M+ home services company — now video trainings that install a 9-figure standard into every operator on your team. Built for HVAC, plumbing, electrical, roofing, and home services owners doing $2M – $10M.",
   openGraph: {
     title: "The 9-Figure Operator's Playbooks | Real American Grit University",
     description:
-      "Train every operator on your team — GM, Service Manager, Sales Lead, CSR, Tech — with the exact playbooks behind a $1 billion home services operation.",
+      "Train every operator on your team — GM, Service Manager, Sales Lead, CSR, Tech — with the exact playbooks behind a $140M+ home services operation.",
     url: "https://www.realamericangrit.com/offer",
     siteName: "Real American Grit University",
     type: "website",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The 9-Figure Operator's Playbooks | Real American Grit University",
     description:
-      "Train every operator on your team with the exact playbooks behind a $1 billion home services operation.",
+      "Train every operator on your team with the exact playbooks behind a $140M+ home services operation.",
     images: ["/Social Sharing Images.png"],
   },
   alternates: {
