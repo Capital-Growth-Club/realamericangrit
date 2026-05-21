@@ -28,7 +28,6 @@ import {
   Palette,
 } from "lucide-react";
 import CheckoutModal from "@/components/CheckoutModal";
-import VSLPlayer from "@/components/VSLPlayer";
 
 /* ─── heading font helper ─── */
 const hFont = "font-[family-name:var(--font-bebas)]";
@@ -411,8 +410,13 @@ export default function Home() {
             having to be the trainer.
           </p>
 
-          <div className="hero-fade mb-8 w-full">
-            <VSLPlayer />
+          <div className="hero-fade mb-8 w-full flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/9 Figure Operators Bundle.png"
+              alt="The 9-Figure Operator's Playbooks — complete bundle"
+              className="w-full max-w-3xl h-auto"
+            />
           </div>
 
           <div className="hero-fade flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
