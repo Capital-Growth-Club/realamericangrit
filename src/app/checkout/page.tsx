@@ -24,7 +24,7 @@ export default function CheckoutPage() {
       {/* Minimal header */}
       <header className="border-b border-white/10">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-5 sm:px-8 h-[72px]">
-          <a href="/coaching" className="flex items-center gap-2.5" aria-label="Home">
+          <a href="/" className="flex items-center gap-2.5" aria-label="Home">
             <div className="w-10 h-10 rounded-full bg-[#BF0A30] flex items-center justify-center">
               <span className={`text-sm font-black text-white tracking-[0.05em] ${hFont}`}>RAG</span>
             </div>
@@ -51,7 +51,7 @@ export default function CheckoutPage() {
             {/* ─── LEFT: Pitch ─── */}
             <div>
               <p className={`uppercase text-xs font-bold tracking-[0.2em] text-gray-400 mb-4 ${hFont}`}>
-                Led by the President of ServiceTitan &amp; the #1 home services sales rep
+                Led by the Owner of a $140M+ home services company &amp; the #1 home services sales rep
               </p>
 
               <h1

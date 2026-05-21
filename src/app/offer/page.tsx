@@ -394,7 +394,7 @@ export default function Offer() {
           </div>
 
           <p className="hero-fade text-sm text-gray-500">
-            Built by <span className="text-gray-300 font-medium">Tom Howard</span> (President of ServiceTitan · Owner of Leesair $1B+) and <span className="text-gray-300 font-medium">Phil Filaski</span> ($19.6M in residential HVAC sales)
+            Built by <span className="text-gray-300 font-medium">Tom Howard</span> (Owner of Lee&rsquo;s Air · $140M+ Annual Revenue) and <span className="text-gray-300 font-medium">Phil Filaski</span> ($19.6M in residential HVAC sales)
           </p>
         </div>
       </section>

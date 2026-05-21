@@ -17,7 +17,7 @@ const TIER_COPY: Record<
     subtitle: "Full library access for your entire team — billed monthly",
     bullets: [
       "All 9 department curricula — 50+ courses",
-      "Frameworks from Tom Howard (ServiceTitan president, Leesair owner) & Phil Filaski ($19.6M HVAC)",
+      "Frameworks from Tom Howard (Lee's Air owner, $140M+ annual revenue) & Phil Filaski ($19.6M HVAC)",
       "Quizzes, certificates, and the owner dashboard",
       "Lock in $997/m before it goes to $1,497/m",
     ],
