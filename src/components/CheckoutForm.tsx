@@ -221,7 +221,7 @@ export default function CheckoutForm({
 
     setTracking(trackNext);
 
-    if (next.name && next.email && next.phone) {
+    if (next.name && next.email && next.phone && next.company) {
       setFormData(next);
       setPrefilled(true);
     } else if (next.name || next.email || next.phone || next.company) {
@@ -232,13 +232,25 @@ export default function CheckoutForm({
   // Auto-create payment intent when contact info is fully prefilled
   useEffect(() => {
     if (!prefilled || autoIntentTriggered.current) return;
-    if (!formData.name || !formData.email || !formData.phone) return;
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.company
+    )
+      return;
 
     autoIntentTriggered.current = true;
     captureLead(formData, tracking);
     void createPaymentIntent(formData, tracking);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prefilled, formData.name, formData.email, formData.phone]);
+  }, [
+    prefilled,
+    formData.name,
+    formData.email,
+    formData.phone,
+    formData.company,
+  ]);
 
   // Fire-and-forget: capture the lead in GHL the moment we have full contact info,
   // before any Stripe interaction, so we still get the contact if they bail on payment.
@@ -382,6 +394,7 @@ export default function CheckoutForm({
         <input
           type="text"
           placeholder="Company Name"
+          required
           value={formData.company}
           onChange={(e) =>
             setFormData({ ...formData, company: e.target.value })

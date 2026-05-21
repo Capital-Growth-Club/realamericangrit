@@ -37,9 +37,9 @@ export async function POST(request: Request) {
     utm_term?: string;
   };
 
-  if (!name || !email || !phone) {
+  if (!name || !email || !phone || !company) {
     return NextResponse.json(
-      { error: "Name, email, and phone are required." },
+      { error: "Name, email, phone, and company are required." },
       { status: 400 },
     );
   }
