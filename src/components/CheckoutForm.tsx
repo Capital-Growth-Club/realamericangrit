@@ -52,6 +52,19 @@ const TIER_COPY: Record<Tier, { priceLabel: string; buttonLabel: string }> = {
   },
 };
 
+const TIER_PRICE: Record<Tier, number> = {
+  standard: 997,
+  "white-label": 1497,
+};
+
+function thankYouUrl(tier: Tier): string {
+  const params = new URLSearchParams({
+    tier,
+    amount: String(TIER_PRICE[tier]),
+  });
+  return `${window.location.origin}/thank-you?${params.toString()}`;
+}
+
 /* ─── Inner form (has access to Stripe context) ─── */
 function PaymentForm({
   formData,
@@ -96,7 +109,7 @@ function PaymentForm({
       const result = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/thank-you`,
+          return_url: thankYouUrl(tier),
           payment_method_data: {
             billing_details: {
               name: formData.name,
@@ -122,7 +135,7 @@ function PaymentForm({
       console.log("[checkout] PaymentIntent status:", status);
 
       if (status === "succeeded" || status === "processing") {
-        window.location.assign(`${window.location.origin}/thank-you`);
+        window.location.assign(thankYouUrl(tier));
         return;
       }
 

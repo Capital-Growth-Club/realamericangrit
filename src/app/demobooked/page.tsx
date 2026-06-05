@@ -1,61 +1,30 @@
-import { Mail, KeyRound, GraduationCap } from "lucide-react";
-import PurchaseEvent from "@/components/PurchaseEvent";
+import { CalendarCheck, Mail, Video } from "lucide-react";
+import ScheduleEvent from "@/components/ScheduleEvent";
 
 const hFont = "font-[family-name:var(--font-bebas)]";
-
-const TIER_PRICE: Record<"standard" | "white-label", number> = {
-  standard: 997,
-  "white-label": 1497,
-};
-
-function parseTier(raw: string | string[] | undefined): "standard" | "white-label" | null {
-  const v = Array.isArray(raw) ? raw[0] : raw;
-  if (v === "standard" || v === "white-label") return v;
-  return null;
-}
-
-function parseAmount(raw: string | string[] | undefined): number | null {
-  const v = Array.isArray(raw) ? raw[0] : raw;
-  if (!v) return null;
-  const n = Number(v);
-  return Number.isFinite(n) && n > 0 ? n : null;
-}
 
 const STEPS = [
   {
     icon: Mail,
     title: "Check Your Email",
-    desc: "A welcome email is on its way to the address you used at checkout. Open it for the next steps and a quick overview of what to expect.",
+    desc: "A calendar invite is on its way with the meeting details, dial-in link, and a quick note on what to bring to the demo.",
   },
   {
-    icon: KeyRound,
-    title: "Get Your Login Details",
-    desc: "A second email follows shortly with your username and temporary password. Should land in your inbox within the next few minutes.",
+    icon: Video,
+    title: "Show Up Ready",
+    desc: "Have a rough idea of your top 1–2 bottlenecks. We'll tailor the walkthrough to the parts of the platform that actually solve them.",
   },
   {
-    icon: GraduationCap,
-    title: "Log In & Access Your Material",
-    desc: "Use those credentials to log in, add your team, and start assigning playbooks. The full 9-figure library is unlocked the moment you sign in.",
+    icon: CalendarCheck,
+    title: "Walk Out With A Plan",
+    desc: "By the end of the call you'll know whether the system fits your shop, what onboarding looks like, and what the next 30 days would cost you.",
   },
 ];
 
-export default async function ThankYou({
-  searchParams,
-}: {
-  searchParams: Promise<{ tier?: string; amount?: string }>;
-}) {
-  const params = await searchParams;
-  const tier = parseTier(params.tier);
-  const explicitAmount = parseAmount(params.amount);
-  const purchaseValue = tier
-    ? explicitAmount ?? TIER_PRICE[tier]
-    : null;
-
+export default function DemoBooked() {
   return (
     <div className="relative min-h-[100dvh] bg-[#0B2341] text-white flex flex-col">
-      {tier && purchaseValue !== null && (
-        <PurchaseEvent value={purchaseValue} tier={tier} />
-      )}
+      <ScheduleEvent />
       {/* Top tricolor */}
       <div className="h-1 flex shrink-0" aria-hidden="true">
         <div className="flex-1 bg-[#BF0A30]" />
@@ -87,13 +56,13 @@ export default async function ThankYou({
 
           {/* Heading */}
           <p className={`uppercase text-xs font-bold tracking-[0.2em] text-[#BF0A30] mb-3 ${hFont}`}>
-            Payment Confirmed
+            Demo Booked
           </p>
           <h1 className={`text-4xl sm:text-5xl font-black tracking-[0.05em] leading-[1.1] mb-5 ${hFont}`}>
-            You&rsquo;re In.
+            You&rsquo;re On The Calendar.
           </h1>
           <p className="text-base sm:text-lg text-gray-400 leading-relaxed mb-12 max-w-md mx-auto">
-            Your subscription is active. Here&rsquo;s what happens next so we can get you fully onboarded and rolling.
+            We&rsquo;ve got your slot locked in. Here&rsquo;s what happens between now and the call.
           </p>
 
           {/* Next steps */}
@@ -124,7 +93,7 @@ export default async function ThankYou({
 
           {/* Support note */}
           <p className="text-sm text-gray-500 mb-6">
-            Didn&rsquo;t get the emails? Check your spam folder or reach us at{" "}
+            Need to reschedule or didn&rsquo;t get the invite? Reach us at{" "}
             <a
               href="mailto:info@realamericangrit.com"
               className="text-[#BF0A30] hover:underline font-medium"
