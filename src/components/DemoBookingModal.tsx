@@ -95,7 +95,13 @@ export default function DemoBookingModal({
       const res = await fetch("/api/send-phone-verification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: form.phone }),
+        body: JSON.stringify({
+          phone: form.phone,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          company: form.company,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {

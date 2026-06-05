@@ -3,6 +3,15 @@ import twilio from "twilio";
 
 export const dynamic = "force-dynamic";
 
+// GHL workflow that captures every demo-booking form submission. Fires
+// alongside the SMS send so we keep "demo intent" leads even when the user
+// bails before verifying. Note: the firstName/lastName/email/company come
+// from the modal but they're NOT verified here — only the phone is. The GHL
+// workflow can branch on whether the calendar booking eventually fires
+// (signaled by the booking redirect to /demobooked).
+const GHL_DEMO_LEAD_WEBHOOK =
+  "https://services.leadconnectorhq.com/hooks/U33crx49dqSM4lE4OIY2/webhook-trigger/2570196f-593a-4469-88eb-649a4c5bd798";
+
 function getClient() {
   const sid = process.env.TWILIO_ACCOUNT_SID;
   const token = process.env.TWILIO_AUTH_TOKEN;
@@ -18,8 +27,15 @@ function formatToE164(raw: string): string | null {
 }
 
 export async function POST(request: Request) {
-  const { phone } = (await request.json()) as { phone?: string };
+  const body = (await request.json()) as {
+    phone?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    company?: string;
+  };
 
+  const phone = body.phone?.trim() ?? "";
   if (!phone) {
     return NextResponse.json(
       { error: "Phone number is required." },
@@ -48,8 +64,6 @@ export async function POST(request: Request) {
     await client.verify.v2
       .services(serviceSid)
       .verifications.create({ to: formatted, channel: "sms" });
-
-    return NextResponse.json({ success: true, phone: formatted });
   } catch (err) {
     console.error("Twilio SMS send error:", err);
     return NextResponse.json(
@@ -57,4 +71,30 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
+
+  // Forward the lead to GHL. Fire-and-forget — if this fails we still want
+  // the user to see the verification screen (we already sent the SMS).
+  const firstName = body.firstName?.trim() ?? "";
+  const lastName = body.lastName?.trim() ?? "";
+  const email = body.email?.trim() ?? "";
+  const company = body.company?.trim() ?? "";
+  if (firstName || lastName || email || company) {
+    fetch(GHL_DEMO_LEAD_WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        phone: formatted,
+        company_name: company,
+        source: "Real American Grit - Demo Booking",
+        event_type: "demo_form_submitted",
+      }),
+    }).catch((err) => {
+      console.error("[demo] GHL webhook forward failed:", err);
+    });
+  }
+
+  return NextResponse.json({ success: true, phone: formatted });
 }
