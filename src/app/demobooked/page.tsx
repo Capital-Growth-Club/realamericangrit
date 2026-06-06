@@ -1,4 +1,4 @@
-import { CalendarCheck, Mail, Video, CalendarPlus } from "lucide-react";
+import { CalendarCheck, Mail, Video } from "lucide-react";
 import ScheduleEvent from "@/components/ScheduleEvent";
 
 const hFont = "font-[family-name:var(--font-bebas)]";
@@ -21,31 +21,7 @@ const STEPS = [
   },
 ];
 
-// Merge-field tokens GHL substitutes into the redirect URL. If GHL fails to
-// substitute (token shows up literally) we hide the button instead of
-// linking to garbage.
-function parseUrl(raw: string | string[] | undefined): string | null {
-  const v = Array.isArray(raw) ? raw[0] : raw;
-  if (!v) return null;
-  if (v.includes("{{") || v.includes("}}")) return null; // literal merge token
-  try {
-    const u = new URL(v);
-    if (u.protocol !== "https:" && u.protocol !== "http:") return null;
-    return u.toString();
-  } catch {
-    return null;
-  }
-}
-
-export default async function DemoBooked({
-  searchParams,
-}: {
-  searchParams: Promise<{ google?: string; outlook?: string }>;
-}) {
-  const params = await searchParams;
-  const googleUrl = parseUrl(params.google);
-  const outlookUrl = parseUrl(params.outlook);
-  const hasCalendarLinks = googleUrl || outlookUrl;
+export default function DemoBooked() {
   return (
     <div className="relative min-h-[100dvh] bg-[#0B2341] text-white flex flex-col">
       <ScheduleEvent />
@@ -85,40 +61,9 @@ export default async function DemoBooked({
           <h1 className={`text-4xl sm:text-5xl font-black tracking-[0.05em] leading-[1.1] mb-5 ${hFont}`}>
             You&rsquo;re On The Calendar.
           </h1>
-          <p className="text-base sm:text-lg text-gray-400 leading-relaxed mb-10 max-w-md mx-auto">
-            We&rsquo;ve got your slot locked in.{" "}
-            {hasCalendarLinks
-              ? "Add it to your calendar so you don't miss it."
-              : "Check your email for the calendar invite."}
+          <p className="text-base sm:text-lg text-gray-400 leading-relaxed mb-12 max-w-md mx-auto">
+            We&rsquo;ve got your slot locked in and a calendar invite is on its way to your inbox.
           </p>
-
-          {/* Add-to-calendar buttons (only if GHL passed the URLs) */}
-          {hasCalendarLinks && (
-            <div className="flex flex-col sm:flex-row gap-3 mb-10 max-w-md mx-auto">
-              {googleUrl && (
-                <a
-                  href={googleUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`inline-flex h-[52px] flex-1 items-center justify-center gap-2 rounded-full bg-[#BF0A30] text-white px-5 text-base font-bold tracking-[0.05em] cursor-pointer hover:bg-[#D91C40] active:bg-[#A00928] transition-colors duration-200 ${hFont}`}
-                >
-                  <CalendarPlus className="w-4 h-4" aria-hidden="true" />
-                  Add To Google Calendar
-                </a>
-              )}
-              {outlookUrl && (
-                <a
-                  href={outlookUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`inline-flex h-[52px] flex-1 items-center justify-center gap-2 rounded-full border-2 border-white/30 text-white px-5 text-base font-bold tracking-[0.05em] cursor-pointer hover:bg-white/10 active:bg-white/5 transition-colors duration-200 ${hFont}`}
-                >
-                  <CalendarPlus className="w-4 h-4" aria-hidden="true" />
-                  Add To Outlook
-                </a>
-              )}
-            </div>
-          )}
 
           {/* Next steps */}
           <div className="space-y-3 text-left mb-10">
