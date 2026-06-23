@@ -33,6 +33,13 @@ export async function POST(request: Request) {
     lastName?: string;
     email?: string;
     company?: string;
+    qualifiedOwner?: string;
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    utm_term?: string;
+    utm_content?: string;
+    fbclid?: string;
   };
 
   const phone = body.phone?.trim() ?? "";
@@ -48,6 +55,16 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Please enter a valid 10-digit US phone number." },
       { status: 400 },
+    );
+  }
+
+  // Defense in depth — the frontend should already redirect to
+  // /not-qualified, but if anything reaches us with qualifiedOwner === "no"
+  // we refuse the SMS send AND skip the GHL forward.
+  if (body.qualifiedOwner === "no") {
+    return NextResponse.json(
+      { error: "Demo not available — must be a $1M+ home service owner." },
+      { status: 403 },
     );
   }
 
@@ -88,6 +105,13 @@ export async function POST(request: Request) {
         email,
         phone: formatted,
         company_name: company,
+        qualified_owner: body.qualifiedOwner ?? "",
+        utm_source: body.utm_source ?? "",
+        utm_medium: body.utm_medium ?? "",
+        utm_campaign: body.utm_campaign ?? "",
+        utm_term: body.utm_term ?? "",
+        utm_content: body.utm_content ?? "",
+        fbclid: body.fbclid ?? "",
         source: "Real American Grit - Demo Booking",
         event_type: "demo_form_submitted",
       }),

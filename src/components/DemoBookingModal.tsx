@@ -14,8 +14,10 @@ const hFont = "font-[family-name:var(--font-bebas)]";
 const CALENDAR_ID = "DUSPZCW0jGMskd8wx9p4";
 
 type Step = "form" | "verify" | "calendar";
+type YesNo = "" | "yes" | "no";
 
 type Form = {
+  qualifiedOwner: YesNo;
   firstName: string;
   lastName: string;
   email: string;
@@ -23,13 +25,38 @@ type Form = {
   company: string;
 };
 
+type Utm = {
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  utm_term: string;
+  utm_content: string;
+  fbclid: string;
+};
+
 const EMPTY: Form = {
+  qualifiedOwner: "",
   firstName: "",
   lastName: "",
   email: "",
   phone: "",
   company: "",
 };
+
+const EMPTY_UTM: Utm = {
+  utm_source: "",
+  utm_medium: "",
+  utm_campaign: "",
+  utm_term: "",
+  utm_content: "",
+  fbclid: "",
+};
+
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+  }
+}
 
 export default function DemoBookingModal({
   open,
@@ -40,11 +67,28 @@ export default function DemoBookingModal({
 }) {
   const [step, setStep] = useState<Step>("form");
   const [form, setForm] = useState<Form>(EMPTY);
+  const [utm, setUtm] = useState<Utm>(EMPTY_UTM);
   const [verifiedPhone, setVerifiedPhone] = useState("");
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const codeInputRef = useRef<HTMLInputElement>(null);
+
+  // Capture UTM + click-id params off the URL on mount so we can forward
+  // them with the lead submission. Read directly from window.location so
+  // we don't force the page into dynamic rendering via useSearchParams.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const p = new URLSearchParams(window.location.search);
+    setUtm({
+      utm_source: p.get("utm_source") ?? "",
+      utm_medium: p.get("utm_medium") ?? "",
+      utm_campaign: p.get("utm_campaign") ?? "",
+      utm_term: p.get("utm_term") ?? "",
+      utm_content: p.get("utm_content") ?? "",
+      fbclid: p.get("fbclid") ?? "",
+    });
+  }, []);
 
   // Lock body scroll while open and reset state on close
   useEffect(() => {
@@ -90,6 +134,15 @@ export default function DemoBookingModal({
   async function submitForm(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+
+    // Gate: if they don't own a home service business doing $1M+, they're
+    // outside our ICP. Bounce to /not-qualified — no API call, no GHL
+    // forward, no Facebook Pixel Lead event.
+    if (form.qualifiedOwner === "no") {
+      window.location.assign("/not-qualified");
+      return;
+    }
+
     setBusy(true);
     try {
       const res = await fetch("/api/send-phone-verification", {
@@ -101,6 +154,8 @@ export default function DemoBookingModal({
           lastName: form.lastName,
           email: form.email,
           company: form.company,
+          qualifiedOwner: form.qualifiedOwner,
+          ...utm,
         }),
       });
       const data = await res.json();
@@ -109,6 +164,17 @@ export default function DemoBookingModal({
         setBusy(false);
         return;
       }
+
+      // Qualified lead captured — fire the FB Pixel Lead event. Schedule
+      // (the optimization target) fires later on /demobooked when they
+      // actually book a slot.
+      if (typeof window !== "undefined" && window.fbq) {
+        window.fbq("track", "Lead", {
+          content_name: "Real American Grit — Demo Booking",
+          content_category: "demo",
+        });
+      }
+
       setVerifiedPhone(data.phone);
       setStep("verify");
     } catch {
@@ -167,6 +233,7 @@ export default function DemoBookingModal({
   })();
 
   const formValid =
+    form.qualifiedOwner &&
     form.firstName.trim() &&
     form.lastName.trim() &&
     form.email.trim() &&
@@ -210,6 +277,12 @@ export default function DemoBookingModal({
             </p>
 
             <div className="space-y-3 mb-4">
+              <YesNoField
+                label="Do you own a home service business doing $1M+ a year?"
+                value={form.qualifiedOwner}
+                onChange={(v) => setForm((f) => ({ ...f, qualifiedOwner: v }))}
+                disabled={busy}
+              />
               <div className="grid grid-cols-2 gap-3">
                 <Field
                   label="First Name"
@@ -401,6 +474,54 @@ export default function DemoBookingModal({
             </div>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+function YesNoField({
+  label,
+  value,
+  onChange,
+  disabled,
+}: {
+  label: string;
+  value: YesNo;
+  onChange: (v: YesNo) => void;
+  disabled?: boolean;
+}) {
+  const baseBtn = `h-11 rounded-lg border text-sm font-bold tracking-[0.05em] uppercase transition-colors duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${hFont}`;
+  const selected =
+    "bg-[#BF0A30] border-[#BF0A30] text-white hover:bg-[#D91C40]";
+  const unselected =
+    "bg-[#06192F] border-white/15 text-gray-400 hover:border-white/30 hover:text-white";
+  return (
+    <div>
+      <span
+        className={`block text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-1.5 ${hFont}`}
+      >
+        {label}
+        <span className="text-[#BF0A30] ml-1">*</span>
+      </span>
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={() => onChange("yes")}
+          aria-pressed={value === "yes"}
+          className={`${baseBtn} ${value === "yes" ? selected : unselected}`}
+        >
+          Yes
+        </button>
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={() => onChange("no")}
+          aria-pressed={value === "no"}
+          className={`${baseBtn} ${value === "no" ? selected : unselected}`}
+        >
+          No
+        </button>
       </div>
     </div>
   );
