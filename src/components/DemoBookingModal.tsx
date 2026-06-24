@@ -278,7 +278,7 @@ export default function DemoBookingModal({
 
             <div className="space-y-3 mb-4">
               <YesNoField
-                label="Do you own a home service business doing $1M+ a year?"
+                label="Do you own a home service business with 3+ employees?"
                 value={form.qualifiedOwner}
                 onChange={(v) => setForm((f) => ({ ...f, qualifiedOwner: v }))}
                 disabled={busy}

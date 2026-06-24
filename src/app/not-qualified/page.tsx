@@ -42,12 +42,12 @@ export default function NotQualified() {
           <h1
             className={`text-4xl sm:text-5xl font-black tracking-[0.05em] leading-[1.05] mb-6 ${hFont}`}
           >
-            These demos are reserved for <span className="text-[#BF0A30]">$1M&ndash;$10M home service owners.</span>
+            These demos are reserved for <span className="text-[#BF0A30]">home service owners with a team.</span>
           </h1>
 
           <div className="space-y-4 text-base sm:text-lg text-gray-400 leading-relaxed mb-10 max-w-lg mx-auto">
             <p>
-              This is reserved for home service businesses doing <strong className="text-white">$1M&ndash;$10M a year</strong> who are trying to install the systems that can support a <strong className="text-white">9-figure-plus enterprise</strong>.
+              This is reserved for home service business owners with <strong className="text-white">3 or more employees</strong> who are trying to install the systems that can support a <strong className="text-white">9-figure-plus enterprise</strong>.
             </p>
             <p>
               If that&rsquo;s not you yet, we don&rsquo;t want to waste your time or ours on a demo that won&rsquo;t deliver. When you get there, come back.
