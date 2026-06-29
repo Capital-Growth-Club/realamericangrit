@@ -10,11 +10,12 @@ const LSVT_SOURCE_LOCATION_ID = Number(
 );
 const LSVT_ACCESS_LEVEL_MANAGER = 4; // Manager/Location Owner per LSVT docs
 const LSVT_CONTENT_ROLES: Record<LsvtTier, number[]> = {
+  essentials: [40245, 40246],
   standard: [40245, 40246],
   "white-label": [40245, 40246, 41313],
 };
 
-export type LsvtTier = "standard" | "white-label";
+export type LsvtTier = "essentials" | "standard" | "white-label";
 
 export type LsvtProvisionResult = {
   locationId: number;

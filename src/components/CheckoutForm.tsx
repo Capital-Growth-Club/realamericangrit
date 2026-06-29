@@ -39,9 +39,13 @@ const EMPTY_TRACKING: Tracking = {
   utm_term: "",
 };
 
-type Tier = "standard" | "white-label";
+type Tier = "essentials" | "standard" | "white-label";
 
 const TIER_COPY: Record<Tier, { priceLabel: string; buttonLabel: string }> = {
+  essentials: {
+    priceLabel: "$549/m",
+    buttonLabel: "Start Subscription — $549/m",
+  },
   standard: {
     priceLabel: "$997/m",
     buttonLabel: "Start Subscription — $997/m",
@@ -53,6 +57,7 @@ const TIER_COPY: Record<Tier, { priceLabel: string; buttonLabel: string }> = {
 };
 
 const TIER_PRICE: Record<Tier, number> = {
+  essentials: 549,
   standard: 997,
   "white-label": 1497,
 };

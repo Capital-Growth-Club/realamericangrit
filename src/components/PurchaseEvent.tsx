@@ -4,10 +4,11 @@ import { useEffect, useRef } from "react";
 
 type Props = {
   value: number;
-  tier: "standard" | "white-label";
+  tier: "essentials" | "standard" | "white-label";
 };
 
 const CONTENT_NAME: Record<Props["tier"], string> = {
+  essentials: "Essentials - The Core Library",
   standard: "Standard - The Full Library",
   "white-label": "White-Label - Make It Yours",
 };

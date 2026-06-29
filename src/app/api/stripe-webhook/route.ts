@@ -34,12 +34,21 @@ const GHL_CUSTOMER_WEBHOOK_URL =
 function resolveTier(
   metadataTier: string | undefined,
   priceId: string,
-): { tier: "standard" | "white-label" | "unknown"; productName: string } {
+): {
+  tier: "essentials" | "standard" | "white-label" | "unknown";
+  productName: string;
+} {
   if (metadataTier === "white-label") {
     return { tier: "white-label", productName: "White-Label - Make It Yours" };
   }
   if (metadataTier === "standard") {
     return { tier: "standard", productName: "Standard - The Full Library" };
+  }
+  if (metadataTier === "essentials") {
+    return {
+      tier: "essentials",
+      productName: "Essentials - The Core Library",
+    };
   }
   // Fallback: match against configured price IDs
   if (priceId && priceId === process.env.STRIPE_PRICE_ID_WHITE_LABEL) {
@@ -47,6 +56,12 @@ function resolveTier(
   }
   if (priceId && priceId === process.env.STRIPE_PRICE_ID) {
     return { tier: "standard", productName: "Standard - The Full Library" };
+  }
+  if (priceId && priceId === process.env.STRIPE_PRICE_ID_ESSENTIALS) {
+    return {
+      tier: "essentials",
+      productName: "Essentials - The Core Library",
+    };
   }
   return { tier: "unknown", productName: "Unknown" };
 }
@@ -65,7 +80,7 @@ type GhlPayload = {
   amount_cents?: number;
   amount_dollars?: number;
   currency?: string;
-  product_tier?: "standard" | "white-label" | "unknown";
+  product_tier?: "essentials" | "standard" | "white-label" | "unknown";
   product_name?: string;
   reason?: string;
 };
@@ -168,6 +183,43 @@ export async function POST(request: Request) {
             }
           }
           const { tier, productName } = resolveTier(metadataTier, priceId);
+
+          // For new subscriptions, check if this came through a Checkout Session
+          // (Payment Link flow). Payment Links can collect a "Company Name"
+          // custom field that we use to name the LSVT location correctly —
+          // Stripe doesn't put it on customer.metadata automatically, so we
+          // look it up here and persist it back.
+          if (isFirstPayment && subscriptionId) {
+            try {
+              const sessions = await stripe.checkout.sessions.list({
+                subscription: subscriptionId,
+                limit: 1,
+              });
+              const session = sessions.data[0];
+              const companyField = session?.custom_fields?.find(
+                (f) => f.key === "company",
+              );
+              const companyFromSession = companyField?.text?.value?.trim();
+              if (companyFromSession) {
+                await stripe.customers.update(customer.id, {
+                  metadata: {
+                    ...customer.metadata,
+                    company: companyFromSession,
+                  },
+                });
+                // Patch the local copy so downstream GHL + LSVT calls use it.
+                customer.metadata = {
+                  ...customer.metadata,
+                  company: companyFromSession,
+                };
+              }
+            } catch (err) {
+              console.error(
+                "Failed to read Checkout Session custom fields:",
+                err,
+              );
+            }
+          }
 
           await forwardToGhl(GHL_PAYMENT_SUCCESS_WEBHOOK_URL, {
             first_name,

@@ -8,10 +8,12 @@ const hFont = "font-[family-name:var(--font-bebas)]";
 
 export default function StageOffer() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalTier, setModalTier] = useState<"standard" | "white-label">(
-    "standard",
-  );
-  const openModal = (tier: "standard" | "white-label" = "standard") => {
+  const [modalTier, setModalTier] = useState<
+    "essentials" | "standard" | "white-label"
+  >("standard");
+  const openModal = (
+    tier: "essentials" | "standard" | "white-label" = "standard",
+  ) => {
     setModalTier(tier);
     setModalOpen(true);
   };
@@ -70,9 +72,63 @@ export default function StageOffer() {
         />
       </section>
 
-      {/* ═══ TWO PURCHASE OPTIONS ═══ */}
+      {/* ═══ THREE PURCHASE OPTIONS ═══ */}
       <section className="relative shrink-0 px-4 sm:px-8 pb-6">
-        <div className="w-full max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <div className="w-full max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+          {/* Essentials */}
+          <div className="relative bg-white text-[#0B2341] rounded-2xl p-6 sm:p-7 border-2 border-gray-200 flex flex-col">
+            <p
+              className={`text-sm sm:text-base font-black text-[#BF0A30] tracking-[0.25em] mb-2 ${hFont}`}
+            >
+              ESSENTIALS
+            </p>
+            <h3
+              className={`font-black text-2xl sm:text-3xl tracking-[0.05em] mb-1 ${hFont}`}
+            >
+              The Core Library
+            </h3>
+            <p className="text-sm sm:text-base text-[#475569] mb-4">
+              Standard, minus the AI role-playing module.
+            </p>
+            <div className="flex items-baseline gap-1 mb-5">
+              <span
+                className={`text-4xl sm:text-5xl font-black text-[#0B2341] ${hFont}`}
+              >
+                $549
+              </span>
+              <span className="text-sm sm:text-base text-[#475569] font-medium">
+                /m
+              </span>
+            </div>
+            <ul className="space-y-2 mb-6 flex-1">
+              {[
+                "All 9 department curricula",
+                "Quizzes + certificates per course",
+                "Owner dashboard + progress tracking",
+                "No AI role-playing module",
+              ].map((item, j) => (
+                <li
+                  key={j}
+                  className="flex items-start gap-2.5 text-sm sm:text-base text-[#475569] leading-snug"
+                >
+                  <Check
+                    className="shrink-0 mt-1 w-4 h-4 text-[#0B2341]"
+                    strokeWidth={3}
+                    aria-hidden="true"
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              onClick={() => openModal("essentials")}
+              className={`inline-flex h-[56px] sm:h-[60px] items-center justify-center rounded-full px-6 text-lg sm:text-xl font-bold tracking-[0.05em] cursor-pointer border-2 border-[#BF0A30] text-[#BF0A30] hover:bg-[#BF0A30] hover:text-white transition-colors duration-200 w-full ${hFont}`}
+            >
+              Start Essentials
+            </button>
+          </div>
+
           {/* Standard */}
           <div className="relative bg-white text-[#0B2341] rounded-2xl p-6 sm:p-7 border-2 border-[#BF0A30] flex flex-col">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#BF0A30] text-white px-4 py-1 rounded-full">
@@ -108,9 +164,9 @@ export default function StageOffer() {
             <ul className="space-y-2 mb-6 flex-1">
               {[
                 "All 9 department curricula",
+                "Includes AI sales role-playing",
                 "Quizzes + certificates per course",
                 "Owner dashboard + progress tracking",
-                "23-day Sales Huddle Series",
               ].map((item, j) => (
                 <li
                   key={j}

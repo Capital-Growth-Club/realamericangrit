@@ -314,10 +314,12 @@ const PLATFORM = [
 export default function Home() {
   const { visible } = useScrollNav();
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalTier, setModalTier] = useState<"standard" | "white-label">(
-    "standard",
-  );
-  const openModal = (tier: "standard" | "white-label" = "standard") => {
+  const [modalTier, setModalTier] = useState<
+    "essentials" | "standard" | "white-label"
+  >("standard");
+  const openModal = (
+    tier: "essentials" | "standard" | "white-label" = "standard",
+  ) => {
     setModalTier(tier);
     setModalOpen(true);
   };
@@ -811,7 +813,7 @@ export default function Home() {
 
       {/* ═══ PRICING ANCHOR + WHITE-LABEL ═══ */}
       <Section id="pricing" className="scroll-mt-[140px] py-16 sm:py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8">
           {/* Bundle visual — anchors "everything you get" before the price reveal */}
           <div className="flex justify-center mb-10 sm:mb-12">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -824,18 +826,45 @@ export default function Home() {
           <div className="text-center mb-12">
             <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-3 ${hFont}`}>What it actually costs you</p>
             <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black text-[#0B2341] tracking-[0.05em] leading-[1.05] mb-4 ${hFont}`}>
-              <span className="line-through text-[#475569]/70">$64,973</span> a la carte. <br className="hidden sm:inline" /><span className="text-[#BF0A30]">$997/m with us.</span>
+              <span className="line-through text-[#475569]/70">$64,973</span> a la carte. <br className="hidden sm:inline" /><span className="text-[#BF0A30]">From $549/m with us.</span>
             </h2>
             <p className="text-lg sm:text-xl text-[#475569] max-w-xl mx-auto leading-relaxed">
-              One library. Run it as Real American Grit, or fully rebrand it as your own.
+              One library. Three ways to roll it out — start essentials, go full standard, or fully rebrand it as your own.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-10">
+            {/* Essentials */}
+            <Stagger i={0} className="relative bg-[#EDEDED] rounded-2xl p-8 border-2 border-gray-200">
+              <p className={`text-base sm:text-lg font-black text-[#BF0A30] tracking-[0.25em] mb-2 ${hFont}`}>ESSENTIALS</p>
+              <h3 className={`font-black text-3xl sm:text-4xl text-[#0B2341] mb-1 ${hFont}`}>The Core Library</h3>
+              <p className="text-base sm:text-lg text-[#475569] mb-5">Standard library, minus the AI role-playing module.</p>
+              <div className="flex items-baseline gap-1 mb-6">
+                <span className={`text-5xl font-black text-[#0B2341] ${hFont}`}>$549</span>
+                <span className="text-base text-[#475569] font-medium">/m</span>
+              </div>
+              <ul className="space-y-2.5 mb-6">
+                {[
+                  "All 9 department curricula",
+                  "Quizzes + certificates per course",
+                  "Owner dashboard with progress tracking",
+                  "23-day Sales Huddle Series",
+                  "Quarterly content drops",
+                  "Does not include the AI role-playing module",
+                ].map((item, j) => (
+                  <li key={j} className="flex items-start gap-2.5 text-base text-[#475569]">
+                    <Check className="shrink-0 mt-1 w-4 h-4 text-[#0B2341]" strokeWidth={3} aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <CtaButton variant="outline-dark" className="w-full" onClick={() => openModal("essentials")} label="Start With Essentials" />
+            </Stagger>
+
             {/* Standard */}
-            <Stagger i={0} className="relative bg-[#EDEDED] rounded-2xl p-8 border-2 border-[#BF0A30]/20">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#BF0A30] text-white px-4 py-1 rounded-full">
-                <p className={`text-sm sm:text-base font-bold tracking-[0.25em] ${hFont}`}>MOST POPULAR</p>
+            <Stagger i={1} className="relative bg-[#EDEDED] rounded-2xl p-8 border-2 border-[#BF0A30]/20">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#BF0A30] text-white px-5 sm:px-6 py-1 sm:py-1.5 rounded-full shadow-lg shadow-[#BF0A30]/30 whitespace-nowrap">
+                <p className={`text-sm sm:text-base font-bold tracking-[0.25em] pl-[0.25em] ${hFont}`}>MOST POPULAR</p>
               </div>
               <p className={`text-base sm:text-lg font-black text-[#BF0A30] tracking-[0.25em] mb-2 ${hFont}`}>STANDARD</p>
               <h3 className={`font-black text-3xl sm:text-4xl text-[#0B2341] mb-1 ${hFont}`}>The Full Library</h3>
@@ -847,6 +876,7 @@ export default function Home() {
               <ul className="space-y-2.5 mb-6">
                 {[
                   "All 9 department curricula",
+                  "Includes the AI sales role-playing module",
                   "Quizzes + certificates per course",
                   "Owner dashboard with progress tracking",
                   "23-day Sales Huddle Series",
@@ -863,7 +893,7 @@ export default function Home() {
             </Stagger>
 
             {/* White-Label */}
-            <Stagger i={1} className="relative bg-[#0B2341] text-white rounded-2xl p-8 border-2 border-white/10">
+            <Stagger i={2} className="relative bg-[#0B2341] text-white rounded-2xl p-8 border-2 border-white/10">
               <div className="flex items-center gap-2 mb-2">
                 <Palette className="w-4 h-4 text-[#BF0A30]" aria-hidden="true" />
                 <p className={`text-base sm:text-lg font-black text-[#BF0A30] tracking-[0.25em] ${hFont}`}>WHITE-LABEL</p>

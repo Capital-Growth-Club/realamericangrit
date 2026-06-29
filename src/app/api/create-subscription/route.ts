@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     email: string;
     phone: string;
     company?: string;
-    tier?: "standard" | "white-label";
+    tier?: "essentials" | "standard" | "white-label";
     cid?: string;
     utm_source?: string;
     utm_medium?: string;
@@ -44,11 +44,17 @@ export async function POST(request: Request) {
     );
   }
 
-  const selectedTier: "standard" | "white-label" =
-    tier === "white-label" ? "white-label" : "standard";
+  const selectedTier: "essentials" | "standard" | "white-label" =
+    tier === "white-label"
+      ? "white-label"
+      : tier === "essentials"
+      ? "essentials"
+      : "standard";
   const priceId =
     selectedTier === "white-label"
       ? process.env.STRIPE_PRICE_ID_WHITE_LABEL
+      : selectedTier === "essentials"
+      ? process.env.STRIPE_PRICE_ID_ESSENTIALS
       : process.env.STRIPE_PRICE_ID;
 
   if (!priceId) {

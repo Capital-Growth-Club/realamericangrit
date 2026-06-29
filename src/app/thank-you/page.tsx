@@ -3,14 +3,17 @@ import PurchaseEvent from "@/components/PurchaseEvent";
 
 const hFont = "font-[family-name:var(--font-bebas)]";
 
-const TIER_PRICE: Record<"standard" | "white-label", number> = {
+const TIER_PRICE: Record<"essentials" | "standard" | "white-label", number> = {
+  essentials: 549,
   standard: 997,
   "white-label": 1497,
 };
 
-function parseTier(raw: string | string[] | undefined): "standard" | "white-label" | null {
+function parseTier(
+  raw: string | string[] | undefined,
+): "essentials" | "standard" | "white-label" | null {
   const v = Array.isArray(raw) ? raw[0] : raw;
-  if (v === "standard" || v === "white-label") return v;
+  if (v === "essentials" || v === "standard" || v === "white-label") return v;
   return null;
 }
 
