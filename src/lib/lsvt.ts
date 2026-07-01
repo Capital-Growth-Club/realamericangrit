@@ -9,10 +9,14 @@ const LSVT_SOURCE_LOCATION_ID = Number(
   process.env.LSVT_SOURCE_LOCATION_ID ?? "233608", // B2B Template Location
 );
 const LSVT_ACCESS_LEVEL_MANAGER = 4; // Manager/Location Owner per LSVT docs
+// LSVT content role bundles per tier (confirmed with the LSVT team):
+//   40245, 40246 — Core Library (all 9 department curricula, quizzes, certs)
+//   41450        — AI Sales Roleplay module (Standard + White-Label only)
+//   41313        — White-Label branding overlay (White-Label only)
 const LSVT_CONTENT_ROLES: Record<LsvtTier, number[]> = {
   essentials: [40245, 40246],
-  standard: [40245, 40246],
-  "white-label": [40245, 40246, 41313],
+  standard: [40245, 40246, 41450],
+  "white-label": [40245, 40246, 41450, 41313],
 };
 
 export type LsvtTier = "essentials" | "standard" | "white-label";
@@ -160,11 +164,13 @@ export async function provisionLightspeedVT(payload: {
   }
   console.log(`[LSVT] created location ${locationId} (${locationName})`);
 
-  // Temp password = FirstNameLastName123! (spaces stripped) — matches the
-  // credentials email sent by GHL. forcePasswordUpdate makes LSVT require
-  // the user to set their own on first login.
-  const stripSpaces = (s: string) => (s || "").replace(/\s+/g, "");
-  const password = `${stripSpaces(payload.first_name)}${stripSpaces(payload.last_name)}123!`;
+  // Static temp password — every new user gets the same initial credentials
+  // and is forced to change them on first login (forcePasswordUpdate=true).
+  // Previously this was `${firstName}${lastName}123!` but the password lived
+  // in two places (LSVT user creation here, GHL credentials email merge
+  // fields) and any name-format mismatch between Stripe + GHL caused them
+  // to disagree. Static value eliminates that whole class of bug.
+  const password = "RealGrit123!";
 
   const userId = await lsvtCreateUser({
     locationId,
