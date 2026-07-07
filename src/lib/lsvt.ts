@@ -12,11 +12,12 @@ const LSVT_ACCESS_LEVEL_MANAGER = 4; // Manager/Location Owner per LSVT docs
 // LSVT content role bundles per tier (confirmed with the LSVT team):
 //   40245, 40246 — Core Library (all 9 department curricula, quizzes, certs)
 //   41450        — AI Sales Roleplay module (Standard + White-Label only)
+//   41606        — Full Library add-on (Standard + White-Label only)
 //   41313        — White-Label branding overlay (White-Label only)
 const LSVT_CONTENT_ROLES: Record<LsvtTier, number[]> = {
   essentials: [40245, 40246],
-  standard: [40245, 40246, 41450],
-  "white-label": [40245, 40246, 41450, 41313],
+  standard: [40245, 40246, 41450, 41606],
+  "white-label": [40245, 40246, 41450, 41313, 41606],
 };
 
 export type LsvtTier = "essentials" | "standard" | "white-label";
