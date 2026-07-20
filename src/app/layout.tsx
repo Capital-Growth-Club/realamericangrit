@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bebas_Neue, Roboto } from "next/font/google";
 import "./globals.css";
 import FacebookPixel from "@/components/FacebookPixel";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 const bebas = Bebas_Neue({
   variable: "--font-bebas",
@@ -75,6 +76,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-white text-[#1a1a1a]">
         <FacebookPixel />
+        <GoogleAnalytics />
         {children}
       </body>
     </html>

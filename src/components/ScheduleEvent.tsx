@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { track } from "@/lib/analytics";
 
-// Fires the FB Pixel Schedule event on /demobooked. This is the conversion
-// event we optimize Facebook ads against — fires only after a successful
-// appointment booking. Lead fires earlier (on form submission) but is not
-// the optimization target.
+// Fires two conversion events on /demobooked:
+//   1. FB Pixel Schedule — reserved standard event, our Facebook ads
+//      optimization target. Fires via fbq('track', 'Schedule').
+//   2. GA4 demo_booked — custom event via track() so it's auto-tagged
+//      with ab_variant. Lets us measure the /demo → /demobooked funnel
+//      split by A/B in BigQuery.
 export default function ScheduleEvent() {
   // Guard against duplicate fires from React StrictMode double-mount in dev
   // and from any unintended re-renders.
@@ -13,12 +16,20 @@ export default function ScheduleEvent() {
 
   useEffect(() => {
     if (fired.current) return;
-    if (typeof window === "undefined" || !window.fbq) return;
+    if (typeof window === "undefined") return;
     fired.current = true;
-    window.fbq("track", "Schedule", {
+
+    const eventData = {
       content_name: "Real American Grit — Demo Booking",
       content_category: "demo",
-    });
+    };
+
+    if (window.fbq) {
+      window.fbq("track", "Schedule", eventData);
+    }
+
+    // GA4 + Meta Pixel custom event, auto-enriched with ab_variant.
+    track("demo_booked", eventData);
   }, []);
 
   return null;
