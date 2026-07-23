@@ -409,7 +409,7 @@ export default function DemoLandingPage({
           </h1>
 
           <p className="hero-fade text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-6">
-            Every fire, every price, and every process runs through your cellphone first. Real American Grit takes the 9 SOP Training playbooks that built a <strong className="text-gray-200 font-semibold">$140M+ home services operation</strong> and installs them into every operator on your team — so you stop being the duct tape and start being the CEO.
+            Every fire, every price, and every process runs through your cellphone first. Real American Grit takes the 9 SOP Training playbooks that built a <strong className="text-gray-200 font-semibold">$140M/yr+ home services operation</strong> and installs them into every operator on your team — so you stop being the duct tape and start being the CEO.
           </p>
 
           <p className="hero-fade text-sm sm:text-base text-gray-500 mb-8 tracking-wide">
