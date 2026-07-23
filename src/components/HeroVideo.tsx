@@ -165,7 +165,9 @@ export default function HeroVideo({
     v.muted = false;
     v.loop = false;
     clearReplay();
-    if (v.currentTime < 1) v.currentTime = 0;
+    // First "real" play always starts from the beginning, regardless of where
+    // the muted preview loop happened to be.
+    v.currentTime = 0;
     v.play().catch(() => {});
     // Reset progress marks so we count checkpoints for the "real" watch.
     progressMarksRef.current = new Set();
@@ -261,6 +263,19 @@ export default function HeroVideo({
       >
         <source src={src} type="video/mp4" />
       </video>
+
+      {/* Tap anywhere to pause/play (post-unmute). Sits above the video but
+          below the z-10 controls, so the control buttons still win their taps.
+          Essential on mobile, where the bottom controls only reveal on hover. */}
+      {unmuted && (
+        <button
+          type="button"
+          onClick={togglePlay}
+          aria-label={isPlaying ? "Pause video" : "Play video"}
+          tabIndex={-1}
+          className="absolute inset-0 z-0 cursor-pointer"
+        />
+      )}
 
       {/* Tap-to-unmute overlay */}
       {!unmuted && (
