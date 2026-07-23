@@ -17,7 +17,7 @@ const TIER_COPY: Record<
     subtitle: "Standard library, minus the AI role-playing module",
     bullets: [
       "All 9 department curricula — 50+ courses",
-      "Frameworks from Tom Howard (Lee's Air owner, $140M+ annual revenue) & Phil Filaski ($19.6M HVAC)",
+      "Frameworks from Tom Howard (Lee's Air owner, $140M+ annual revenue) & Phil Filaski ($19.6M/yr HVAC)",
       "Quizzes, certificates, and the owner dashboard",
       "Does not include the AI role-playing module",
     ],
@@ -27,7 +27,7 @@ const TIER_COPY: Record<
     subtitle: "Full library access for your entire team — billed monthly",
     bullets: [
       "All 9 department curricula — 50+ courses",
-      "Frameworks from Tom Howard (Lee's Air owner, $140M+ annual revenue) & Phil Filaski ($19.6M HVAC)",
+      "Frameworks from Tom Howard (Lee's Air owner, $140M+ annual revenue) & Phil Filaski ($19.6M/yr HVAC)",
       "Quizzes, certificates, and the owner dashboard",
       "Includes the AI role-playing module",
       "Lock in $997/m before it goes to $1,497/m",

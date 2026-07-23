@@ -146,7 +146,7 @@ const DEPARTMENT_DEEP = [
     price: 9997,
     headline: "How to turn every rep into a top closer.",
     bullets: [
-      { title: "The $19.6M Step-by-Step In-Home Sales Process", desc: "Hand your reps the proven sequence they run on every in-home call." },
+      { title: "The $19.6M/Year Step-by-Step In-Home Sales Process", desc: "Hand your reps the proven sequence they run on every in-home call." },
       { title: "FLIP, Selling Tech, or Hybrid", desc: "Discover the sales model that closes more deals for your shop." },
       { title: "The Advanced Objection Handling Playbook", desc: "Crush stalls, spouse excuses, and price pushback." },
       { title: "The Golden Nugget Close", desc: "Land maintenance agreements on most closed jobs." },
@@ -392,7 +392,7 @@ export default function Offer() {
           </div>
 
           <p className="hero-fade text-sm text-gray-500">
-            Built by <span className="text-gray-300 font-medium">Tom Howard</span> (Owner of Lee&rsquo;s Air · $140M+ Annual Revenue) and <span className="text-gray-300 font-medium">Phil Filaski</span> ($19.6M in residential HVAC sales)
+            Built by <span className="text-gray-300 font-medium">Tom Howard</span> (Owner of Lee&rsquo;s Air · $140M+ Annual Revenue) and <span className="text-gray-300 font-medium">Phil Filaski</span> ($19.6M in annual residential HVAC sales)
           </p>
         </div>
       </section>

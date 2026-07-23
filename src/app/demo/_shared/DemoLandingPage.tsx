@@ -51,7 +51,7 @@ function CtaButton({
     "outline-dark": `${base} border-2 border-[#BF0A30] text-[#BF0A30] hover:bg-[#BF0A30] hover:text-white active:bg-[#A00928]`,
     "outline-white": `${base} border-2 border-white/30 text-white hover:bg-white/10 active:bg-white/5`,
   };
-  const text = label ?? "Book My Demo";
+  const text = label ?? "Book My Training Platform Demo";
   return (
     <button type="button" onClick={onClick} className={`${styles[variant]} ${className}`}>
       {text}
@@ -83,7 +83,7 @@ function CtaCallout({
         <p className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-[0.05em] leading-[1.05] mb-6 ${hFont}`}>
           {headline}
         </p>
-        <CtaButton variant="red" label="Book My Demo" onClick={onClick} />
+        <CtaButton variant="red" label="Book My Training Platform Demo" onClick={onClick} />
       </div>
     </section>
   );
@@ -203,7 +203,7 @@ const DEPARTMENT_DEEP = [
     price: 9997,
     headline: "How to turn every rep into a top closer.",
     bullets: [
-      { title: "The $19.6M Step-by-Step In-Home Sales Process", desc: "Hand your reps the proven sequence they run on every in-home call." },
+      { title: "The $19.6M/Year Step-by-Step In-Home Sales Process", desc: "Hand your reps the proven sequence they run on every in-home call." },
       { title: "FLIP, Selling Tech, or Hybrid", desc: "Discover the sales model that closes more deals for your shop." },
       { title: "The Advanced Objection Handling Playbook", desc: "Crush stalls, spouse excuses, and price pushback." },
       { title: "The Golden Nugget Close", desc: "Land maintenance agreements on most closed jobs." },
@@ -386,7 +386,7 @@ export default function DemoLandingPage({
               onClick={openModal}
               className={`hidden sm:inline-flex h-12 items-center rounded-full bg-[#BF0A30] px-7 text-base sm:text-lg font-bold tracking-[0.05em] text-white cursor-pointer hover:bg-[#D91C40] active:bg-[#A00928] transition-colors duration-200 ${hFont}`}
             >
-              Book My Demo
+              Book My Training Platform Demo
             </button>
           </div>
         </nav>
@@ -404,15 +404,16 @@ export default function DemoLandingPage({
             For home service owners doing $2M – $10M
           </p>
 
-          <h1 className={`hero-fade text-6xl sm:text-7xl md:text-7xl lg:text-8xl font-black tracking-[0.05em] leading-[0.95] mb-5 ${hFont}`}>
-            Stop Being<br className="md:hidden" /> The Reason<br className="md:hidden" /> Your Company<br /> <span className="text-[#BF0A30]">Can&rsquo;t Grow.</span>
+          <h1 className={`hero-fade text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[0.05em] leading-[0.95] mb-5 ${hFont}`}>
+            Stop Being The <span className="text-[#BF0A30]">Duct Tape</span>{" "}That&rsquo;s Holding Your Business Together.
           </h1>
 
-          <p className="hero-fade text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
-            Train every operator on your team — GM, Service Manager, Install
-            Manager, Sales Lead, CSR, Technician — with the exact SOPs that
-            built a $140M+ home services operation. Without you
-            having to be the trainer.
+          <p className="hero-fade text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-6">
+            Every fire, every price, and every process runs through your cellphone first. Real American Grit installs the SOP Training playbooks that built a <strong className="text-gray-200 font-semibold">$140M+ home services operation</strong> into every operator on your team — so you stop being the duct tape and start being the CEO.
+          </p>
+
+          <p className="hero-fade text-sm sm:text-base text-gray-500 mb-8 tracking-wide">
+            <span aria-hidden="true">↓</span>{" "}Watch the video below to see how{" "}<span aria-hidden="true">↓</span>
           </p>
 
           <div className="hero-fade mb-8 w-full flex justify-center">
@@ -420,11 +421,11 @@ export default function DemoLandingPage({
           </div>
 
           <div className="hero-fade flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-            <CtaButton variant="red" className="w-full sm:w-auto" label="Book My Demo" onClick={openModal} />
+            <CtaButton variant="red" className="w-full sm:w-auto" label="Book My Training Platform Demo" onClick={openModal} />
           </div>
 
           <p className="hero-fade text-sm text-gray-500">
-            Built by <span className="text-gray-300 font-medium">Tom Howard</span> (Owner of Lee&rsquo;s Air · $140M+ Annual Revenue) and <span className="text-gray-300 font-medium">Phil Filaski</span> ($19.6M in residential HVAC sales)
+            Built by <span className="text-gray-300 font-medium">Tom Howard</span> (Owner of Lee&rsquo;s Air · $140M+ Annual Revenue) and <span className="text-gray-300 font-medium">Phil Filaski</span> ($19.6M in annual residential HVAC sales)
           </p>
         </div>
       </section>
@@ -456,16 +457,21 @@ export default function DemoLandingPage({
                 <div className="w-[52px] h-[52px] rounded-full bg-[#BF0A30] flex items-center justify-center text-white font-bold text-base shrink-0">PF</div>
                 <div>
                   <p className={`font-extrabold text-[#0B2341] text-2xl sm:text-3xl ${hFont}`}>Phil Filaski</p>
-                  <p className="text-base text-[#BF0A30] font-semibold">$19.6M Sold. In Living Rooms.</p>
+                  <p className="text-base text-[#BF0A30] font-semibold">$19.6M Sold Annually. In Living Rooms.</p>
                 </div>
               </div>
               <p className="text-base text-[#475569] leading-relaxed">
-                Phil is the <strong className="text-[#0B2341] font-semibold">#1 residential HVAC salesperson in the country</strong>. $19.6 million in personal residential sales — not over the phone, not on Zoom. In the home, knee-to-knee with the homeowner. He teaches the entire sales curriculum: the in-home process, objection handling, closing techniques, and the maintenance agreement plays.
+                Phil is the <strong className="text-[#0B2341] font-semibold">#1 residential HVAC salesperson in the country</strong>. $19.6 million a year in personal residential sales — not over the phone, not on Zoom. In the home, knee-to-knee with the homeowner. He teaches the entire sales curriculum: the in-home process, objection handling, closing techniques, and the maintenance agreement plays.
               </p>
             </Stagger>
           </div>
         </div>
       </Section>
+
+      <CtaCallout
+        onClick={openModal}
+        headline={<>Want the systems Tom &amp; Phil actually use? <span className="text-[#BF0A30]">Book a walkthrough.</span></>}
+      />
 
       {/* ═══ PROBLEMS ═══ */}
       <Section id="problems" className="py-16 sm:py-24 bg-white">
@@ -545,6 +551,12 @@ export default function DemoLandingPage({
         </div>
       </Section>
 
+      <CtaCallout
+        onClick={openModal}
+        headline={<>Tired of handling every problem? <span className="text-[#BF0A30]">Install the standard.</span></>}
+        bg="deep"
+      />
+
       {/* ═══ SOLUTION INTRO ═══ */}
       <Section className="py-16 sm:py-24 bg-white">
         <div className="max-w-3xl mx-auto px-5 sm:px-8 text-center">
@@ -596,6 +608,11 @@ export default function DemoLandingPage({
           </div>
         </div>
       </Section>
+
+      <CtaCallout
+        onClick={openModal}
+        headline={<>Three steps. Ready to <span className="text-[#BF0A30]">see it in action</span>?</>}
+      />
 
       {/* ═══ CURRICULUM — 9 DEPARTMENTS ═══ */}
       <Section id="curriculum" className="scroll-mt-[140px] py-16 sm:py-24 bg-white">
@@ -660,7 +677,7 @@ export default function DemoLandingPage({
               onClick={openModal}
               className={`inline-flex h-[72px] sm:h-[80px] items-center justify-center rounded-full bg-[#BF0A30] px-12 sm:px-16 text-2xl sm:text-3xl font-bold tracking-[0.05em] text-white cursor-pointer hover:bg-[#D91C40] active:bg-[#A00928] transition-colors duration-200 pulse-red w-full sm:w-auto ${hFont}`}
             >
-              Book My Demo
+              Book My Training Platform Demo
             </button>
           </div>
         </div>
@@ -684,15 +701,16 @@ export default function DemoLandingPage({
 
       {DEPARTMENT_DEEP.map((dept, i) => {
         const isReverse = i % 2 === 1;
-        // Insert a CTA callout after Pricing (i=2) and Marketing (i=5) — natural
-        // mid-flow breaks. The EBITDA + pricing sections below cover the post-#9
-        // conversion moment, so no callout after the last deep dive.
-        const showCalloutAfter = i === 2 || i === 5;
+        // Insert a CTA callout after Pricing (i=2), Marketing (i=5), and
+        // Leadership (i=8) — three natural conversion moments across the
+        // 9 deep-dive sections.
+        const showCalloutAfter = i === 2 || i === 5 || i === 8;
         const calloutHeadlines = [
           <>Want a guided tour of <span className="text-[#BF0A30]">pricing &amp; financials</span>?</>,
           <>Ready to see the <span className="text-[#BF0A30]">marketing engine</span> live?</>,
+          <>That&rsquo;s all 9 playbooks. Ready to <span className="text-[#BF0A30]">see it live</span>?</>,
         ];
-        const headlineIdx = i === 2 ? 0 : 1;
+        const headlineIdx = i === 2 ? 0 : i === 5 ? 1 : 2;
         return (
           <Fragment key={dept.num}>
           <Section className={`py-20 sm:py-28 ${isReverse ? "bg-[#EDEDED]" : "bg-white"}`}>
@@ -802,7 +820,12 @@ export default function DemoLandingPage({
         </div>
       </Section>
 
-      {/* ═══ PRICING — STANDARD + WHITE-LABEL (Book My Demo CTAs) ═══ */}
+      <CtaCallout
+        onClick={openModal}
+        headline={<>Ready to <span className="text-[#BF0A30]">close the gap</span> before you sell?</>}
+      />
+
+      {/* ═══ PRICING — STANDARD + WHITE-LABEL (Book My Training Platform Demo CTAs) ═══ */}
       <Section className="py-16 sm:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
           {/* Bundle visual */}
@@ -849,7 +872,7 @@ export default function DemoLandingPage({
                   </li>
                 ))}
               </ul>
-              <CtaButton variant="outline-dark" className="w-full" label="Book My Demo" onClick={openModal} />
+              <CtaButton variant="outline-dark" className="w-full" label="Book My Training Platform Demo" onClick={openModal} />
             </Stagger>
 
             {/* Standard */}
@@ -880,7 +903,7 @@ export default function DemoLandingPage({
                   </li>
                 ))}
               </ul>
-              <CtaButton variant="red" className="w-full" label="Book My Demo" onClick={openModal} />
+              <CtaButton variant="red" className="w-full" label="Book My Training Platform Demo" onClick={openModal} />
             </Stagger>
 
             {/* White-Label */}
@@ -910,7 +933,7 @@ export default function DemoLandingPage({
                   </li>
                 ))}
               </ul>
-              <CtaButton variant="outline-white" className="w-full" label="Book My Demo" onClick={openModal} />
+              <CtaButton variant="outline-white" className="w-full" label="Book My Training Platform Demo" onClick={openModal} />
             </Stagger>
           </div>
 
@@ -930,7 +953,7 @@ export default function DemoLandingPage({
           <p className="text-gray-400 text-lg max-w-md mx-auto mb-8 font-light leading-relaxed">
             Right now, the operation runs on what&rsquo;s in your head. That&rsquo;s not a business — that&rsquo;s a job. Hand it over.
           </p>
-          <CtaButton variant="red" label="Book My Demo" onClick={openModal} />
+          <CtaButton variant="red" label="Book My Training Platform Demo" onClick={openModal} />
         </div>
       </Section>
 
