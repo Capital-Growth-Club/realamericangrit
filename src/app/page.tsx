@@ -446,7 +446,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-base text-[#475569] leading-relaxed">
-                Every system in this library came from <strong className="text-[#0B2341] font-semibold">Lee&rsquo;s Air</strong> — the home services operation Tom actually built, now doing over <strong className="text-[#0B2341] font-semibold">$140M in annual revenue</strong>. He&rsquo;s not a consultant. He lived it.
+                Every system in this library came from <strong className="text-[#0B2341] font-semibold">Lee&rsquo;s Air</strong> — the home services operation Tom took from a couple million a year to over <strong className="text-[#0B2341] font-semibold">$140M in annual revenue</strong>. He&rsquo;s not a consultant. He lived it.
               </p>
             </Stagger>
             <Stagger i={1} className="bg-white rounded-2xl p-7 border border-gray-200 hover:shadow-lg transition-shadow duration-200">
@@ -556,7 +556,7 @@ export default function Home() {
           {/* Hidden h2 for SEO/a11y */}
           <h2 className="sr-only">What is Real American Grit University?</h2>
           <p className="text-lg text-[#475569] leading-relaxed mb-4">
-            Get the <strong className="text-[#0B2341]">9 playbooks</strong> Tom used to run a <strong className="text-[#0B2341]">$140M+ home services company</strong> — now broken into video trainings that install a <strong className="text-[#0B2341]">9-figure standard</strong> into every operator on your team.
+            Get the <strong className="text-[#0B2341]">9 playbooks</strong> Tom used to turn a couple million a year operation into a <strong className="text-[#0B2341]">$140M+ home services company</strong> — now broken into video trainings that install a <strong className="text-[#0B2341]">9-figure standard</strong> into every operator on your team.
           </p>
           <p className="text-lg text-[#475569] leading-relaxed mb-4">
             Every department. Every role. Every operator. You assign the playbooks by role. Your team watches the videos. They take the quizzes. They earn the certificates. You watch their progress on one dashboard.
