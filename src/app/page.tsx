@@ -446,7 +446,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-base text-[#475569] leading-relaxed">
-                Every system in this library came from <strong className="text-[#0B2341] font-semibold">Lee&rsquo;s Air</strong> — the home services operation Tom took from a couple million a year to over <strong className="text-[#0B2341] font-semibold">$140M in annual revenue</strong>. He&rsquo;s not a consultant. He lived it.
+                Every system in this library came from <strong className="text-[#0B2341] font-semibold">Lee&rsquo;s Air</strong> — the home services operation Tom took from a couple million a year to over <strong className="text-[#0B2341] font-semibold">$140M in annual revenue</strong>. He&rsquo;s also scaled and sold other companies, and today sits on the boards of some of the biggest operators in the nation — fixing these exact problems every week. He&rsquo;s not a consultant. He lives it.
               </p>
             </Stagger>
             <Stagger i={1} className="bg-white rounded-2xl p-7 border border-gray-200 hover:shadow-lg transition-shadow duration-200">
