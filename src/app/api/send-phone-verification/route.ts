@@ -33,6 +33,7 @@ export async function POST(request: Request) {
     lastName?: string;
     email?: string;
     company?: string;
+    trade?: string;
     qualifiedOwner?: string;
     utm_source?: string;
     utm_medium?: string;
@@ -40,6 +41,7 @@ export async function POST(request: Request) {
     utm_term?: string;
     utm_content?: string;
     fbclid?: string;
+    gclid?: string;
   };
 
   const phone = body.phone?.trim() ?? "";
@@ -95,6 +97,7 @@ export async function POST(request: Request) {
   const lastName = body.lastName?.trim() ?? "";
   const email = body.email?.trim() ?? "";
   const company = body.company?.trim() ?? "";
+  const trade = body.trade?.trim() ?? "";
   if (firstName || lastName || email || company) {
     fetch(GHL_DEMO_LEAD_WEBHOOK, {
       method: "POST",
@@ -105,6 +108,7 @@ export async function POST(request: Request) {
         email,
         phone: formatted,
         company_name: company,
+        trade,
         qualified_owner: body.qualifiedOwner ?? "",
         utm_source: body.utm_source ?? "",
         utm_medium: body.utm_medium ?? "",
@@ -112,6 +116,7 @@ export async function POST(request: Request) {
         utm_term: body.utm_term ?? "",
         utm_content: body.utm_content ?? "",
         fbclid: body.fbclid ?? "",
+        gclid: body.gclid ?? "",
         source: "Real American Grit - Demo Booking",
         event_type: "demo_form_submitted",
       }),

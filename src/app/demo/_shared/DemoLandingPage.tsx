@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import DemoBookingModal from "@/components/DemoBookingModal";
 import HeroVideo from "@/components/HeroVideo";
+import { track } from "@/lib/analytics";
 
 /* ─── heading font helper ─── */
 const hFont = "font-[family-name:var(--font-bebas)]";
@@ -110,6 +111,34 @@ function useReveal() {
   });
 }
 
+// Fires a one-time `section_view` event the first time each major section
+// scrolls into view, so GA4 can chart a section-by-section drop-off funnel
+// (hero → credibility → problems → … → pricing → final_cta). Height-agnostic:
+// fires as soon as a section's top crosses into the lower viewport, so it
+// works even for sections taller than the screen.
+function useSectionTracking() {
+  useEffect(() => {
+    const els = document.querySelectorAll("[data-track-section]");
+    if (!els.length) return;
+    const seen = new Set<string>();
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          obs.unobserve(e.target);
+          const name = (e.target as HTMLElement).dataset.trackSection ?? "";
+          if (!name || seen.has(name)) return;
+          seen.add(name);
+          track("section_view", { section: name });
+        });
+      },
+      { threshold: 0, rootMargin: "0px 0px -25% 0px" },
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+}
+
 function useHeroFade() {
   useEffect(() => {
     const els = document.querySelectorAll(".hero-fade");
@@ -119,9 +148,9 @@ function useHeroFade() {
   }, []);
 }
 
-function Section({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
+function Section({ children, className = "", id, trackName }: { children: React.ReactNode; className?: string; id?: string; trackName?: string }) {
   return (
-    <section id={id} className={`section-fade ${className}`}>
+    <section id={id} data-track-section={trackName} className={`section-fade ${className}`}>
       {children}
     </section>
   );
@@ -361,6 +390,7 @@ export default function DemoLandingPage({
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
   useReveal();
+  useSectionTracking();
   useHeroFade();
 
   return (
@@ -406,7 +436,7 @@ export default function DemoLandingPage({
       <div className="h-[120px] sm:h-[140px] bg-[#0B2341]" />
 
       {/* ═══ HERO ═══ */}
-      <section className="relative bg-[#0B2341] text-white overflow-hidden">
+      <section data-track-section="hero" className="relative bg-[#0B2341] text-white overflow-hidden">
         <div className="absolute top-[12%] left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-[#BF0A30]/[0.05] rounded-full blur-[140px] pointer-events-none glow-bg" aria-hidden="true" />
 
         <div className="relative max-w-[820px] mx-auto px-5 sm:px-8 pt-16 sm:pt-24 md:pt-32 pb-20 sm:pb-28 md:pb-36 text-center">
@@ -419,7 +449,7 @@ export default function DemoLandingPage({
           </h1>
 
           <p className="hero-fade text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-6">
-            Every fire, every price, and every process runs through your cellphone first. Real American Grit takes the 9 SOP Training playbooks that built a <strong className="text-gray-200 font-semibold">$140M/yr+ home services operation</strong> and installs them into every operator on your team — so you stop being the duct tape and start being the CEO.
+            Real American Grit takes the 9 SOP Training playbooks that built a <strong className="text-gray-200 font-semibold">$150M/yr+ home services operation</strong>{" "}and installs them into every operator on your team — so your whole team can start operating like a 9-figure company without you.
           </p>
 
           <p className="hero-fade text-sm sm:text-base text-gray-500 mb-8 tracking-wide">
@@ -435,13 +465,13 @@ export default function DemoLandingPage({
           </div>
 
           <p className="hero-fade text-sm text-gray-500">
-            Built by <span className="text-gray-300 font-medium">Tom Howard</span> (Owner of Lee&rsquo;s Air · $140M+ Annual Revenue) and <span className="text-gray-300 font-medium">Phil Filaski</span> ($19.6M in annual residential HVAC sales)
+            Built by <span className="text-gray-300 font-medium">Tom Howard</span> (Owner of Lee&rsquo;s Air · $150M+ Annual Revenue) and <span className="text-gray-300 font-medium">Phil Filaski</span> ($19.6M in annual residential HVAC sales)
           </p>
         </div>
       </section>
 
       {/* ═══ CREDIBILITY ═══ */}
-      <Section className="bg-[#EDEDED] py-16 sm:py-24">
+      <Section trackName="credibility" className="bg-[#EDEDED] py-16 sm:py-24">
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <div className="max-w-2xl mb-10">
             <h2 className={`text-4xl sm:text-5xl font-black text-[#0B2341] tracking-[0.05em] leading-[1.1] ${hFont}`}>
@@ -455,11 +485,11 @@ export default function DemoLandingPage({
                 <div className="w-[52px] h-[52px] rounded-full bg-[#0B2341] flex items-center justify-center text-white font-bold text-base shrink-0">TH</div>
                 <div>
                   <p className={`font-extrabold text-[#0B2341] text-2xl sm:text-3xl ${hFont}`}>Tom Howard</p>
-                  <p className="text-base text-[#BF0A30] font-semibold">Owner of Lee&rsquo;s Air · $140M+ Annual Revenue</p>
+                  <p className="text-base text-[#BF0A30] font-semibold">Owner of Lee&rsquo;s Air · $150M+ Annual Revenue</p>
                 </div>
               </div>
               <p className="text-base text-[#475569] leading-relaxed">
-                Every system in this library came from <strong className="text-[#0B2341] font-semibold">Lee&rsquo;s Air</strong> — the home services operation Tom took from a couple million a year to over <strong className="text-[#0B2341] font-semibold">$140M in annual revenue</strong>. He&rsquo;s also scaled and sold other companies, and today sits on the boards of some of the biggest operators in the nation — fixing these exact problems every week. He&rsquo;s not a consultant. He lives it.
+                Every system in this library came from <strong className="text-[#0B2341] font-semibold">Lee&rsquo;s Air</strong> — the home services operation Tom took from a couple million a year to over <strong className="text-[#0B2341] font-semibold">$150M in annual revenue</strong>. He&rsquo;s also scaled and sold other companies, and today sits on the boards of some of the biggest operators in the nation — fixing these exact problems every week. He&rsquo;s not a consultant. He lives it.
               </p>
             </Stagger>
             <Stagger i={1} className="bg-white rounded-2xl p-7 border border-gray-200 hover:shadow-lg transition-shadow duration-200">
@@ -484,7 +514,7 @@ export default function DemoLandingPage({
       />
 
       {/* ═══ PROBLEMS ═══ */}
-      <Section id="problems" className="py-16 sm:py-24 bg-white">
+      <Section id="problems" trackName="problems" className="py-16 sm:py-24 bg-white">
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10 lg:gap-16">
             <div className="lg:sticky lg:top-28 lg:self-start">
@@ -513,7 +543,7 @@ export default function DemoLandingPage({
       </Section>
 
       {/* ═══ AGITATION ═══ */}
-      <Section className="relative py-20 sm:py-28 bg-[#0B2341] text-white">
+      <Section trackName="agitation" className="relative py-20 sm:py-28 bg-[#0B2341] text-white">
         <div className="absolute inset-0 opacity-[0.02] pointer-events-none" aria-hidden="true"
           style={{ backgroundImage: "linear-gradient(45deg, #fff 1px, transparent 1px), linear-gradient(-45deg, #fff 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
         <div className="relative max-w-5xl mx-auto px-5 sm:px-8">
@@ -568,7 +598,7 @@ export default function DemoLandingPage({
       />
 
       {/* ═══ SOLUTION INTRO ═══ */}
-      <Section className="py-16 sm:py-24 bg-white">
+      <Section trackName="solution_intro" className="py-16 sm:py-24 bg-white">
         <div className="max-w-3xl mx-auto px-5 sm:px-8 text-center">
           <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#0B2341] mb-5 ${hFont}`}>Introducing</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -579,7 +609,7 @@ export default function DemoLandingPage({
           />
           <h2 className="sr-only">What is Real American Grit University?</h2>
           <p className="text-lg text-[#475569] leading-relaxed mb-4">
-            Get the <strong className="text-[#0B2341]">9 playbooks</strong> Tom used to turn a couple million a year operation into a <strong className="text-[#0B2341]">$140M+ home services company</strong> — now broken into video trainings that install a <strong className="text-[#0B2341]">9-figure standard</strong> into every operator on your team.
+            Get the <strong className="text-[#0B2341]">9 playbooks</strong> Tom used to turn a couple million a year operation into a <strong className="text-[#0B2341]">$150M+ home services company</strong> — now broken into video trainings that install a <strong className="text-[#0B2341]">9-figure standard</strong> into every operator on your team.
           </p>
           <p className="text-lg text-[#475569] leading-relaxed mb-4">
             Every department. Every role. Every operator. You assign the playbooks by role. Your team watches the videos. They take the quizzes. They earn the certificates. You watch their progress on one dashboard.
@@ -591,7 +621,7 @@ export default function DemoLandingPage({
       </Section>
 
       {/* ═══ HOW IT WORKS ═══ */}
-      <Section className="py-16 sm:py-24 bg-[#EDEDED]">
+      <Section trackName="how_it_works" className="py-16 sm:py-24 bg-[#EDEDED]">
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <div className="text-center mb-12">
             <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-3 ${hFont}`}>How it works</p>
@@ -625,7 +655,7 @@ export default function DemoLandingPage({
       />
 
       {/* ═══ CURRICULUM — 9 DEPARTMENTS ═══ */}
-      <Section id="curriculum" className="scroll-mt-[140px] py-16 sm:py-24 bg-white">
+      <Section id="curriculum" trackName="curriculum" className="scroll-mt-[140px] py-16 sm:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
           <div className="text-center mb-12">
             <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-3 ${hFont}`}>What&rsquo;s inside</p>
@@ -633,7 +663,7 @@ export default function DemoLandingPage({
               9 Departments. 50+ Courses. <span className="text-[#BF0A30]">Zero Theory.</span>
             </h2>
             <p className="text-base text-[#475569] max-w-2xl mx-auto leading-relaxed">
-              Every system in this library came from a real $140M+
+              Every system in this library came from a real $150M+
               home services operation. Not a single module is theoretical.
             </p>
           </div>
@@ -694,7 +724,7 @@ export default function DemoLandingPage({
       </Section>
 
       {/* ═══ DEPARTMENT DEEP DIVES (9 sections) ═══ */}
-      <Section className="py-20 sm:py-28 bg-[#0B2341] text-white relative overflow-hidden">
+      <Section trackName="deep_dives" className="py-20 sm:py-28 bg-[#0B2341] text-white relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[#BF0A30]/[0.06] rounded-full blur-[140px] pointer-events-none" aria-hidden="true" />
         <div className="relative max-w-5xl mx-auto px-5 sm:px-8 text-center">
           <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-5 ${hFont}`}>
@@ -792,7 +822,7 @@ export default function DemoLandingPage({
       })}
 
       {/* ═══ SALE-DAY MULTIPLIER (EBITDA value-stack) ═══ */}
-      <Section className="pt-4 sm:pt-8 pb-20 sm:pb-28 bg-white">
+      <Section trackName="value_stack" className="pt-4 sm:pt-8 pb-20 sm:pb-28 bg-white">
         <div className="max-w-4xl mx-auto px-5 sm:px-8">
           <div className="text-center mb-10">
             <p className={`text-base sm:text-lg md:text-xl font-bold uppercase tracking-[0.3em] text-[#BF0A30] mb-4 ${hFont}`}>
@@ -836,7 +866,7 @@ export default function DemoLandingPage({
       />
 
       {/* ═══ PRICING — STANDARD + WHITE-LABEL (Book My Training Platform Demo CTAs) ═══ */}
-      <Section className="py-16 sm:py-24 bg-white">
+      <Section trackName="pricing" className="py-16 sm:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-5 sm:px-8">
           {/* Bundle visual */}
           <div className="flex justify-center mb-10 sm:mb-12">
@@ -954,7 +984,7 @@ export default function DemoLandingPage({
       </Section>
 
       {/* ═══ FINAL CTA ═══ */}
-      <Section className="relative py-20 sm:py-28 bg-[#0B2341] text-white">
+      <Section trackName="final_cta" className="relative py-20 sm:py-28 bg-[#0B2341] text-white">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[250px] bg-[#BF0A30]/[0.06] rounded-full blur-[100px] pointer-events-none glow-bg" aria-hidden="true" />
         <div className="relative max-w-2xl mx-auto px-5 sm:px-8 text-center">
           <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black tracking-[0.05em] leading-[1.1] mb-4 ${hFont}`}>

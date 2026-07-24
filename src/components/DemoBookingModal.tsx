@@ -5,6 +5,7 @@ import Script from "next/script";
 import {
   X,
   ArrowRight,
+  ArrowLeft,
   ShieldCheck,
   AlertCircle,
   RefreshCw,
@@ -13,16 +14,20 @@ import {
 const hFont = "font-[family-name:var(--font-bebas)]";
 const CALENDAR_ID = "DUSPZCW0jGMskd8wx9p4";
 
-type Step = "form" | "verify" | "calendar";
+type Step = "qualify" | "trade" | "business" | "contact" | "verify" | "calendar";
 type YesNo = "" | "yes" | "no";
+
+/** The ordered input steps, used for the progress bar. */
+const INPUT_STEPS: Step[] = ["qualify", "trade", "business", "contact"];
 
 type Form = {
   qualifiedOwner: YesNo;
+  trade: string;
+  company: string;
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
-  company: string;
 };
 
 type Utm = {
@@ -32,15 +37,17 @@ type Utm = {
   utm_term: string;
   utm_content: string;
   fbclid: string;
+  gclid: string;
 };
 
 const EMPTY: Form = {
   qualifiedOwner: "",
+  trade: "",
+  company: "",
   firstName: "",
   lastName: "",
   email: "",
   phone: "",
-  company: "",
 };
 
 const EMPTY_UTM: Utm = {
@@ -50,6 +57,7 @@ const EMPTY_UTM: Utm = {
   utm_term: "",
   utm_content: "",
   fbclid: "",
+  gclid: "",
 };
 
 declare global {
@@ -65,7 +73,7 @@ export default function DemoBookingModal({
   open: boolean;
   onClose: () => void;
 }) {
-  const [step, setStep] = useState<Step>("form");
+  const [step, setStep] = useState<Step>("qualify");
   const [form, setForm] = useState<Form>(EMPTY);
   const [utm, setUtm] = useState<Utm>(EMPTY_UTM);
   const [verifiedPhone, setVerifiedPhone] = useState("");
@@ -87,6 +95,7 @@ export default function DemoBookingModal({
       utm_term: p.get("utm_term") ?? "",
       utm_content: p.get("utm_content") ?? "",
       fbclid: p.get("fbclid") ?? "",
+      gclid: p.get("gclid") ?? "",
     });
   }, []);
 
@@ -96,7 +105,7 @@ export default function DemoBookingModal({
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
-      setStep("form");
+      setStep("qualify");
       setForm(EMPTY);
       setVerifiedPhone("");
       setCode("");
@@ -131,18 +140,22 @@ export default function DemoBookingModal({
     (key: keyof Form) => (e: React.ChangeEvent<HTMLInputElement>) =>
       setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  async function submitForm(e: React.FormEvent) {
-    e.preventDefault();
+  // Step 1 — qualify. "No" is outside our ICP: bounce to /not-qualified.
+  function answerQualify(v: YesNo) {
     setError("");
-
-    // Gate: if they don't own a home service business doing $1M+, they're
-    // outside our ICP. Bounce to /not-qualified — no API call, no GHL
-    // forward, no Facebook Pixel Lead event.
-    if (form.qualifiedOwner === "no") {
+    if (v === "no") {
+      setForm((f) => ({ ...f, qualifiedOwner: "no" }));
       window.location.assign("/not-qualified");
       return;
     }
+    setForm((f) => ({ ...f, qualifiedOwner: "yes" }));
+    setStep("trade");
+  }
 
+  // Final input step — send the SMS verification code + forward the lead.
+  async function submitContact(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
     setBusy(true);
     try {
       const res = await fetch("/api/send-phone-verification", {
@@ -154,6 +167,7 @@ export default function DemoBookingModal({
           lastName: form.lastName,
           email: form.email,
           company: form.company,
+          trade: form.trade,
           qualifiedOwner: form.qualifiedOwner,
           ...utm,
         }),
@@ -221,34 +235,67 @@ export default function DemoBookingModal({
     setBusy(false);
   }
 
-  // GHL calendar URL with prefill — all standard GHL booking widget params
+  // GHL calendar URL with prefill. Carries the qualifying answers (trade,
+  // business name) + full attribution (UTMs, fbclid, gclid) onto the booking
+  // so it's captured even when GHL's own attribution misses it. URLSearchParams
+  // encodes values (handles spaces in business names); empties are dropped.
   const calendarSrc = (() => {
-    const params = new URLSearchParams({
+    const fields: Record<string, string> = {
       first_name: form.firstName,
       last_name: form.lastName,
       email: form.email,
       phone: verifiedPhone,
+      what_trade_are_you_in: form.trade,
+      legal_business_name: form.company,
+      utm_source: utm.utm_source,
+      utm_medium: utm.utm_medium,
+      utm_campaign: utm.utm_campaign,
+      utm_term: utm.utm_term,
+      utm_content: utm.utm_content,
+      fbclid: utm.fbclid,
+      gclid: utm.gclid,
+    };
+    const params = new URLSearchParams();
+    Object.entries(fields).forEach(([k, v]) => {
+      if (v) params.set(k, v);
     });
     return `https://api.leadconnectorhq.com/widget/booking/${CALENDAR_ID}?${params.toString()}`;
   })();
 
-  const formValid =
-    form.qualifiedOwner &&
+  const contactValid =
     form.firstName.trim() &&
     form.lastName.trim() &&
     form.email.trim() &&
-    form.phone.trim() &&
-    form.company.trim();
+    form.phone.trim();
+
+  const inputIndex = INPUT_STEPS.indexOf(step);
+  const progressPct =
+    inputIndex >= 0 ? ((inputIndex + 1) / INPUT_STEPS.length) * 100 : 0;
+
+  const kicker = `text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-[#BF0A30] mb-2 ${hFont}`;
+  const heading = `text-3xl sm:text-4xl font-black tracking-[0.03em] leading-[1.02] mb-3 ${hFont}`;
+  const primaryBtn = `inline-flex h-[56px] items-center justify-center gap-2 rounded-full px-8 text-lg font-bold tracking-[0.05em] cursor-pointer bg-[#BF0A30] text-white hover:bg-[#D91C40] active:bg-[#A00928] transition-colors duration-200 w-full disabled:opacity-50 disabled:cursor-not-allowed ${hFont}`;
 
   return (
     <div
-      className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto"
+      className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm overflow-y-auto"
       onClick={onClose}
     >
+      <div className="flex min-h-full items-center justify-center p-3 sm:p-4">
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative w-full ${step === "calendar" ? "max-w-3xl" : "max-w-md"} bg-[#0B2341] text-white rounded-2xl border border-white/10 my-4 sm:my-0 transition-[max-width] duration-300`}
+        className={`relative w-full ${step === "calendar" ? "max-w-3xl" : "max-w-md"} bg-[#0B2341] text-white rounded-2xl border border-white/10 transition-[max-width] duration-300`}
       >
+        {/* Progress bar (input steps only) */}
+        {inputIndex >= 0 && (
+          <div className="absolute top-0 left-0 right-0 h-1 bg-white/10 rounded-t-2xl overflow-hidden">
+            <div
+              className="h-full bg-[#BF0A30] transition-all duration-300"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+        )}
+
         <button
           type="button"
           onClick={onClose}
@@ -258,31 +305,118 @@ export default function DemoBookingModal({
           <X className="w-4 h-4 text-white" aria-hidden="true" />
         </button>
 
-        {/* ─── Step: form ─── */}
-        {step === "form" && (
-          <form onSubmit={submitForm} className="p-6 sm:p-8">
-            <p
-              className={`text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-[#BF0A30] mb-2 ${hFont}`}
-            >
-              Book A Demo
-            </p>
-            <h2
-              className={`text-3xl sm:text-4xl font-black tracking-[0.05em] leading-[0.95] mb-2 ${hFont}`}
-            >
-              Let&rsquo;s grab a time.
+        {/* ─── Step 1: qualify ─── */}
+        {step === "qualify" && (
+          <div className="p-6 sm:p-8">
+            <p className={kicker}>Book A Demo</p>
+            <h2 className={heading}>
+              Do you own or run a home service operation with at least 5
+              employees?
             </h2>
+            <p className="text-sm text-gray-400 mb-6">
+              This platform is built for established operators. Quick question
+              before we grab a time.
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => answerQualify("yes")}
+                className={`h-14 rounded-xl text-lg font-bold tracking-[0.05em] uppercase transition-colors cursor-pointer bg-[#BF0A30] text-white hover:bg-[#D91C40] ${hFont}`}
+              >
+                Yes
+              </button>
+              <button
+                type="button"
+                onClick={() => answerQualify("no")}
+                className={`h-14 rounded-xl text-lg font-bold tracking-[0.05em] uppercase transition-colors cursor-pointer bg-[#06192F] border border-white/15 text-gray-300 hover:border-white/30 hover:text-white ${hFont}`}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ─── Step 2: trade ─── */}
+        {step === "trade" && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (form.trade.trim()) setStep("business");
+            }}
+            className="p-6 sm:p-8"
+          >
+            <BackButton onClick={() => setStep("qualify")} />
+            <p className={kicker}>Book A Demo</p>
+            <h2 className={heading}>What trade are you in?</h2>
+            <p className="text-sm text-gray-400 mb-6">
+              HVAC, plumbing, electrical, roofing, and so on.
+            </p>
+            <Field
+              label="Trade"
+              required
+              value={form.trade}
+              onChange={update("trade")}
+              disabled={busy}
+              placeholder="e.g. HVAC"
+              autoFocus
+            />
+            <button
+              type="submit"
+              disabled={!form.trade.trim()}
+              className={`${primaryBtn} mt-5`}
+            >
+              Continue <ArrowRight className="w-5 h-5" aria-hidden="true" />
+            </button>
+          </form>
+        )}
+
+        {/* ─── Step 3: business name ─── */}
+        {step === "business" && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (form.company.trim()) setStep("contact");
+            }}
+            className="p-6 sm:p-8"
+          >
+            <BackButton onClick={() => setStep("trade")} />
+            <p className={kicker}>Book A Demo</p>
+            <h2 className={heading}>What&rsquo;s your business name?</h2>
+            <p className="text-sm text-gray-400 mb-6">
+              So we can pull up your operation before the call.
+            </p>
+            <Field
+              label="Business Name"
+              required
+              value={form.company}
+              onChange={update("company")}
+              disabled={busy}
+              autoComplete="organization"
+              placeholder="e.g. Lee's Air"
+              autoFocus
+            />
+            <button
+              type="submit"
+              disabled={!form.company.trim()}
+              className={`${primaryBtn} mt-5`}
+            >
+              Continue <ArrowRight className="w-5 h-5" aria-hidden="true" />
+            </button>
+          </form>
+        )}
+
+        {/* ─── Step 4: contact ─── */}
+        {step === "contact" && (
+          <form onSubmit={submitContact} className="p-6 sm:p-8">
+            <BackButton onClick={() => setStep("business")} />
+            <p className={kicker}>Almost There</p>
+            <h2 className={heading}>Fill in your information and book your call on the next page.</h2>
             <p className="text-sm text-gray-400 mb-6">
               We&rsquo;ll text you a code to verify your number, then put you
               straight on the calendar.
             </p>
 
             <div className="space-y-3 mb-4">
-              <YesNoField
-                label="Do you own a home service business with 3+ employees?"
-                value={form.qualifiedOwner}
-                onChange={(v) => setForm((f) => ({ ...f, qualifiedOwner: v }))}
-                disabled={busy}
-              />
               <div className="grid grid-cols-2 gap-3">
                 <Field
                   label="First Name"
@@ -291,6 +425,7 @@ export default function DemoBookingModal({
                   onChange={update("firstName")}
                   disabled={busy}
                   autoComplete="given-name"
+                  autoFocus
                 />
                 <Field
                   label="Last Name"
@@ -320,14 +455,6 @@ export default function DemoBookingModal({
                 autoComplete="tel"
                 placeholder="(555) 123-4567"
               />
-              <Field
-                label="Company"
-                required
-                value={form.company}
-                onChange={update("company")}
-                disabled={busy}
-                autoComplete="organization"
-              />
             </div>
 
             {error && (
@@ -342,8 +469,8 @@ export default function DemoBookingModal({
 
             <button
               type="submit"
-              disabled={busy || !formValid}
-              className={`inline-flex h-[56px] items-center justify-center gap-2 rounded-full px-8 text-lg font-bold tracking-[0.05em] cursor-pointer bg-[#BF0A30] text-white hover:bg-[#D91C40] active:bg-[#A00928] transition-colors duration-200 w-full disabled:opacity-50 disabled:cursor-not-allowed ${hFont}`}
+              disabled={busy || !contactValid}
+              className={primaryBtn}
             >
               {busy ? (
                 "Sending Code…"
@@ -417,7 +544,7 @@ export default function DemoBookingModal({
               <button
                 type="button"
                 onClick={() => {
-                  setStep("form");
+                  setStep("contact");
                   setCode("");
                   setError("");
                 }}
@@ -475,55 +602,20 @@ export default function DemoBookingModal({
           </div>
         )}
       </div>
+      </div>
     </div>
   );
 }
 
-function YesNoField({
-  label,
-  value,
-  onChange,
-  disabled,
-}: {
-  label: string;
-  value: YesNo;
-  onChange: (v: YesNo) => void;
-  disabled?: boolean;
-}) {
-  const baseBtn = `h-11 rounded-lg border text-sm font-bold tracking-[0.05em] uppercase transition-colors duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${hFont}`;
-  const selected =
-    "bg-[#BF0A30] border-[#BF0A30] text-white hover:bg-[#D91C40]";
-  const unselected =
-    "bg-[#06192F] border-white/15 text-gray-400 hover:border-white/30 hover:text-white";
+function BackButton({ onClick }: { onClick: () => void }) {
   return (
-    <div>
-      <span
-        className={`block text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-1.5 ${hFont}`}
-      >
-        {label}
-        <span className="text-[#BF0A30] ml-1">*</span>
-      </span>
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={() => onChange("yes")}
-          aria-pressed={value === "yes"}
-          className={`${baseBtn} ${value === "yes" ? selected : unselected}`}
-        >
-          Yes
-        </button>
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={() => onChange("no")}
-          aria-pressed={value === "no"}
-          className={`${baseBtn} ${value === "no" ? selected : unselected}`}
-        >
-          No
-        </button>
-      </div>
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-white transition-colors cursor-pointer mb-4"
+    >
+      <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" /> Back
+    </button>
   );
 }
 
@@ -536,6 +628,7 @@ function Field({
   disabled,
   autoComplete,
   placeholder,
+  autoFocus,
 }: {
   label: string;
   required?: boolean;
@@ -545,6 +638,7 @@ function Field({
   disabled?: boolean;
   autoComplete?: string;
   placeholder?: string;
+  autoFocus?: boolean;
 }) {
   return (
     <label className="block">
@@ -562,6 +656,7 @@ function Field({
         required={required}
         autoComplete={autoComplete}
         placeholder={placeholder}
+        autoFocus={autoFocus}
         className="w-full h-11 px-3 rounded-lg bg-[#06192F] border border-white/15 text-white text-base focus:outline-none focus:border-[#BF0A30] focus:ring-1 focus:ring-[#BF0A30] disabled:opacity-50"
       />
     </label>

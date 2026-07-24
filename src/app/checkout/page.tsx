@@ -51,7 +51,7 @@ export default function CheckoutPage() {
             {/* ─── LEFT: Pitch ─── */}
             <div>
               <p className={`uppercase text-xs font-bold tracking-[0.2em] text-gray-400 mb-4 ${hFont}`}>
-                Led by the Owner of a $140M+ home services company &amp; the #1 home services sales rep
+                Led by the Owner of a $150M+ home services company &amp; the #1 home services sales rep
               </p>
 
               <h1
