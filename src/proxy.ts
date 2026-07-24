@@ -3,16 +3,19 @@ import { NextRequest, NextResponse } from "next/server";
 /**
  * A/B split for /demo.
  *
+ *   A (control) = the current demo landing page (/demo).
+ *   B (variant) = the long-form story sales page (/demo/grit).
+ *
  * Change VARIANT_B_PERCENT to control the split:
  *   0    — split off. Everyone sees the control (/demo). No cookie. Default.
- *   50   — 50/50 split between A and B.
- *   20   — 80/20 split (soft rollout of B).
- *   100  — force everyone onto variant B (useful for previewing B in prod).
+ *   50   — 50/50 split between the demo page (A) and the grit page (B).
+ *   20   — 80/20 split (soft rollout of the grit page).
+ *   100  — force everyone onto the grit page (preview it in prod).
  *
  * When a real split is running (0 < percent < 100), a visitor's assignment
  * is stored in a cookie for 1 year so returning visitors always see the
  * same variant. The browser URL always stays `/demo` for both variants —
- * variant B is delivered via an edge rewrite to `/demo/b`.
+ * variant B is delivered via an edge rewrite to `/demo/grit`.
  *
  * Every tracked event auto-attaches `ab_variant` (set below) as an event
  * param in GA4 + Meta Pixel via src/lib/analytics.ts, so BigQuery can slice
@@ -30,8 +33,8 @@ function isVariant(v: unknown): v is Variant {
 }
 
 export function proxy(request: NextRequest) {
-  // Only act on the /demo entry point — not /demo/b (direct hit) or any
-  // future /demo/* subroutes.
+  // Only act on the /demo entry point — not /demo/grit (direct hit) or any
+  // other /demo/* subroutes.
   if (request.nextUrl.pathname !== "/demo") {
     return NextResponse.next();
   }
@@ -43,7 +46,7 @@ export function proxy(request: NextRequest) {
 
   // Force everyone to B (preview B in prod without a code deploy).
   if (VARIANT_B_PERCENT >= 100) {
-    return NextResponse.rewrite(new URL("/demo/b", request.url));
+    return NextResponse.rewrite(new URL("/demo/grit", request.url));
   }
 
   // Normal split — read cookie for stickiness, else roll a fresh assignment.
@@ -54,10 +57,10 @@ export function proxy(request: NextRequest) {
       ? "b"
       : "a";
 
-  // For variant B, rewrite to /demo/b — URL bar stays /demo.
+  // For variant B, rewrite to /demo/grit — URL bar stays /demo.
   const response =
     variant === "b"
-      ? NextResponse.rewrite(new URL("/demo/b", request.url))
+      ? NextResponse.rewrite(new URL("/demo/grit", request.url))
       : NextResponse.next();
 
   // Persist the assignment for 1 year so return visits stay on the same variant.
