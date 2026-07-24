@@ -66,7 +66,7 @@ export default function StageOffer() {
       {/* ═══ HERO VIDEO (centered in remaining space on desktop) ═══ */}
       <section className="relative sm:flex-1 sm:min-h-0 px-5 sm:px-8 py-6 sm:py-4 flex items-center justify-center">
         <HeroVideo
-          src="https://assets.cdn.filesafe.space/U33crx49dqSM4lE4OIY2/media/6a430a3042c4669a15dc5372.mp4"
+          src="https://assets.cdn.filesafe.space/U33crx49dqSM4lE4OIY2/media/6a5d1512bc0b1f5d2e51131c.mp4"
           className="w-full max-w-md sm:max-w-lg aspect-video rounded-xl overflow-hidden shadow-[0_16px_56px_rgba(0,0,0,0.3)] relative"
         />
       </section>

@@ -341,11 +341,21 @@ const PLATFORM = [
 ];
 
 
+/* ─── Control (variant A) hero headline. Override via the heroHeadline prop
+   to run a headline A/B test — see /demo/b. ─── */
+const CONTROL_HEADLINE = (
+  <>
+    Stop Being The <span className="text-[#BF0A30]">Duct Tape</span>{" "}That&rsquo;s Holding Your Business Together.
+  </>
+);
+
 /* ═══════════════════════════════════════════ */
 export default function DemoLandingPage({
   heroVideoSrc,
+  heroHeadline = CONTROL_HEADLINE,
 }: {
   heroVideoSrc: string;
+  heroHeadline?: React.ReactNode;
 }) {
   const { visible } = useScrollNav();
   const [modalOpen, setModalOpen] = useState(false);
@@ -405,7 +415,7 @@ export default function DemoLandingPage({
           </p>
 
           <h1 className={`hero-fade text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[0.05em] leading-[0.95] mb-5 ${hFont}`}>
-            Stop Being The <span className="text-[#BF0A30]">Duct Tape</span>{" "}That&rsquo;s Holding Your Business Together.
+            {heroHeadline}
           </h1>
 
           <p className="hero-fade text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-6">

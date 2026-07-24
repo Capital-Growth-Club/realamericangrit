@@ -384,7 +384,7 @@ export default function Offer() {
           </p>
 
           <div className="hero-fade mb-8 w-full flex justify-center">
-            <HeroVideo src="https://assets.cdn.filesafe.space/U33crx49dqSM4lE4OIY2/media/6a430a3042c4669a15dc5372.mp4" />
+            <HeroVideo src="https://assets.cdn.filesafe.space/U33crx49dqSM4lE4OIY2/media/6a5d1512bc0b1f5d2e51131c.mp4" />
           </div>
 
           <div className="hero-fade flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
