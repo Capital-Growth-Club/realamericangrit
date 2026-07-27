@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import DemoBookingModal from "@/components/DemoBookingModal";
 import HeroVideo from "@/components/HeroVideo";
+import TimeOnPage from "@/components/TimeOnPage";
 import { track } from "@/lib/analytics";
 
 /* ─── heading font helper ─── */
@@ -395,6 +396,7 @@ export default function DemoLandingPage({
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden">
+      <TimeOnPage page="demo" />
       <DemoBookingModal open={modalOpen} onClose={() => setModalOpen(false)} />
 
       {/* ═══ BANNER + NAV ═══ */}

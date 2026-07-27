@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Check, Palette } from "lucide-react";
 import DemoBookingModal from "@/components/DemoBookingModal";
 import HeroVideo from "@/components/HeroVideo";
+import TimeOnPage from "@/components/TimeOnPage";
 import { HERO_VIDEO } from "../_shared/constants";
 import { track } from "@/lib/analytics";
 
@@ -199,6 +200,7 @@ export default function GritStoryPage() {
 
   return (
     <div className="flex flex-col w-full overflow-x-hidden bg-white">
+      <TimeOnPage page="grit" />
       <DemoBookingModal open={modalOpen} onClose={() => setModalOpen(false)} />
 
       {/* ═══ SLIM BRAND BAR (distraction-free — logo only) ═══ */}
