@@ -456,6 +456,8 @@ export default function GritStoryPage() {
               <img
                 src="/9-figure-bundle.webp"
                 alt="The 9-Figure Operator's Playbooks — complete bundle"
+                loading="lazy"
+                decoding="async"
                 className="w-full max-w-xl mx-auto h-auto mb-8"
               />
               <Cta onClick={open} label="Book Your Training Platform Demo" className="w-full sm:w-auto" />
@@ -488,6 +490,8 @@ export default function GritStoryPage() {
             <img
               src="/9-figure-bundle.webp"
               alt="The 9-Figure Operator's Playbooks — complete bundle"
+              loading="lazy"
+              decoding="async"
               className="w-full max-w-md mx-auto h-auto mb-8"
             />
             <Cta onClick={open} className="w-full sm:w-auto" />
@@ -571,6 +575,8 @@ Who actually teaches this thing though?
             <img
               src="/9-figure-bundle.webp"
               alt="The 9-Figure Operator's Playbooks — complete bundle"
+              loading="lazy"
+              decoding="async"
               className="w-full max-w-3xl h-auto"
             />
           </div>
@@ -685,6 +691,8 @@ Who actually teaches this thing though?
           <img
             src="/9-figure-bundle.webp"
             alt="The 9-Figure Operator's Playbooks — complete bundle"
+            loading="lazy"
+            decoding="async"
             className="w-full max-w-lg mx-auto h-auto mb-8"
           />
 
