@@ -179,15 +179,10 @@ export default function DemoBookingModal({
         return;
       }
 
-      // Qualified lead captured — fire the FB Pixel Lead event. Schedule
-      // (the optimization target) fires later on /demobooked when they
-      // actually book a slot.
-      if (typeof window !== "undefined" && window.fbq) {
-        window.fbq("track", "Lead", {
-          content_name: "Real American Grit — Demo Booking",
-          content_category: "demo",
-        });
-      }
+      // NOTE: No Facebook Pixel conversion fires here. Submitting the form is
+      // NOT a booking — an "abandoned" visitor can submit + verify and still
+      // never pick a slot. The only Pixel conversion (Schedule) fires on the
+      // /demobooked thank-you page after a real booking, keeping reporting clean.
 
       setVerifiedPhone(data.phone);
       setStep("verify");
