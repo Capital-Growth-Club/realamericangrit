@@ -169,7 +169,7 @@ const DEPARTMENT_DEEP = [
     icon: TrendingUp,
     num: "01",
     name: "Sales",
-    image: "/Sales Playbook.png",
+    image: "/sales-playbook.webp",
     price: 9997,
     headline: "How to turn every rep into a top closer.",
     bullets: [
@@ -184,7 +184,7 @@ const DEPARTMENT_DEEP = [
     icon: Briefcase,
     num: "02",
     name: "Acquisitions",
-    image: "/Acquisitions Playbook.png",
+    image: "/acquisitions-playbook.webp",
     price: 4997,
     headline: "How to scale through acquisitions without overpaying.",
     bullets: [
@@ -198,7 +198,7 @@ const DEPARTMENT_DEEP = [
     icon: DollarSign,
     num: "03",
     name: "Pricing",
-    image: "/Pricing Playbook.png",
+    image: "/pricing-playbook.webp",
     price: 4997,
     headline: "How to make more money on every job you sell.",
     bullets: [
@@ -213,7 +213,7 @@ const DEPARTMENT_DEEP = [
     icon: Building2,
     num: "04",
     name: "Corporate Structure",
-    image: "/Corporate Structures Playbook.png",
+    image: "/corporate-structures-playbook.webp",
     price: 2997,
     headline: "How to keep more of the money you make.",
     bullets: [
@@ -227,7 +227,7 @@ const DEPARTMENT_DEEP = [
     icon: BarChart3,
     num: "05",
     name: "Financials",
-    image: "/Financials Playbook.png",
+    image: "/financials-playbook.webp",
     price: 7997,
     headline: "How to stop feeling broke and spend money confidently.",
     bullets: [
@@ -242,7 +242,7 @@ const DEPARTMENT_DEEP = [
     icon: Megaphone,
     num: "06",
     name: "Marketing",
-    image: "/Marketing Playbook.png",
+    image: "/marketing-playbook.webp",
     price: 9997,
     headline: "How to turn $1 of marketing into $10.",
     bullets: [
@@ -258,7 +258,7 @@ const DEPARTMENT_DEEP = [
     icon: Wrench,
     num: "07",
     name: "Operations",
-    image: "/Operations Playbook.png",
+    image: "/operations-playbook.webp",
     price: 9997,
     headline: "How to take a month off without anything falling apart.",
     bullets: [
@@ -274,7 +274,7 @@ const DEPARTMENT_DEEP = [
     icon: Users,
     num: "08",
     name: "Human Resources",
-    image: "/Human Resources Playbook.png",
+    image: "/human-resources-playbook.webp",
     price: 3997,
     headline: "How to hire and retain good talent forever.",
     bullets: [
@@ -289,7 +289,7 @@ const DEPARTMENT_DEEP = [
     icon: Crown,
     num: "09",
     name: "Leadership",
-    image: "/Leadership Playbook.png",
+    image: "/leadership-playbook.webp",
     price: 9997,
     headline: "How to build culture and leadership that runs without you.",
     bullets: [
@@ -814,7 +814,7 @@ export default function Home() {
           <div className="flex justify-center mb-10 sm:mb-12">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/9 Figure Operators Bundle.png"
+              src="/9-figure-bundle.webp"
               alt="The 9-Figure Operator's Playbooks — complete bundle"
               className="w-full max-w-4xl h-auto"
             />

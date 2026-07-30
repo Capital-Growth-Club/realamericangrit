@@ -273,7 +273,7 @@ export default function GritStoryPage() {
             <figure className="my-9">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/tom and old lees air.jpg"
+                src="/tom-old-lees-air.webp"
                 alt="Tom Howard with the original Lee's Air team and branding"
                 loading="lazy"
                 className="w-full rounded-xl shadow-[0_18px_44px_rgba(0,0,0,0.22)]"
@@ -332,7 +332,7 @@ export default function GritStoryPage() {
           {/* ── PLAYBOOK 1 · PRICING ── */}
           <div data-track-section="pb_pricing" className="section-fade">
             <p className="story-line">My pricing.</p>
-            <Cover src="/Pricing Playbook.png" name="Pricing" />
+            <Cover src="/pricing-playbook.webp" name="Pricing" />
             <p className="story-line">Most contractors are 5 to 15% underpriced and have no idea.</p>
             <p className="story-line">I was one of them.</p>
             <p className="story-line">So I threw out gut-feel quoting for good.</p>
@@ -344,7 +344,7 @@ export default function GritStoryPage() {
           {/* ── PLAYBOOK 2 · SALES ── */}
           <div data-track-section="pb_sales" className="section-fade">
             <p className="story-line">But fixing my prices meant nothing if my guys couldn&rsquo;t hold them.</p>
-            <Cover src="/Sales Playbook.png" name="Sales" />
+            <Cover src="/sales-playbook.webp" name="Sales" />
             <p className="story-line">So the next thing I wrote down was how we actually sell.</p>
             <p className="story-line">Every objection. Every stall. Every close.</p>
             <p className="story-line">The exact in-home process my partner Phil Filaski still runs today.</p>
@@ -355,7 +355,7 @@ export default function GritStoryPage() {
           {/* ── PLAYBOOK 3 · MARKETING ── */}
           <div data-track-section="pb_marketing" className="section-fade">
             <p className="story-line">But even the best closer still needs leads to sell to.</p>
-            <Cover src="/Marketing Playbook.png" name="Marketing" />
+            <Cover src="/marketing-playbook.webp" name="Marketing" />
             <p className="story-line">So I built the machine &mdash; the rebrand that <B>tripled our calls</B>, the positioning, the website, Google, paid ads, the follow-up.</p>
             <p className="story-line"><Y>A system that turns $1 of marketing into $10.</Y></p>
             <p className="story-line">At a cost-per-booked-job I could actually predict.</p>
@@ -364,7 +364,7 @@ export default function GritStoryPage() {
           {/* ── PLAYBOOK 4 · OPERATIONS ── */}
           <div data-track-section="pb_operations" className="section-fade">
             <p className="story-line">More leads. More sold jobs. More chaos.</p>
-            <Cover src="/Operations Playbook.png" name="Operations" />
+            <Cover src="/operations-playbook.webp" name="Operations" />
             <p className="story-line">The bottleneck didn&rsquo;t disappear. It just moved.</p>
             <p className="story-line">So I documented the operation itself &mdash; scheduling, quality control, inventory, the KPI dashboard.</p>
             <p className="story-line"><Y>Every SOP written down so the business runs without me in the building.</Y></p>
@@ -382,7 +382,7 @@ export default function GritStoryPage() {
           {/* ── PLAYBOOK 5 · FINANCIALS ── */}
           <div data-track-section="pb_financials" className="section-fade">
             <p className="story-line">Now I could finally see the work.</p>
-            <Cover src="/Financials Playbook.png" name="Financials" />
+            <Cover src="/financials-playbook.webp" name="Financials" />
             <p className="story-line">But I still couldn&rsquo;t see the money.</p>
             <p className="story-line">So I learned to run the whole company off one page &mdash; the P&amp;L.</p>
             <p className="story-line">Job costing. Cash flow. The ratios that tell you if you&rsquo;re really ready to scale.</p>
@@ -392,7 +392,7 @@ export default function GritStoryPage() {
           {/* ── PLAYBOOK 6 · TAX / CORPORATE STRUCTURES ── */}
           <div data-track-section="pb_tax" className="section-fade">
             <p className="story-line">Making the money was one thing.</p>
-            <Cover src="/Corporate Structures Playbook.png" name="Corporate Structures" />
+            <Cover src="/corporate-structures-playbook.webp" name="Corporate Structures" />
             <p className="story-line">Keeping it was another.</p>
             <p className="story-line">The right entity. The right owner&rsquo;s comp.</p>
             <p className="story-line">The asset protection most contractors skip until it&rsquo;s too late.</p>
@@ -403,7 +403,7 @@ export default function GritStoryPage() {
           {/* ── PLAYBOOK 7 · HR & HIRING ── */}
           <div data-track-section="pb_hr" className="section-fade">
             <p className="story-line">None of it holds if the wrong people are running it though.</p>
-            <Cover src="/Human Resources Playbook.png" name="Human Resources" />
+            <Cover src="/human-resources-playbook.webp" name="Human Resources" />
             <p className="story-line">I was stuck in the bad-hire cycle.</p>
             <p className="story-line">Hire, wash out at 90 days, blame the labor market, start over.</p>
             <p className="story-line">Then I stopped blaming the labor market.</p>
@@ -415,7 +415,7 @@ export default function GritStoryPage() {
           {/* ── PLAYBOOK 8 · LEADERSHIP ── */}
           <div data-track-section="pb_leadership" className="section-fade">
             <p className="story-line">And then I did the hardest thing an owner can do.</p>
-            <Cover src="/Leadership Playbook.png" name="Leadership" />
+            <Cover src="/leadership-playbook.webp" name="Leadership" />
             <p className="story-line"><Y>I got out of the way.</Y></p>
             <p className="story-line">I promoted techs into managers without watching them drown.</p>
             <p className="story-line">I built standards and a culture that hold up whether I&rsquo;m in the room or not.</p>
@@ -425,7 +425,7 @@ export default function GritStoryPage() {
           {/* ── PLAYBOOK 9 · ACQUISITIONS ── */}
           <div data-track-section="pb_acquisitions" className="section-fade">
             <p className="story-line">Once the business ran without me, I had a new kind of problem.</p>
-            <Cover src="/Acquisitions Playbook.png" name="Acquisitions" />
+            <Cover src="/acquisitions-playbook.webp" name="Acquisitions" />
             <p className="story-line">Too much time. Too much cash.</p>
             <p className="story-line">So I started buying other shops.</p>
             <p className="story-line">Sourcing, deal structure, the operator-to-operator negotiation.</p>
@@ -454,7 +454,7 @@ export default function GritStoryPage() {
             <div className="mt-12 rounded-3xl bg-[#0B2341] px-6 py-10 sm:px-10 sm:py-12 text-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/9 Figure Operators Bundle.png"
+                src="/9-figure-bundle.webp"
                 alt="The 9-Figure Operator's Playbooks — complete bundle"
                 className="w-full max-w-xl mx-auto h-auto mb-8"
               />
@@ -486,7 +486,7 @@ export default function GritStoryPage() {
             </h2>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/9 Figure Operators Bundle.png"
+              src="/9-figure-bundle.webp"
               alt="The 9-Figure Operator's Playbooks — complete bundle"
               className="w-full max-w-md mx-auto h-auto mb-8"
             />
@@ -569,7 +569,7 @@ Who actually teaches this thing though?
           <div className="section-fade flex justify-center mb-12">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/9 Figure Operators Bundle.png"
+              src="/9-figure-bundle.webp"
               alt="The 9-Figure Operator's Playbooks — complete bundle"
               className="w-full max-w-3xl h-auto"
             />
@@ -683,7 +683,7 @@ Who actually teaches this thing though?
           {/* bundle image */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/9 Figure Operators Bundle.png"
+            src="/9-figure-bundle.webp"
             alt="The 9-Figure Operator's Playbooks — complete bundle"
             className="w-full max-w-lg mx-auto h-auto mb-8"
           />
