@@ -85,15 +85,30 @@ html {
 .section-fade[data-d="4"] { transition-delay: 0.2s; }
 .section-fade[data-d="5"] { transition-delay: 0.25s; }
 
-/* Hero fade-in on load */
+/* CSS-driven hero entrance — runs on first paint, NOT gated behind JS
+   hydration, so it never delays LCP. The element is fully painted from the
+   start; only a subtle upward slide animates in. */
 .hero-fade {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  animation: heroRise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes heroRise {
+  from {
+    transform: translateY(14px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-fade {
+    animation: none;
+  }
+}
+
+/* Back-compat: useHeroFade() still adds .visible; now a no-op. */
 .hero-fade.visible {
-  opacity: 1;
   transform: translateY(0);
 }
 
