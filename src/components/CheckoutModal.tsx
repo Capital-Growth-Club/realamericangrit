@@ -81,18 +81,15 @@ export default function CheckoutModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-start justify-center px-4 pt-[112px] pb-8 overflow-y-auto"
+      className="fixed inset-0 z-[100] bg-black/60 overflow-y-auto"
+      onClick={onClose}
       style={{ animation: "fadeIn 0.2s ease-out" }}
     >
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/60"
-        onClick={onClose}
-      />
-
+      <div className="flex min-h-full items-center justify-center px-4 py-8">
       {/* Modal card */}
       <div
-        className="relative w-full max-w-lg my-8"
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-lg"
         style={{ animation: "slideUp 0.3s ease-out" }}
       >
         <div className="relative bg-[#0B2341] text-white rounded-3xl p-7 sm:p-10 shadow-2xl shadow-black/40">
@@ -152,6 +149,7 @@ export default function CheckoutModal({
             <CheckoutForm tier={tier} />
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
