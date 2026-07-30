@@ -257,7 +257,7 @@ export default function HeroVideo({
         autoPlay
         muted
         loop
-        preload="auto"
+        preload="metadata"
         poster={poster}
         className="w-full h-full object-cover"
       >

@@ -680,6 +680,8 @@ export default function Home() {
                     <img
                       src={dept.image}
                       alt={`The 9-Figure Operator's ${dept.name} Playbook`}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full max-w-[380px] sm:max-w-[440px] h-auto"
                       style={{ filter: "drop-shadow(0 6px 8px rgba(0,0,0,0.08)) drop-shadow(0 24px 36px rgba(0,0,0,0.22))" }}
                     />
@@ -816,6 +818,8 @@ export default function Home() {
             <img
               src="/9-figure-bundle.webp"
               alt="The 9-Figure Operator's Playbooks — complete bundle"
+              loading="lazy"
+              decoding="async"
               className="w-full max-w-4xl h-auto"
             />
           </div>
