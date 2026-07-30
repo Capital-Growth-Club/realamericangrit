@@ -10,9 +10,20 @@ import {
 import { loadStripe } from "@stripe/stripe-js";
 import { Lock } from "lucide-react";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "",
-);
+// Lazy Stripe init — loadStripe() injects js.stripe.com (~800KB + iframe chain)
+// the moment it runs. Calling it at module scope loaded Stripe on every page
+// that imports the checkout (incl. the home page). getStripe() defers that
+// until the payment step actually renders, and caches the promise as a
+// singleton so <Elements> gets a stable reference.
+let _stripePromise: ReturnType<typeof loadStripe> | null = null;
+function getStripe() {
+  if (!_stripePromise) {
+    _stripePromise = loadStripe(
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "",
+    );
+  }
+  return _stripePromise;
+}
 
 type FormData = {
   name: string;
@@ -351,7 +362,7 @@ export default function CheckoutForm({
         )}
         {clientSecret && (
           <Elements
-            stripe={stripePromise}
+            stripe={getStripe()}
             options={{
               clientSecret,
               appearance: {
@@ -461,7 +472,7 @@ export default function CheckoutForm({
       </div>
 
       <Elements
-        stripe={stripePromise}
+        stripe={getStripe()}
         options={{
           clientSecret,
           appearance: {
