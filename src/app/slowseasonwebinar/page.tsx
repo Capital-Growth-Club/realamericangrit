@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Check, CalendarDays, Clock, Wrench } from "lucide-react";
+import { Check, CalendarDays, Clock, ArrowDown } from "lucide-react";
 import WebinarRegisterForm from "@/components/WebinarRegisterForm";
 
 const hFont = "font-[family-name:var(--font-bebas)]";
@@ -15,57 +15,57 @@ type Point = { title: string; detail: string };
 
 const SALES_POINTS: Point[] = [
   {
-    title: "Book Every Call — At A Higher Ticket",
+    title: "Turn Routine Tune-Ups Into High-Ticket Sales",
     detail:
-      "Turn fewer inbound calls into more booked, higher-dollar jobs so a quiet phone still fills the schedule.",
+      "Phil's process for turning a routine tune-up call into a legitimate high-ticket sales opportunity.",
   },
   {
-    title: "Wake Up Dead Leads & Past Customers",
+    title: "Uncover The Big Job Without The Hard Sell",
     detail:
-      "A simple follow-up system that pulls revenue straight out of the database you already have.",
+      "How to identify the right opportunities inside the home without leaning on pushy sales tactics.",
   },
   {
-    title: "Protect Your Margin Without Discounting",
+    title: "Win The Deal Without Killing Your Margin",
     detail:
-      "Offer and pricing structures that keep profit intact while everyone else races to the bottom.",
+      "How to manage discounting to win the deal without gutting the profit you actually keep.",
   },
   {
-    title: "Close Premium Work On Every Visit",
+    title: "Motivate Techs To Uncover Every Opportunity",
     detail:
-      "The in-home conversations that sell the bigger job — no “it's the slow season” excuses.",
+      "Structure technician pay so your team is motivated to uncover and communicate real opportunities.",
   },
   {
-    title: "Turn Your Techs Into Sellers",
+    title: "Drive More Revenue From Every Service Call",
     detail:
-      "Keep your team generating revenue instead of just running calls when the board gets thin.",
+      "Move your team beyond “complete the call and move on” to driving revenue from every visit.",
   },
 ];
 
 const MARKETING_POINTS: Point[] = [
   {
-    title: "Fill The Calendar For Cheap",
+    title: "Turn Slow Months Into A Predictable Pipeline",
     detail:
-      "Low-cost campaigns built to book jobs in your slowest weeks — without torching your budget.",
+      "How to build your slowest months into a steady, predictable pipeline of service opportunities your team can actually sell from.",
   },
   {
-    title: "Stay Top-Of-Mind With Past Customers",
+    title: "The Off-Season Mistakes That Burn Cash",
     detail:
-      "Simple touches that make sure they call you first — not a competitor — when work comes up.",
+      "The biggest marketing mistakes that quietly drain HVAC companies' cash in the off-season — and how to avoid them.",
   },
   {
-    title: "Create Demand Without Killing Price",
+    title: "Create Tune-Up Demand Before The Breakdown",
     detail:
-      "Promotions that pull work forward now without training customers to wait around for a deal.",
+      "How to manufacture demand for tune-ups and preventative service so homeowners book before they ever hit an emergency.",
   },
   {
-    title: "Ad Angles That Actually Book Jobs",
+    title: "Keep A Steady Flow Of Leads All Off-Season",
     detail:
-      "The off-season hooks and content that turn attention into booked appointments — not just likes.",
+      "How to keep consistent HVAC leads coming in through the slow months instead of waiting on the weather to create demand.",
   },
   {
-    title: "Build A Pipeline Before You Need It",
+    title: "Keep Your Trucks Full When Calls Slow",
     detail:
-      "Set up demand now so you hit the busy season with momentum instead of a cold start.",
+      "The marketing that keeps every technician booked when inbound calls naturally start to slow down.",
   },
 ];
 
@@ -108,14 +108,15 @@ export default function SlowSeasonWebinar() {
       >
         <div className="relative mx-auto max-w-2xl text-center">
           <p className="inline-flex items-center gap-2 rounded-full border border-[#BF0A30]/25 bg-[#BF0A30]/[0.08] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#BF0A30]">
-            <Wrench className="h-3.5 w-3.5" />
-            HVAC Business Owners
+            <ArrowDown className="h-3.5 w-3.5" />
+            Free HVAC Slow Season Webinar
+            <ArrowDown className="h-3.5 w-3.5" />
           </p>
           <h1
             className={`${hFont} mx-auto mt-5 max-w-2xl text-5xl font-black leading-[0.95] tracking-[0.04em] text-[#0B2341] sm:text-6xl md:text-7xl`}
           >
-            Register Free To Steal The $150M Slow-Season Playbook — Built For
-            $2&ndash;10M HVAC Shops
+            Register Free To Steal The $150M Operator&apos;s Slow-Season Profit
+            Playbook
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600 sm:text-xl">
             A free live training for $2&ndash;10M HVAC business owners — the

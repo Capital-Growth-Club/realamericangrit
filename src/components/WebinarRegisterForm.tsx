@@ -168,19 +168,20 @@ export default function WebinarRegisterForm() {
   }
 
   const inputCls =
-    "w-full rounded-lg border border-white/20 bg-white/[0.06] px-4 py-3 text-white placeholder-white/40 outline-none transition-colors focus:border-[#BF0A30] focus:bg-white/[0.1]";
+    "w-full rounded-lg border border-white/50 bg-white/[0.06] px-4 py-3 text-white placeholder-white/40 outline-none transition-colors focus:border-[#BF0A30] focus:bg-white/[0.1]";
 
   return (
-    <div className="w-full rounded-2xl border border-white/10 bg-[#0B2341] p-5 shadow-2xl shadow-[#0B2341]/25 sm:p-7">
+    <div className="w-full rounded-2xl border-2 border-[#BF0A30] bg-[#0B2341] p-5 shadow-2xl shadow-[#BF0A30]/20 sm:p-7">
       {step === "form" ? (
         <>
           <h2
             className={`${hFont} text-center text-3xl font-black leading-none tracking-[0.03em] text-white sm:text-4xl`}
           >
-            Save My Free Seat
+            Register For Free Webinar
           </h2>
           <p className="mt-2 text-center text-sm text-white/60">
-            Register below to join us live on September 3rd.
+            Save your seat and add it to your calendar to join us live on
+            September 3rd.
           </p>
           <form onSubmit={submitForm} className="mt-5 space-y-3">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
