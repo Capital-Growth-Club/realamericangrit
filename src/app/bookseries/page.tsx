@@ -6,6 +6,30 @@ export const metadata: Metadata = {
   title: "The 9-Figure Operator's Playbooks — Book Series (Coming Soon)",
   description:
     "The complete playbook series behind a $150M home service operation. Launching soon.",
+  openGraph: {
+    title: "The 9-Figure Operator's Playbooks — Book Series (Coming Soon)",
+    description:
+      "The complete playbook series behind a $150M+ home service operation. Launching soon.",
+    url: "https://www.realamericangrit.com/bookseries",
+    siteName: "Real American Grit University",
+    type: "website",
+    locale: "en_US",
+    images: [
+      {
+        url: "/og-bundle.jpg",
+        width: 1500,
+        height: 788,
+        alt: "The 9-Figure Operator's Playbooks — Real American Grit University",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The 9-Figure Operator's Playbooks — Book Series (Coming Soon)",
+    description:
+      "The complete playbook series behind a $150M+ home service operation. Launching soon.",
+    images: ["/og-bundle.jpg"],
+  },
 };
 
 export default function BookSeries() {

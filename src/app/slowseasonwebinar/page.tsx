@@ -5,10 +5,34 @@ import WebinarRegisterForm from "@/components/WebinarRegisterForm";
 const hFont = "font-[family-name:var(--font-bebas)]";
 
 export const metadata: Metadata = {
-  title: "Break Out Of The Slow Season — Free Live Webinar (Sept 3)",
+  title: "Free HVAC Slow Season Webinar — Sept 3",
   description:
-    "A free live training for home service owners: the sales & marketing plays that keep the calendar full through the slow season. Thursday, September 3rd at 12:00 PM PT.",
+    "How a $150M HVAC operation dominates the slow season. A free live sales & marketing training for $2–10M HVAC owners. Thursday, September 3 at 12:00 PM PT.",
   robots: { index: false, follow: false },
+  openGraph: {
+    title: "Free HVAC Slow Season Webinar — Sept 3",
+    description:
+      "How a $150M HVAC operation dominates the slow season — the sales & marketing playbook for $2–10M HVAC owners. Register free.",
+    url: "https://www.realamericangrit.com/slowseasonwebinar",
+    siteName: "Real American Grit University",
+    type: "website",
+    locale: "en_US",
+    images: [
+      {
+        url: "/og-bundle.jpg",
+        width: 1500,
+        height: 788,
+        alt: "Free HVAC Slow Season Webinar — Real American Grit University",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free HVAC Slow Season Webinar — Sept 3",
+    description:
+      "How a $150M HVAC operation dominates the slow season. Register free.",
+    images: ["/og-bundle.jpg"],
+  },
 };
 
 type Point = { title: string; detail: string };
