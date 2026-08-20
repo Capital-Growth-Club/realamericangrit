@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Real American Grit University//Slow Season Webinar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:slow-season-webinar-2026-09-03@realamericangrit.com
+DTSTAMP:20260819T000000Z
+DTSTART:20260903T190000Z
+DTEND:20260903T200000Z
+SUMMARY:Break Out Of The Slow Season — Live Training
+DESCRIPTION:Join Tom Howard & Phil Filaski live for the off-season sales & marketing playbook behind a $150M HVAC operation.\n\nJoin here: https://us06web.zoom.us/j/82056025313
+LOCATION:https://us06web.zoom.us/j/82056025313
+URL:https://us06web.zoom.us/j/82056025313
+BEGIN:VALARM
+TRIGGER:-PT15M
+ACTION:DISPLAY
+DESCRIPTION:Slow Season Webinar starts in 15 minutes
+END:VALARM
+END:VEVENT
+END:VCALENDAR
