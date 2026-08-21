@@ -49,7 +49,7 @@ function GuideCover() {
       alt="The HVAC & Plumbers Pricing Guide"
       width={1254}
       height={1254}
-      className="mx-auto w-full max-w-[380px]"
+      className="mx-auto w-full max-w-[380px] md:max-w-[520px]"
     />
   );
 }
