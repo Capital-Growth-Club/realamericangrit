@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: "Private Coaching With Tom Howard | Real American Grit University",
     description:
       "One-on-one coaching with the operator behind a $150M+ home service business. Grab a time that works for you.",
-    url: "https://www.realamericangrit.com/coaching",
+    url: "https://www.realamericangrit.com/1on1",
     siteName: "Real American Grit University",
     type: "website",
     locale: "en_US",
