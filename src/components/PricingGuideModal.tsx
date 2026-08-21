@@ -207,7 +207,7 @@ export default function PricingGuideModal({
               Get The Free Guide
             </h2>
             <p className="mt-2 text-center text-sm text-white/60">
-              Tell us where to send it and we&rsquo;ll unlock your download.
+              Tell us where to send it and we&rsquo;ll email you the guide.
             </p>
             <form onSubmit={submitForm} className="mt-5 space-y-3">
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -288,7 +288,7 @@ export default function PricingGuideModal({
             <p className="mt-2 text-center text-sm text-white/60">
               We texted a 6-digit code to{" "}
               <span className="font-semibold text-white">{verifiedPhone}</span>.
-              Enter it to unlock the guide.
+              Enter it and we&rsquo;ll email you the guide.
             </p>
             <form onSubmit={submitVerify} className="mt-5 space-y-3">
               <input
@@ -314,7 +314,7 @@ export default function PricingGuideModal({
                 disabled={busy || code.length < 6}
                 className={`${hFont} flex h-[58px] w-full items-center justify-center rounded-full bg-[#BF0A30] text-2xl tracking-[0.04em] text-white transition-colors hover:bg-[#D91C40] active:bg-[#A00928] disabled:opacity-60`}
               >
-                {busy ? "Unlocking…" : "Get My Guide"}
+                {busy ? "Sending…" : "Send My Guide"}
               </button>
               <button
                 type="button"
