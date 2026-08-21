@@ -8,9 +8,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-// TODO: drop the finished PDF at /public and update this path if the filename
-// differs.
-const GUIDE_PDF = "/what-to-charge-pricing-guide.pdf";
+const GUIDE_PDF =
+  "https://assets.cdn.filesafe.space/U33crx49dqSM4lE4OIY2/media/6a886513152c3deba8d7ec88.pdf";
 
 export default function PricingGuideThanks() {
   return (
