@@ -69,6 +69,26 @@ export default function WebinarRegisterForm() {
       fbclid: p.get("fbclid") ?? "",
       gclid: p.get("gclid") ?? "",
     });
+
+    // Prefill from contact info passed in the URL (GHL merge tags in email
+    // links, e.g. ?name=Jane%20Doe&email=...&phone=...). Accepts first/last
+    // split out, or a single "name" we split on the first space.
+    const fullName = (p.get("name") ?? "").trim();
+    const spaceIdx = fullName.indexOf(" ");
+    const firstFromName =
+      spaceIdx === -1 ? fullName : fullName.slice(0, spaceIdx);
+    const lastFromName = spaceIdx === -1 ? "" : fullName.slice(spaceIdx + 1);
+    // A literal "+" in a query string decodes to a space, so strip stray
+    // whitespace back out of the phone number.
+    const phone = (p.get("phone") ?? "").replace(/\s+/g, "");
+    setForm((f) => ({
+      ...f,
+      firstName: p.get("first_name") ?? p.get("fname") ?? firstFromName ?? "",
+      lastName: p.get("last_name") ?? p.get("lname") ?? lastFromName ?? "",
+      email: p.get("email") ?? "",
+      phone,
+      trade: p.get("trade") ?? f.trade,
+    }));
   }, []);
 
   useEffect(() => {
