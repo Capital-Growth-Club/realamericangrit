@@ -5,7 +5,7 @@ import { ArrowRight, Check, Palette } from "lucide-react";
 import DemoBookingModal from "@/components/DemoBookingModal";
 import HeroVideo from "@/components/HeroVideo";
 import TimeOnPage from "@/components/TimeOnPage";
-import { HERO_VIDEO } from "../_shared/constants";
+import { HERO_VIDEO, HERO_VIDEO_MP4 } from "../_shared/constants";
 import { track } from "@/lib/analytics";
 
 /*
@@ -240,7 +240,11 @@ export default function GritStoryPage() {
           </p>
 
           <div className="mb-8 w-full flex justify-center">
-            <HeroVideo src={HERO_VIDEO} poster="/demo-hero-poster.jpg" />
+            <HeroVideo
+              src={HERO_VIDEO}
+              mp4Fallback={HERO_VIDEO_MP4}
+              poster="/demo-hero-poster.jpg"
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">

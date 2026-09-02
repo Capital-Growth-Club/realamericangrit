@@ -382,9 +382,11 @@ const CONTROL_HEADLINE = (
 /* ═══════════════════════════════════════════ */
 export default function DemoLandingPage({
   heroVideoSrc,
+  heroVideoMp4,
   heroHeadline = CONTROL_HEADLINE,
 }: {
   heroVideoSrc: string;
+  heroVideoMp4?: string;
   heroHeadline?: React.ReactNode;
 }) {
   const { visible } = useScrollNav();
@@ -459,7 +461,11 @@ export default function DemoLandingPage({
           </p>
 
           <div className="hero-fade mb-8 w-full flex justify-center">
-            <HeroVideo src={heroVideoSrc} poster="/demo-hero-poster.jpg" />
+            <HeroVideo
+              src={heroVideoSrc}
+              mp4Fallback={heroVideoMp4}
+              poster="/demo-hero-poster.jpg"
+            />
           </div>
 
           <div className="hero-fade flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">

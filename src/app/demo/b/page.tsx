@@ -1,5 +1,5 @@
 import DemoLandingPage from "../_shared/DemoLandingPage";
-import { HERO_VIDEO } from "../_shared/constants";
+import { HERO_VIDEO, HERO_VIDEO_MP4 } from "../_shared/constants";
 
 // Variant B — HEADLINE challenger slot. Served via edge rewrite from /demo
 // (see src/proxy.ts). Same winning video as control; only the hero headline
@@ -9,5 +9,7 @@ import { HERO_VIDEO } from "../_shared/constants";
 // Until then B renders identically to A (control headline), so the 50/50
 // split is a harmless no-op.
 export default function DemoPageB() {
-  return <DemoLandingPage heroVideoSrc={HERO_VIDEO} />;
+  return (
+    <DemoLandingPage heroVideoSrc={HERO_VIDEO} heroVideoMp4={HERO_VIDEO_MP4} />
+  );
 }

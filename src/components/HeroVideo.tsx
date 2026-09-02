@@ -1,10 +1,14 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
+import type HlsJs from "hls.js";
 import { track } from "@/lib/analytics";
 
 type Props = {
+  /** Video source — an HLS playlist (.m3u8) or a plain MP4. */
   src: string;
+  /** MP4 URL to fall back to if HLS can't load (unsupported browser, blocked, etc.). */
+  mp4Fallback?: string;
   /** How long (ms) to play before looping back to 0 if the user never interacts. */
   replayIntervalMs?: number;
   /** Override the outer container's classes (sizing, shadow, rounding). */
@@ -26,6 +30,7 @@ const SPEEDS = [1, 1.25, 1.5, 1.75, 2] as const;
  */
 export default function HeroVideo({
   src,
+  mp4Fallback,
   replayIntervalMs = 15000,
   className,
   poster,
@@ -58,6 +63,86 @@ export default function HeroVideo({
       }
     }, replayIntervalMs);
   }, [replayIntervalMs, clearReplay]);
+
+  // Attach the source. HLS (.m3u8) plays adaptively via hls.js — or natively on
+  // Safari/iOS — and falls back to the plain MP4 if HLS can't load (unsupported
+  // browser, a blocked/403 playlist, or a network failure). Plain MP4 sources
+  // are attached directly.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    const isHls = /\.m3u8(\?|$)/i.test(src);
+    let hls: HlsJs | null = null;
+    let cancelled = false;
+
+    const useMp4 = () => {
+      if (cancelled || !mp4Fallback) return;
+      v.src = mp4Fallback;
+      v.load();
+      v.play().catch(() => {});
+    };
+
+    if (!isHls) {
+      v.src = src;
+      v.play().catch(() => {});
+      return;
+    }
+
+    // Safari / iOS play HLS natively — no library needed.
+    if (v.canPlayType("application/vnd.apple.mpegurl")) {
+      v.src = src;
+      const onErr = () => useMp4();
+      v.addEventListener("error", onErr, { once: true });
+      v.play().catch(() => {});
+      return () => {
+        cancelled = true;
+        v.removeEventListener("error", onErr);
+      };
+    }
+
+    // Everyone else: hls.js (lazily imported so it isn't in the main bundle).
+    import("hls.js")
+      .then(({ default: Hls }) => {
+        if (cancelled) return;
+        if (!Hls.isSupported()) {
+          useMp4();
+          return;
+        }
+        hls = new Hls({ enableWorker: true });
+        hls.loadSource(src);
+        hls.attachMedia(v);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => v.play().catch(() => {}));
+        hls.on(Hls.Events.ERROR, (_evt, data) => {
+          if (!data.fatal) return;
+          if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+            hls?.recoverMediaError();
+          } else if (
+            data.type === Hls.ErrorTypes.NETWORK_ERROR &&
+            data.details !== Hls.ErrorDetails.MANIFEST_LOAD_ERROR &&
+            data.details !== Hls.ErrorDetails.MANIFEST_LOAD_TIMEOUT &&
+            data.details !== Hls.ErrorDetails.MANIFEST_PARSING_ERROR
+          ) {
+            // Transient segment/network hiccup — retry loading.
+            hls?.startLoad();
+          } else {
+            // Playlist blocked/unreachable or unrecoverable — drop to MP4.
+            hls?.destroy();
+            hls = null;
+            useMp4();
+          }
+        });
+      })
+      .catch(() => useMp4());
+
+    return () => {
+      cancelled = true;
+      if (hls) {
+        hls.destroy();
+        hls = null;
+      }
+    };
+  }, [src, mp4Fallback]);
 
   // Core lifecycle: autoplay muted, replay loop, and all tracking listeners.
   useEffect(() => {
@@ -260,9 +345,7 @@ export default function HeroVideo({
         preload="metadata"
         poster={poster}
         className="w-full h-full object-cover"
-      >
-        <source src={src} type="video/mp4" />
-      </video>
+      />
 
       {/* Tap anywhere to pause/play (post-unmute). Sits above the video but
           below the z-10 controls, so the control buttons still win their taps.
