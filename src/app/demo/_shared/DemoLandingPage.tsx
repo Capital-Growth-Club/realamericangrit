@@ -459,7 +459,7 @@ export default function DemoLandingPage({
           </p>
 
           <div className="hero-fade mb-8 w-full flex justify-center">
-            <HeroVideo src={heroVideoSrc} />
+            <HeroVideo src={heroVideoSrc} poster="/demo-hero-poster.jpg" />
           </div>
 
           <div className="hero-fade flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">

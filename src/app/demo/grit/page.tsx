@@ -240,7 +240,7 @@ export default function GritStoryPage() {
           </p>
 
           <div className="mb-8 w-full flex justify-center">
-            <HeroVideo src={HERO_VIDEO} />
+            <HeroVideo src={HERO_VIDEO} poster="/demo-hero-poster.jpg" />
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
