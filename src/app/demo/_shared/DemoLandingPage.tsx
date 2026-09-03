@@ -371,11 +371,17 @@ const PLATFORM = [
 ];
 
 
-/* ─── Control (variant A) hero headline. Override via the heroHeadline prop
-   to run a headline A/B test — see /demo/b. ─── */
+/* ─── Control (variant A) hero copy. Override heroHeadline / heroSubheadline
+   via the /demo/b variant to run a hero A/B test — see src/proxy.ts. ─── */
 const CONTROL_HEADLINE = (
   <>
     Stop Being The <span className="text-[#BF0A30]">Duct Tape</span>{" "}That&rsquo;s Holding Your Business Together.
+  </>
+);
+
+const CONTROL_SUBHEADLINE = (
+  <>
+    Real American Grit takes the 9 SOP Training playbooks that built a <strong className="text-gray-200 font-semibold">$150M/yr+ home services operation</strong>{" "}and installs them into every operator on your team — so your whole team can start operating like a 9-figure company without you.
   </>
 );
 
@@ -384,10 +390,12 @@ export default function DemoLandingPage({
   heroVideoSrc,
   heroVideoMp4,
   heroHeadline = CONTROL_HEADLINE,
+  heroSubheadline = CONTROL_SUBHEADLINE,
 }: {
   heroVideoSrc: string;
   heroVideoMp4?: string;
   heroHeadline?: React.ReactNode;
+  heroSubheadline?: React.ReactNode;
 }) {
   const { visible } = useScrollNav();
   const [modalOpen, setModalOpen] = useState(false);
@@ -453,7 +461,7 @@ export default function DemoLandingPage({
           </h1>
 
           <p className="hero-fade text-lg sm:text-xl md:text-[22px] text-gray-400 max-w-2xl mx-auto leading-relaxed mb-6">
-            Real American Grit takes the 9 SOP Training playbooks that built a <strong className="text-gray-200 font-semibold">$150M/yr+ home services operation</strong>{" "}and installs them into every operator on your team — so your whole team can start operating like a 9-figure company without you.
+            {heroSubheadline}
           </p>
 
           <p className="hero-fade text-sm sm:text-base text-gray-500 mb-8 tracking-wide">
