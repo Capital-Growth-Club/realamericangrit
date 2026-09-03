@@ -81,10 +81,14 @@ export default function DemoBookingModal({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const codeInputRef = useRef<HTMLInputElement>(null);
+  // Contact fields prefilled from the URL (GHL merge tags in email links).
+  // Stored so the close-reset restores the prefill instead of wiping it.
+  const prefillRef = useRef<Partial<Form>>({});
 
   // Capture UTM + click-id params off the URL on mount so we can forward
-  // them with the lead submission. Read directly from window.location so
-  // we don't force the page into dynamic rendering via useSearchParams.
+  // them with the lead submission, and prefill contact fields passed in the
+  // URL (e.g. ?name=Jane%20Doe&email=...&phone=...). Read directly from
+  // window.location so we don't force the page into dynamic rendering.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const p = new URLSearchParams(window.location.search);
@@ -97,6 +101,30 @@ export default function DemoBookingModal({
       fbclid: p.get("fbclid") ?? "",
       gclid: p.get("gclid") ?? "",
     });
+
+    const fullName = (p.get("name") ?? "").trim();
+    const spaceIdx = fullName.indexOf(" ");
+    const prefill: Partial<Form> = {
+      firstName:
+        p.get("first_name") ??
+        p.get("fname") ??
+        (spaceIdx === -1 ? fullName : fullName.slice(0, spaceIdx)),
+      lastName:
+        p.get("last_name") ??
+        p.get("lname") ??
+        (spaceIdx === -1 ? "" : fullName.slice(spaceIdx + 1)),
+      email: p.get("email") ?? "",
+      // A literal "+" in a query decodes to a space — strip stray whitespace.
+      phone: (p.get("phone") ?? "").replace(/\s+/g, ""),
+      company: p.get("company") ?? "",
+      trade: p.get("trade") ?? "",
+    };
+    // Keep only non-empty values so we never stomp real state with "".
+    const cleaned = Object.fromEntries(
+      Object.entries(prefill).filter(([, v]) => v),
+    ) as Partial<Form>;
+    prefillRef.current = cleaned;
+    setForm((f) => ({ ...f, ...cleaned }));
   }, []);
 
   // Lock body scroll while open and reset state on close
@@ -106,7 +134,7 @@ export default function DemoBookingModal({
     } else {
       document.body.style.overflow = "";
       setStep("qualify");
-      setForm(EMPTY);
+      setForm({ ...EMPTY, ...prefillRef.current });
       setVerifiedPhone("");
       setCode("");
       setBusy(false);
