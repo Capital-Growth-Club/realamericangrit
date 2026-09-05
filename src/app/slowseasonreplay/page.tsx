@@ -60,7 +60,6 @@ export default function Replay() {
             <HeroVideo
               src={REPLAY_VIDEO}
               mp4Fallback={REPLAY_VIDEO_MP4}
-              poster="/demo-hero-poster.jpg"
               replayIntervalMs={36000000}
             />
           </div>
