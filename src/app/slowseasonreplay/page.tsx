@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import HeroVideo from "@/components/HeroVideo";
+import Countdown from "@/components/Countdown";
 
 const hFont = "font-[family-name:var(--font-bebas)]";
 
@@ -12,11 +14,16 @@ const REPLAY_VIDEO =
   "https://vz-e88dba28-7f3.b-cdn.net/8088f531-199e-43b6-a4ec-980dcddba294/playlist.m3u8";
 const REPLAY_VIDEO_MP4: string | undefined = undefined;
 
+// Replay comes down 10 days after launch (2026-09-05) — end of day Pacific.
+const REPLAY_DEADLINE = "2026-09-15T23:59:59-07:00";
+
 // Book-a-call funnel, tagged so replay bookings attribute back here.
 const BOOK_DEMO_HREF =
   "/bookdemo?utm_source=webinar-replay&utm_medium=website&utm_campaign=2026-slow-season-webinar&utm_content=book-demo";
 
 export default function Replay() {
+  const [expired, setExpired] = useState(false);
+
   return (
     <div className="flex min-h-[100dvh] flex-col bg-[#0B2341] text-white">
       {/* Top tricolor */}
@@ -55,23 +62,49 @@ export default function Replay() {
             2026 Slow Season Profits Sales &amp; Marketing Live Training
           </h1>
 
-          {/* Replay video */}
-          <div className="mt-9">
-            <HeroVideo
-              src={REPLAY_VIDEO}
-              mp4Fallback={REPLAY_VIDEO_MP4}
-              replayIntervalMs={36000000}
-              showSpeedControl={false}
-            />
-          </div>
+          {expired ? (
+            <>
+              <p className="mx-auto mt-8 max-w-md text-lg text-white/70">
+                This replay is no longer available &mdash; the viewing window
+                has closed.
+              </p>
+              <a
+                href={BOOK_DEMO_HREF}
+                className={`${hFont} mt-8 inline-flex h-[64px] items-center justify-center rounded-full bg-[#BF0A30] px-12 text-2xl tracking-[0.04em] text-white shadow-lg shadow-[#BF0A30]/25 transition-colors hover:bg-[#D91C40] active:bg-[#A00928]`}
+              >
+                Book My Demo Call
+              </a>
+            </>
+          ) : (
+            <>
+              <p className="mt-5 text-sm font-semibold uppercase tracking-[0.1em] text-white/60">
+                This replay comes down in
+              </p>
+              <Countdown
+                deadline={REPLAY_DEADLINE}
+                onExpire={() => setExpired(true)}
+                className="mt-3"
+              />
 
-          {/* CTA → book a demo call */}
-          <a
-            href={BOOK_DEMO_HREF}
-            className={`${hFont} mt-10 inline-flex h-[64px] items-center justify-center rounded-full bg-[#BF0A30] px-12 text-2xl tracking-[0.04em] text-white shadow-lg shadow-[#BF0A30]/25 transition-colors hover:bg-[#D91C40] active:bg-[#A00928]`}
-          >
-            Book My Demo Call
-          </a>
+              {/* Replay video */}
+              <div className="mt-9">
+                <HeroVideo
+                  src={REPLAY_VIDEO}
+                  mp4Fallback={REPLAY_VIDEO_MP4}
+                  replayIntervalMs={36000000}
+                  showSpeedControl={false}
+                />
+              </div>
+
+              {/* CTA → book a demo call */}
+              <a
+                href={BOOK_DEMO_HREF}
+                className={`${hFont} mt-10 inline-flex h-[64px] items-center justify-center rounded-full bg-[#BF0A30] px-12 text-2xl tracking-[0.04em] text-white shadow-lg shadow-[#BF0A30]/25 transition-colors hover:bg-[#D91C40] active:bg-[#A00928]`}
+              >
+                Book My Demo Call
+              </a>
+            </>
+          )}
         </div>
       </div>
 
