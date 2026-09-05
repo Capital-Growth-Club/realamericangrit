@@ -56,7 +56,7 @@ export default function Countdown({ deadline, onExpire, className }: Props) {
 
   return (
     <div className={className}>
-      <div className="flex items-center justify-center gap-2 sm:gap-3">
+      <div className="flex items-center justify-center gap-1.5 sm:gap-2">
         {[
           { label: "Days", value: remaining.days },
           { label: "Hours", value: remaining.hours },
@@ -65,12 +65,12 @@ export default function Countdown({ deadline, onExpire, className }: Props) {
         ].map((unit) => (
           <div
             key={unit.label}
-            className="flex min-w-[58px] flex-col items-center rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 sm:min-w-[68px] sm:px-4 sm:py-3"
+            className="flex min-w-[42px] flex-col items-center rounded-md border border-white/10 bg-white/[0.04] px-2 py-1.5 sm:min-w-[48px]"
           >
-            <span className="font-[family-name:var(--font-bebas)] text-2xl font-black leading-none text-white sm:text-3xl">
+            <span className="font-[family-name:var(--font-bebas)] text-base font-black leading-none text-white sm:text-lg">
               {pad(unit.value)}
             </span>
-            <span className="mt-1 text-[10px] font-bold uppercase tracking-[0.15em] text-white/50 sm:text-xs">
+            <span className="mt-0.5 text-[8px] font-bold uppercase tracking-[0.1em] text-white/50 sm:text-[9px]">
               {unit.label}
             </span>
           </div>

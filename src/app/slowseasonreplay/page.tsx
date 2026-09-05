@@ -77,13 +77,13 @@ export default function Replay() {
             </>
           ) : (
             <>
-              <p className="mt-5 text-sm font-semibold uppercase tracking-[0.1em] text-white/60">
+              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.1em] text-white/50">
                 This replay comes down in
               </p>
               <Countdown
                 deadline={REPLAY_DEADLINE}
                 onExpire={() => setExpired(true)}
-                className="mt-3"
+                className="mt-2"
               />
 
               {/* Replay video */}
