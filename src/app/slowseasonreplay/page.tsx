@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeroVideo from "@/components/HeroVideo";
 import Countdown from "@/components/Countdown";
 
@@ -18,11 +18,22 @@ const REPLAY_VIDEO_MP4: string | undefined = undefined;
 const REPLAY_DEADLINE = "2026-09-15T23:59:59-07:00";
 
 // Book-a-call funnel, tagged so replay bookings attribute back here.
-const BOOK_DEMO_HREF =
+const DEFAULT_BOOK_DEMO_HREF =
   "/bookdemo?utm_source=webinar-replay&utm_medium=website&utm_campaign=2026-slow-season-webinar&utm_content=book-demo";
 
 export default function Replay() {
   const [expired, setExpired] = useState(false);
+  // Forward name/email/phone + any UTMs from this page's own URL (set by the
+  // reminder emails' merge tags) through to /bookdemo, so contacts arriving
+  // from a reminder land on the booking form pre-filled. Falls back to the
+  // default UTMs when someone hits the page with no query params at all.
+  const [bookDemoHref, setBookDemoHref] = useState(DEFAULT_BOOK_DEMO_HREF);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const search = window.location.search;
+    if (search) setBookDemoHref(`/bookdemo${search}`);
+  }, []);
 
   return (
     <div className="flex min-h-[100dvh] flex-col bg-[#0B2341] text-white">
@@ -69,7 +80,7 @@ export default function Replay() {
                 has closed.
               </p>
               <a
-                href={BOOK_DEMO_HREF}
+                href={bookDemoHref}
                 className={`${hFont} mt-8 inline-flex h-[64px] items-center justify-center rounded-full bg-[#BF0A30] px-12 text-2xl tracking-[0.04em] text-white shadow-lg shadow-[#BF0A30]/25 transition-colors hover:bg-[#D91C40] active:bg-[#A00928]`}
               >
                 Book My Demo Call
@@ -98,7 +109,7 @@ export default function Replay() {
 
               {/* CTA → book a demo call */}
               <a
-                href={BOOK_DEMO_HREF}
+                href={bookDemoHref}
                 className={`${hFont} mt-10 inline-flex h-[64px] items-center justify-center rounded-full bg-[#BF0A30] px-12 text-2xl tracking-[0.04em] text-white shadow-lg shadow-[#BF0A30]/25 transition-colors hover:bg-[#D91C40] active:bg-[#A00928]`}
               >
                 Book My Demo Call
