@@ -61,6 +61,7 @@ export default function Replay() {
               src={REPLAY_VIDEO}
               mp4Fallback={REPLAY_VIDEO_MP4}
               replayIntervalMs={36000000}
+              showSpeedControl={false}
             />
           </div>
 

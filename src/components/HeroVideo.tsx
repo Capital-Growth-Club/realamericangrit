@@ -15,6 +15,8 @@ type Props = {
   className?: string;
   /** Optional poster image while the video is loading. */
   poster?: string;
+  /** Show the playback-speed cycle button in the custom controls. Default true. */
+  showSpeedControl?: boolean;
 };
 
 const SPEEDS = [1, 1.25, 1.5, 1.75, 2] as const;
@@ -34,6 +36,7 @@ export default function HeroVideo({
   replayIntervalMs = 15000,
   className,
   poster,
+  showSpeedControl = true,
 }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -431,14 +434,16 @@ export default function HeroVideo({
           </div>
 
           <div className="flex items-center gap-2 pointer-events-auto">
-            <button
-              type="button"
-              onClick={cycleSpeed}
-              aria-label="Playback speed"
-              className="min-w-[52px] h-9 px-3 rounded-full bg-white/15 hover:bg-white/25 text-white text-sm font-bold backdrop-blur-md transition-colors cursor-pointer"
-            >
-              {SPEEDS[speedIndex]}x
-            </button>
+            {showSpeedControl && (
+              <button
+                type="button"
+                onClick={cycleSpeed}
+                aria-label="Playback speed"
+                className="min-w-[52px] h-9 px-3 rounded-full bg-white/15 hover:bg-white/25 text-white text-sm font-bold backdrop-blur-md transition-colors cursor-pointer"
+              >
+                {SPEEDS[speedIndex]}x
+              </button>
+            )}
 
             <button
               type="button"
