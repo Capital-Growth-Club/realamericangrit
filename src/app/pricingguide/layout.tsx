@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Free Guide: What To Charge — Pricing HVAC & Plumbing Work",
+  title: "Free Guide: What To Charge — The Home Service Pricing Guide",
   description:
-    "The contractor's guide to pricing HVAC & plumbing work so you actually make money. From Tom Howard, the operator behind a $150M+ home service business. Download free.",
+    "The contractor's guide to pricing home service work — HVAC, plumbing, electrical, painting, roofing, remodeling, and more — so you actually make money. From Tom Howard, the operator behind a $150M+ home service business. Download free.",
   openGraph: {
-    title: "Free Guide: Price Your HVAC & Plumbing Work to Actually Make Money",
+    title: "Free Guide: Price Your Home Service Work to Actually Make Money",
     description:
       "The contractor's pricing guide from Tom Howard — markup vs. margin, overhead per man-day, billable efficiency, and pricing to a net number. Download free.",
     url: "https://www.realamericangrit.com/pricingguide",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free Guide: Price Your HVAC & Plumbing Work to Actually Make Money",
+    title: "Free Guide: Price Your Home Service Work to Actually Make Money",
     description:
       "The contractor's pricing guide from Tom Howard. Download free.",
     images: ["/og-bundle.jpg"],
