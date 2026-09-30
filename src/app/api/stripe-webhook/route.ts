@@ -31,6 +31,11 @@ const GHL_CANCELED_WEBHOOK_URL =
 const GHL_CUSTOMER_WEBHOOK_URL =
   process.env.GHL_CUSTOMER_WEBHOOK_URL ?? process.env.GHL_WEBHOOK_URL ?? "";
 
+// One-time event-ticket purchase webhook (mastermind, etc.) — set this up as a GHL
+// inbound webhook trigger, then paste the URL into .env.local.
+const GHL_EVENT_PURCHASE_WEBHOOK_URL =
+  process.env.GHL_EVENT_PURCHASE_WEBHOOK_URL ?? "";
+
 function resolveTier(
   metadataTier: string | undefined,
   priceId: string,
@@ -82,6 +87,9 @@ type GhlPayload = {
   currency?: string;
   product_tier?: "essentials" | "standard" | "white-label" | "unknown";
   product_name?: string;
+  trade?: string;
+  guest?: string;
+  seats?: number;
   reason?: string;
 };
 
@@ -505,6 +513,51 @@ export async function POST(request: Request) {
             });
           }
         }
+        break;
+      }
+
+      // ═══ ONE-TIME EVENT PURCHASES ═══
+      // Direct PaymentIntents (not invoice-based) — used for one-time products
+      // like the mastermind event, scoped via metadata.product so this never
+      // accidentally fires for an unrelated future PaymentIntent.
+      case "payment_intent.succeeded": {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        if (paymentIntent.metadata?.product !== "mastermind-nov-2026") break;
+
+        const customerId =
+          typeof paymentIntent.customer === "string"
+            ? paymentIntent.customer
+            : paymentIntent.customer?.id ?? null;
+
+        console.log(
+          `[stripe] payment_intent.succeeded (mastermind): ${paymentIntent.id} customer=${customerId}`,
+        );
+
+        const { first_name, last_name } = splitName(
+          paymentIntent.metadata?.customer_name,
+        );
+        const isGuest = paymentIntent.metadata?.guest === "true";
+
+        await forwardToGhl(GHL_EVENT_PURCHASE_WEBHOOK_URL, {
+          first_name,
+          last_name,
+          email: paymentIntent.metadata?.customer_email ?? "",
+          phone: paymentIntent.metadata?.customer_phone ?? "",
+          company_name: paymentIntent.metadata?.company ?? "",
+          trade: paymentIntent.metadata?.trade ?? "",
+          guest: paymentIntent.metadata?.guest ?? "false",
+          seats: isGuest ? 2 : 1,
+          source: "Real American Grit - Mastermind Landing Page",
+          tags: isGuest
+            ? ["mastermind-nov-2026", "mastermind-purchased", "mastermind-plus-guest"]
+            : ["mastermind-nov-2026", "mastermind-purchased"],
+          event_type: "mastermind_purchased",
+          stripe_customer_id: customerId ?? "",
+          amount_cents: paymentIntent.amount_received,
+          amount_dollars: paymentIntent.amount_received / 100,
+          currency: paymentIntent.currency,
+          product_name: "2-Day Business & Sales Mastermind with Tom Howard",
+        });
         break;
       }
 

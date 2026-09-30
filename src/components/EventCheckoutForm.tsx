@@ -1,0 +1,484 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import {
+  Elements,
+  PaymentElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { Lock } from "lucide-react";
+
+// Lazy Stripe init — same reasoning as CheckoutForm.tsx: defer loading
+// js.stripe.com until the payment step actually renders.
+let _stripePromise: ReturnType<typeof loadStripe> | null = null;
+function getStripe() {
+  if (!_stripePromise) {
+    _stripePromise = loadStripe(
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "",
+    );
+  }
+  return _stripePromise;
+}
+
+type FormData = {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  trade: string;
+};
+
+type Tracking = {
+  cid: string;
+  utm_source: string;
+  utm_medium: string;
+  utm_campaign: string;
+  utm_content: string;
+  utm_term: string;
+};
+
+const EMPTY_TRACKING: Tracking = {
+  cid: "",
+  utm_source: "",
+  utm_medium: "",
+  utm_campaign: "",
+  utm_content: "",
+  utm_term: "",
+};
+
+const SOLO_PRICE = 4500;
+const GUEST_PRICE = 9000;
+
+function thankYouUrl(price: number): string {
+  const params = new URLSearchParams({ amount: String(price) });
+  return `${window.location.origin}/mastermind/thanks?${params.toString()}`;
+}
+
+/* ─── Inner form (has access to Stripe context) ─── */
+function PaymentForm({
+  formData,
+  price,
+}: {
+  formData: FormData;
+  tracking: Tracking;
+  price: number;
+}) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [paying, setPaying] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handlePay(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
+      setError("Payment system not loaded. Please refresh and try again.");
+      return;
+    }
+
+    setPaying(true);
+    setError("");
+
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      setError(submitError.message ?? "Please check your card details.");
+      setPaying(false);
+      return;
+    }
+
+    try {
+      const result = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: thankYouUrl(price),
+          payment_method_data: {
+            billing_details: {
+              name: formData.name,
+              email: formData.email,
+              phone: formData.phone,
+              address: { country: "US" },
+            },
+          },
+        },
+        redirect: "if_required",
+      });
+
+      if (result.error) {
+        setError(result.error.message ?? "Payment failed. Please try again.");
+        setPaying(false);
+        return;
+      }
+
+      const status = result.paymentIntent?.status;
+      if (status === "succeeded" || status === "processing") {
+        window.location.assign(thankYouUrl(price));
+        return;
+      }
+
+      setError(
+        `Payment status: ${status ?? "unknown"}. Please try again or contact support.`,
+      );
+      setPaying(false);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? `Unexpected error: ${err.message}`
+          : "An unexpected error occurred. Please try again.",
+      );
+      setPaying(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handlePay} className="space-y-4">
+      <div className="bg-white rounded-xl p-4">
+        <PaymentElement
+          options={{
+            layout: "tabs",
+            fields: {
+              billingDetails: {
+                name: "never",
+                email: "never",
+                phone: "never",
+                address: { country: "never" },
+              },
+            },
+            wallets: { applePay: "auto", googlePay: "never" },
+          }}
+        />
+      </div>
+
+      {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+
+      <button
+        type="submit"
+        disabled={paying || !stripe || !elements}
+        className="w-full h-14 rounded-lg bg-[#BF0A30] text-white text-lg font-bold hover:bg-[#D91C40] transition-colors pulse-red disabled:opacity-60"
+      >
+        {paying ? "Processing…" : `Reserve My Seat — $${price.toLocaleString()}`}
+      </button>
+
+      <div className="flex items-center justify-center gap-1.5 text-xs text-gray-500">
+        <Lock className="w-3 h-3" />
+        <span>Secure payment · Powered by Stripe</span>
+      </div>
+    </form>
+  );
+}
+
+/* ─── Outer wrapper ─── */
+export default function EventCheckoutForm() {
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    trade: "",
+  });
+  const [tracking, setTracking] = useState<Tracking>(EMPTY_TRACKING);
+  const [guest, setGuest] = useState(false);
+  const [clientSecret, setClientSecret] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [editingContact, setEditingContact] = useState(false);
+  const [prefilled, setPrefilled] = useState(false);
+  const autoIntentTriggered = useRef(false);
+  const price = guest ? GUEST_PRICE : SOLO_PRICE;
+
+  // Read URL params on mount — prefill contact info + tracking
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("guest") === "1") setGuest(true);
+    const next: FormData = {
+      name: params.get("name") ?? "",
+      email: params.get("email") ?? "",
+      phone: params.get("phone") ?? "",
+      company: params.get("company") ?? "",
+      trade: params.get("trade") ?? "",
+    };
+    const trackNext: Tracking = {
+      cid: params.get("cid") ?? "",
+      utm_source: params.get("utm_source") ?? "",
+      utm_medium: params.get("utm_medium") ?? "",
+      utm_campaign: params.get("utm_campaign") ?? "",
+      utm_content: params.get("utm_content") ?? "",
+      utm_term: params.get("utm_term") ?? "",
+    };
+
+    setTracking(trackNext);
+
+    if (next.name && next.email && next.phone && next.company && next.trade) {
+      setFormData(next);
+      setPrefilled(true);
+    } else if (next.name || next.email || next.phone || next.company || next.trade) {
+      setFormData(next);
+    }
+  }, []);
+
+  // Auto-create payment intent when contact info is fully prefilled
+  useEffect(() => {
+    if (!prefilled || autoIntentTriggered.current) return;
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.company ||
+      !formData.trade
+    )
+      return;
+
+    autoIntentTriggered.current = true;
+    captureLead(formData, tracking);
+    void createPaymentIntent(formData, tracking);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    prefilled,
+    formData.name,
+    formData.email,
+    formData.phone,
+    formData.company,
+    formData.trade,
+  ]);
+
+  // Fire-and-forget: capture the lead in GHL before any Stripe interaction,
+  // so we still get the contact if they bail before paying.
+  function captureLead(data: FormData, track: Tracking) {
+    fetch("/api/event-lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...data, ...track, guest }),
+    }).catch(() => {});
+  }
+
+  async function createPaymentIntent(data: FormData, track: Tracking) {
+    setLoading(true);
+    setFormError("");
+    try {
+      const res = await fetch("/api/create-event-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, ...track, guest }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setFormError(json.error || "Something went wrong.");
+        return;
+      }
+      setClientSecret(json.clientSecret);
+    } catch {
+      setFormError("Connection error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleManualSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    captureLead(formData, tracking);
+    await createPaymentIntent(formData, tracking);
+  }
+
+  const stripeAppearance = {
+    theme: "stripe" as const,
+    variables: {
+      colorPrimary: "#BF0A30",
+      colorBackground: "#ffffff",
+      colorText: "#0B2341",
+      colorDanger: "#ef4444",
+      borderRadius: "8px",
+      fontFamily: "system-ui, sans-serif",
+      spacingUnit: "4px",
+    },
+  };
+
+  const guestToggle = (
+    <div className="mb-5">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500">
+        Seats
+      </p>
+      <div className="grid grid-cols-2 gap-2">
+      <button
+        type="button"
+        onClick={() => setGuest(false)}
+        disabled={!!clientSecret}
+        className={`h-14 rounded-lg border text-sm font-semibold transition-colors disabled:opacity-60 ${
+          !guest
+            ? "border-[#BF0A30] bg-[#BF0A30]/10 text-white"
+            : "border-white/20 bg-white/5 text-white/60 hover:bg-white/10"
+        }`}
+      >
+        Just Me
+        <span className="block text-xs font-normal opacity-70">
+          ${SOLO_PRICE.toLocaleString()}
+        </span>
+      </button>
+      <button
+        type="button"
+        onClick={() => setGuest(true)}
+        disabled={!!clientSecret}
+        className={`h-14 rounded-lg border text-sm font-semibold transition-colors disabled:opacity-60 ${
+          guest
+            ? "border-[#BF0A30] bg-[#BF0A30]/10 text-white"
+            : "border-white/20 bg-white/5 text-white/60 hover:bg-white/10"
+        }`}
+      >
+        Me + 1 Guest
+        <span className="block text-xs font-normal opacity-70">
+          ${GUEST_PRICE.toLocaleString()}
+        </span>
+      </button>
+      </div>
+    </div>
+  );
+
+  /* ─── Prefilled flow: read-only contact card + immediate Stripe ─── */
+  if (prefilled && !editingContact) {
+    return (
+      <div>
+        {guestToggle}
+        <div className="bg-white/[0.04] border border-white/10 rounded-lg p-4 mb-5">
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
+                Reserving as
+              </p>
+              <p className="text-white font-semibold text-sm truncate">
+                {formData.name}
+              </p>
+              <p className="text-gray-400 text-xs truncate">{formData.email}</p>
+              <p className="text-gray-400 text-xs truncate">{formData.phone}</p>
+              {formData.company && (
+                <p className="text-gray-400 text-xs truncate">
+                  {formData.company} · {formData.trade}
+                </p>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => setEditingContact(true)}
+              className="text-[#BF0A30] text-xs font-semibold hover:underline shrink-0"
+            >
+              Edit
+            </button>
+          </div>
+        </div>
+
+        {loading && !clientSecret && (
+          <div className="text-center py-8 text-gray-400 text-sm">
+            Loading secure payment…
+          </div>
+        )}
+        {formError && (
+          <p className="text-red-400 text-sm text-center mb-4">{formError}</p>
+        )}
+        {clientSecret && (
+          <Elements
+            stripe={getStripe()}
+            options={{ clientSecret, appearance: stripeAppearance }}
+          >
+            <PaymentForm formData={formData} tracking={tracking} price={price} />
+          </Elements>
+        )}
+      </div>
+    );
+  }
+
+  /* ─── Cold flow (or user clicked Edit): collect contact info first ─── */
+  if (!clientSecret) {
+    return (
+      <form onSubmit={handleManualSubmit} className="space-y-3">
+        {guestToggle}
+        <input
+          type="text"
+          placeholder="Full Name"
+          required
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#BF0A30]"
+        />
+        <input
+          type="email"
+          placeholder="Email Address"
+          required
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#BF0A30]"
+        />
+        <input
+          type="tel"
+          placeholder="Phone Number"
+          required
+          value={formData.phone}
+          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#BF0A30]"
+        />
+        <input
+          type="text"
+          placeholder="Company Name"
+          required
+          value={formData.company}
+          onChange={(e) =>
+            setFormData({ ...formData, company: e.target.value })
+          }
+          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#BF0A30]"
+        />
+        <input
+          type="text"
+          placeholder="What Trade Are You In? (e.g. HVAC, Plumbing, Electrical)"
+          required
+          value={formData.trade}
+          onChange={(e) => setFormData({ ...formData, trade: e.target.value })}
+          className="w-full h-12 rounded-lg bg-white/10 border border-white/20 px-4 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-[#BF0A30]"
+        />
+
+        {formError && (
+          <p className="text-red-400 text-sm text-center">{formError}</p>
+        )}
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full h-14 rounded-lg bg-[#BF0A30] text-white text-lg font-bold hover:bg-[#D91C40] transition-colors pulse-red disabled:opacity-60 mt-2"
+        >
+          {loading ? "Loading…" : "Continue To Checkout →"}
+        </button>
+
+        <p className="text-center text-xs text-gray-500 mt-2">
+          Next step: enter your card details securely via Stripe.
+        </p>
+      </form>
+    );
+  }
+
+  /* ─── Cold flow step 2: Stripe element after manual submit ─── */
+  return (
+    <div>
+      <div className="flex items-center gap-3 mb-5 pb-4 border-b border-white/10">
+        <div className="shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-gray-400">
+          ✓
+        </div>
+        <div className="text-sm">
+          <p className="text-gray-400">
+            {formData.name} · {formData.email}
+          </p>
+          <button
+            type="button"
+            onClick={() => setClientSecret("")}
+            className="text-[#BF0A30] text-xs hover:underline"
+          >
+            Edit info
+          </button>
+        </div>
+      </div>
+
+      <Elements
+        stripe={getStripe()}
+        options={{ clientSecret, appearance: stripeAppearance }}
+      >
+        <PaymentForm formData={formData} tracking={tracking} price={price} />
+      </Elements>
+    </div>
+  );
+}
