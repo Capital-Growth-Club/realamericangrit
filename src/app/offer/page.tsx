@@ -608,6 +608,7 @@ export default function Offer() {
               <ul className="space-y-2.5 mb-6">
                 {[
                   "All 9 department curricula",
+                  "2 coaching calls with Tom Howard",
                   "Quizzes + certificates per course",
                   "Owner dashboard with progress tracking",
                   "23-day Sales Huddle Series",
@@ -637,12 +638,9 @@ export default function Offer() {
               </div>
               <ul className="space-y-2.5 mb-6">
                 {[
-                  "All 9 department curricula",
+                  "Everything in Core",
                   "Includes the AI sales role-playing module",
-                  "Quizzes + certificates per course",
-                  "Owner dashboard with progress tracking",
-                  "23-day Sales Huddle Series",
-                  "Quarterly content drops",
+                  "Full, printable SOPs for every course",
                   "Lock in $997/m before it goes to $1,497/m",
                 ].map((item, j) => (
                   <li key={j} className="flex items-start gap-2.5 text-base text-[#475569]">

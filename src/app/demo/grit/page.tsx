@@ -628,7 +628,7 @@ Who actually teaches this thing though?
                 <span className="text-base text-[#475569] font-medium">/m</span>
               </div>
               <ul className="space-y-3 mb-7 flex-1">
-                {["All 9 department curricula", "Quizzes + certificates per course", "Owner dashboard + progress tracking", "23-day Sales Huddle Series", "Quarterly content drops"].map((f, i) => (
+                {["All 9 department curricula", "2 coaching calls with Tom Howard", "Quizzes + certificates per course", "Owner dashboard + progress tracking", "23-day Sales Huddle Series", "Quarterly content drops"].map((f, i) => (
                   <li key={i} className="flex items-start gap-2.5 text-base text-[#475569]"><Check className="shrink-0 mt-1 w-4 h-4 text-[#0B2341]" strokeWidth={3} aria-hidden="true" />{f}</li>
                 ))}
               </ul>
@@ -648,7 +648,7 @@ Who actually teaches this thing though?
                 <span className="text-base text-gray-400 font-medium">/m</span>
               </div>
               <ul className="space-y-3 mb-7 flex-1">
-                {["All 9 department curricula", <>Includes the <Y>AI sales role-play</Y> module</>, "Quizzes + certificates per course", "Owner dashboard + progress tracking", "23-day Sales Huddle Series", "Lock in $997/m before it goes to $1,497/m"].map((f, i) => (
+                {["Everything in Core", <>Includes the <Y>AI sales role-play</Y> module</>, "Full, printable SOPs for every course", "Lock in $997/m before it goes to $1,497/m"].map((f, i) => (
                   <li key={i} className="flex items-start gap-2.5 text-base text-gray-200"><Check className="shrink-0 mt-1 w-4 h-4 text-[#BF0A30]" strokeWidth={3} aria-hidden="true" />{f}</li>
                 ))}
               </ul>

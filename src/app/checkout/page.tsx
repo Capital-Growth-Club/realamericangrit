@@ -28,6 +28,7 @@ const PLANS: {
     price: "$549",
     bullets: [
       "All 9 department curricula",
+      "2 coaching calls with Tom Howard",
       "Quizzes + certificates per course",
       "Owner dashboard with progress tracking",
       "23-day Sales Huddle Series",
@@ -44,12 +45,9 @@ const PLANS: {
     price: "$997",
     popular: true,
     bullets: [
-      "All 9 department curricula",
+      "Everything in Core",
       "Includes the AI sales role-playing module",
-      "Quizzes + certificates per course",
-      "Owner dashboard with progress tracking",
-      "23-day Sales Huddle Series",
-      "Quarterly content drops",
+      "Full, printable SOPs for every course",
       "Lock in $997/m before it goes to $1,497/m",
     ],
     cta: "Get Started — $997/m",

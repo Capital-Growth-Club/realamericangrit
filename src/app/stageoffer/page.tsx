@@ -102,6 +102,7 @@ export default function StageOffer() {
             <ul className="space-y-2 mb-6 flex-1">
               {[
                 "All 9 department curricula",
+                "2 coaching calls with Tom Howard",
                 "Quizzes + certificates per course",
                 "Owner dashboard + progress tracking",
                 "No AI role-playing module",
@@ -162,10 +163,9 @@ export default function StageOffer() {
             </div>
             <ul className="space-y-2 mb-6 flex-1">
               {[
-                "All 9 department curricula",
+                "Everything in Core",
                 "Includes AI sales role-playing",
-                "Quizzes + certificates per course",
-                "Owner dashboard + progress tracking",
+                "Full, printable SOPs",
               ].map((item, j) => (
                 <li
                   key={j}

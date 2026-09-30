@@ -18,6 +18,7 @@ const TIER_COPY: Record<
     bullets: [
       "All 9 department curricula — 50+ courses",
       "Frameworks from Tom Howard (Lee's Air owner, $150M+ annual revenue) & Phil Filaski ($19.6M/yr HVAC)",
+      "2 coaching calls with Tom Howard",
       "Quizzes, certificates, and the owner dashboard",
       "Does not include the AI role-playing module",
     ],
@@ -26,10 +27,9 @@ const TIER_COPY: Record<
     price: "$997",
     subtitle: "Full library access for your entire team — billed monthly",
     bullets: [
-      "All 9 department curricula — 50+ courses",
-      "Frameworks from Tom Howard (Lee's Air owner, $150M+ annual revenue) & Phil Filaski ($19.6M/yr HVAC)",
-      "Quizzes, certificates, and the owner dashboard",
+      "Everything in Core",
       "Includes the AI role-playing module",
+      "Full, printable SOPs for every course",
       "Lock in $997/m before it goes to $1,497/m",
     ],
   },
@@ -37,7 +37,7 @@ const TIER_COPY: Record<
     price: "$1,497",
     subtitle: "Everything in Standard — fully rebranded as your operation",
     bullets: [
-      "Everything in Standard — all 9 department curricula",
+      "Everything in Standard",
       "Certificates issued under your company name",
       "Training portal branded as your operation",
       "Lock in $1,497/m before it goes to $1,997/m",
