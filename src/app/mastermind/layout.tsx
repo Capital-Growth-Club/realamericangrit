@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { nostalgicItalic, munichBlack, munich } from "./fonts";
 
 export const metadata: Metadata = {
-  title: "2-Day Business & Sales Mastermind With Tom Howard & Phil Filaski — Las Vegas",
+  title: "Registration Closed — Real American Grit University",
   description:
-    "Two days in person with Tom Howard and Phil Filaski — business planning, goal planning, and a hands-on sales workshop. Nov 2-3, 2026, Las Vegas, NV. $4,500 per seat, only 7 remaining.",
+    "Registration for this mastermind with Tom Howard has closed. See the next upcoming mastermind.",
   openGraph: {
-    title: "2-Day Business & Sales Mastermind With Tom Howard & Phil Filaski",
+    title: "Registration Closed — Real American Grit University",
     description:
-      "Business planning, goal planning, and a hands-on sales workshop — in person, at Tom's own residence. Nov 2-3, 2026, Las Vegas, NV.",
+      "Registration for this mastermind with Tom Howard has closed. See the next upcoming mastermind.",
     url: "https://www.realamericangrit.com/mastermind",
     siteName: "Real American Grit University",
     type: "website",
@@ -16,9 +16,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "2-Day Business & Sales Mastermind With Tom Howard & Phil Filaski",
+    title: "Registration Closed — Real American Grit University",
     description:
-      "Two days in person with Tom Howard and Phil Filaski. Nov 2-3, 2026, Las Vegas, NV.",
+      "Registration for this mastermind with Tom Howard has closed.",
   },
 };
 

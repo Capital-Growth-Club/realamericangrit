@@ -518,11 +518,19 @@ export async function POST(request: Request) {
 
       // ═══ ONE-TIME EVENT PURCHASES ═══
       // Direct PaymentIntents (not invoice-based) — used for one-time products
-      // like the mastermind event, scoped via metadata.product so this never
-      // accidentally fires for an unrelated future PaymentIntent.
+      // like the mastermind events, scoped via metadata.product so this never
+      // accidentally fires for an unrelated future PaymentIntent. Both the
+      // Nov 2-3 and Nov 20-21 events forward to the same GHL webhook — they're
+      // distinguished downstream by the event-specific tag (e.g. for routing
+      // to separate tracking sheets), not by separate webhook URLs.
       case "payment_intent.succeeded": {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        if (paymentIntent.metadata?.product !== "mastermind-nov-2026") break;
+        const MASTERMIND_EVENTS: Record<string, string> = {
+          "mastermind-nov-2026": "mastermind-nov-2026",
+          "mastermind-nov20-2026": "mastermind-nov20-2026",
+        };
+        const eventTag = MASTERMIND_EVENTS[paymentIntent.metadata?.product ?? ""];
+        if (!eventTag) break;
 
         const customerId =
           typeof paymentIntent.customer === "string"
@@ -530,7 +538,7 @@ export async function POST(request: Request) {
             : paymentIntent.customer?.id ?? null;
 
         console.log(
-          `[stripe] payment_intent.succeeded (mastermind): ${paymentIntent.id} customer=${customerId}`,
+          `[stripe] payment_intent.succeeded (${eventTag}): ${paymentIntent.id} customer=${customerId}`,
         );
 
         const { first_name, last_name } = splitName(
@@ -549,8 +557,8 @@ export async function POST(request: Request) {
           seats: isGuest ? 2 : 1,
           source: "Real American Grit - Mastermind Landing Page",
           tags: isGuest
-            ? ["mastermind-nov-2026", "mastermind-purchased", "mastermind-plus-guest"]
-            : ["mastermind-nov-2026", "mastermind-purchased"],
+            ? [eventTag, "mastermind-purchased", "mastermind-plus-guest"]
+            : [eventTag, "mastermind-purchased"],
           event_type: "mastermind_purchased",
           stripe_customer_id: customerId ?? "",
           amount_cents: paymentIntent.amount_received,
