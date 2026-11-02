@@ -6,11 +6,8 @@ export const dynamic = "force-dynamic";
 // /api/check-phone-verification approves the code). This is the CONFIRMED
 // registration — the event GHL should key off to send the calendar invite
 // and the pre-event bonus emails.
-//
-// TODO: Replace with the real GHL inbound webhook trigger URL for the
-// Dec 2 Acquisition Webinar workflow (same pattern as the Slow Season
-// webinar's GHL_WEBINAR_WEBHOOK in /api/register-webinar).
-const GHL_WEBINAR_WEBHOOK = "";
+const GHL_WEBINAR_WEBHOOK =
+  "https://services.leadconnectorhq.com/hooks/U33crx49dqSM4lE4OIY2/webhook-trigger/783454a8-0287-4210-bad2-c41262e0fb75";
 
 // $2M+ is the stated qualified floor — below this, the registrant still gets
 // the replay but is excluded from sales follow-up and retargeting.

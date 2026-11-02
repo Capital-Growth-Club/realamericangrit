@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Real American Grit University//Acquisition Webinar//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:acquisition-webinar-2026-12-02@realamericangrit.com
+DTSTAMP:20261102T000000Z
+DTSTART:20261202T200000Z
+DTEND:20261202T211500Z
+SUMMARY:The $0 Acquisition — Live With Tom Howard
+DESCRIPTION:Join Tom Howard live: how home service owners grow by buying the shop down the street instead of building one customer at a time.\n\nJoin here: https://us06web.zoom.us/j/85892269516
+LOCATION:https://us06web.zoom.us/j/85892269516
+URL:https://us06web.zoom.us/j/85892269516
+BEGIN:VALARM
+TRIGGER:-PT15M
+ACTION:DISPLAY
+DESCRIPTION:The $0 Acquisition starts in 15 minutes
+END:VALARM
+END:VEVENT
+END:VCALENDAR
