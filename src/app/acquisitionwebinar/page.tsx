@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Free Home Service Acquisition Webinar — Dec 2",
     description:
-      "How Tom buys the competitor down the street for close to $0 — the home service roll-up playbook for $2M+ owners. Register free.",
+      "How you can buy the competitor down the street for close to $0 — the home service acquisition playbook for $2M+ owners. Register free.",
     url: "https://www.realamericangrit.com/acquisitionwebinar",
     siteName: "Real American Grit University",
     type: "website",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Free Home Service Acquisition Webinar — Dec 2",
     description:
-      "How Tom buys the competitor down the street for close to $0. Register free.",
+      "How you can buy the competitor down the street for close to $0. Register free.",
     images: ["/og-bundle.jpg"],
   },
 };
@@ -133,18 +133,19 @@ export default function AcquisitionWebinar() {
         <div className="relative mx-auto max-w-2xl text-center">
           <p className="inline-flex items-center gap-2 rounded-full border border-[#BF0A30]/25 bg-[#BF0A30]/[0.08] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#BF0A30]">
             <ArrowDown className="h-3.5 w-3.5" />
-            Free Home Service Roll-Up Webinar
+            Free Home Service Acquisition Webinar
             <ArrowDown className="h-3.5 w-3.5" />
           </p>
           <h1
             className={`${hFont} mx-auto mt-5 max-w-2xl text-5xl font-black leading-[0.95] tracking-[0.04em] text-[#0B2341] sm:text-6xl md:text-7xl`}
           >
-            Register Free To Steal Tom&apos;s $0 Home Service Roll-Up
-            Playbook
+            Register Free To Steal A{" "}
+            <span className="whitespace-nowrap">$150M-A-Year</span>{" "}
+            Shop&apos;s $0 Acquisition Playbook
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg text-slate-600 sm:text-xl">
-            A free live training for $2M+ home service owners — how Tom buys
-            the competitor down the street for close to $0, and makes it
+            A free live training for $2M+ home service owners — how you can buy
+            the competitor down the street for close to $0, and make it
             profitable fast.
           </p>
 
