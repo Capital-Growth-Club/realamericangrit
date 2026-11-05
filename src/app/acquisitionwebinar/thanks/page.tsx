@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Mail, CalendarPlus, Gift, CalendarDays, Clock } from "lucide-react";
+import { Mail, CalendarPlus, Inbox, CalendarDays, Clock } from "lucide-react";
 import AcquisitionWebinarRegisteredEvent from "@/components/AcquisitionWebinarRegisteredEvent";
 
 const hFont = "font-[family-name:var(--font-bebas)]";
@@ -21,9 +21,9 @@ const STEPS = [
     desc: "Didn't get the calendar invite? No problem — your confirmation email has a one-click “Add to Calendar” link. Use it now so nothing gets in the way of December 2nd.",
   },
   {
-    icon: Gift,
-    title: "Watch For Your Bonuses",
-    desc: "Between now and the event we'll send a few extra resources to help you get the most out of the training. Keep an eye on your inbox so you don't miss them.",
+    icon: Inbox,
+    title: "Watch Your Inbox",
+    desc: "Between now and December 2nd, Tom will be sending you a few emails — stories from more than 40 acquisitions and what to look for before you buy. Keep an eye out so you don't miss them.",
   },
 ];
 
